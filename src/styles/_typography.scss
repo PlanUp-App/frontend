@@ -1,0 +1,80 @@
+@use "functions";
+@import "./variables";
+
+.pup {
+  // Headings
+  &-heading {
+    font-family: "Montserrat", sans-serif;
+    &-one {
+      font-size: clamp(48px, preferred(48, 86), 86px);
+      font-weight: 600;
+      letter-spacing: -2%;
+      line-height: 100%;
+    }
+
+    &-two {
+      font-size: clamp(48px, preferred(48, 64), 64px);
+      font-weight: 600;
+      letter-spacing: -2%;
+      line-height: 110%;
+    }
+
+    &-three {
+      font-size: clamp(18px, preferred(18, 26), 26px);
+      font-weight: 600;
+      letter-spacing: -2%;
+      line-height: 120%;
+    }
+  }
+
+  // Body
+  &-body {
+    font-family: "Karla", sans-serif;
+
+    &-xl {
+      font-size: clamp(18, preferred(18, 26), 26);
+      font-weight: 700;
+      letter-spacing: -4%;
+      &-700 {
+        font-weight: 700;
+      }
+      &-400 {
+        font-weight: 400;
+      }
+    }
+
+    &-lg-500 {
+      font-size: clamp(16, preferred(16, 20), 20);
+      font-weight: 500;
+      line-height: 120%;
+      letter-spacing: -4%;
+    }
+
+    &-md {
+      font-size: clamp(12, preferred(12, 17), 17);
+      line-height: 150%;
+      letter-spacing: -4%;
+      &-400 {
+        font-weight: 400;
+      }
+      &-500 {
+        font-weight: 500;
+      }
+    }
+
+    &-sm-400 {
+      font-size: clamp(10, preferred(10, 15), 15);
+      font-weight: 400;
+      line-height: 150%;
+      letter-spacing: -4%;
+    }
+
+    &-tag {
+      font-size: clamp(10, preferred(10, 16), 16);
+      font-family: "Montserrat", sans-serif;
+      font-weight: 600;
+      line-height: 120%;
+      letter-spacing: 2%;
+    }
+  }
+}
