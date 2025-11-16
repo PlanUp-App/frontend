@@ -1,11 +1,7 @@
-@function preferred(
-  $min-font,
-  $max-font,
-  $min-width: $min_width,
-  $max-width: $max_width
-) {
+@function preferred($min-font, $max-font, $min-width: 1440, $max-width: 2560) {
   @return calc(
-    #{$min-font} + #{stripUnit($max-font - $min-font)} *
-      ((100vw - #{$min-width}) / #{stripUnit($max-width - $min-width)})
-  );
+      #{$min-font} + #{stripUnit($max-font - $min-font)} *
+        ((100vw - #{$min-width}) / #{stripUnit($max-width - $min-width)})
+    ) +
+    "px";
 }

@@ -1,80 +1,91 @@
 @use "functions";
-@import "./variables";
+@use "variables";
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Montserrat:wght@400;500;700&display=swap");
 
 .pup {
-  // Headings
-  &-heading {
+  // ----------------------
+  // Headings (Montserrat)
+  // ----------------------
+  &-heading-one {
     font-family: "Montserrat", sans-serif;
-    &-one {
-      font-size: clamp(48px, preferred(48, 86), 86px);
-      font-weight: 600;
-      letter-spacing: -2%;
-      line-height: 100%;
-    }
-
-    &-two {
-      font-size: clamp(48px, preferred(48, 64), 64px);
-      font-weight: 600;
-      letter-spacing: -2%;
-      line-height: 110%;
-    }
-
-    &-three {
-      font-size: clamp(18px, preferred(18, 26), 26px);
-      font-weight: 600;
-      letter-spacing: -2%;
-      line-height: 120%;
-    }
+    font-size: 86px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1; // use unitless
   }
 
-  // Body
-  &-body {
+  &-heading-two {
+    font-family: "Montserrat", sans-serif;
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  &-heading-three {
+    font-family: "Montserrat", sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  // ----------------------
+  // Body (Karla)
+  // ----------------------
+  &-body-xl-700 {
     font-family: "Karla", sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+  }
 
-    &-xl {
-      font-size: clamp(18, preferred(18, 26), 26);
-      font-weight: 700;
-      letter-spacing: -4%;
-      &-700 {
-        font-weight: 700;
-      }
-      &-400 {
-        font-weight: 400;
-      }
-    }
+  &-body-xl-400 {
+    font-family: "Karla", sans-serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+  }
 
-    &-lg-500 {
-      font-size: clamp(16, preferred(16, 20), 20);
-      font-weight: 500;
-      line-height: 120%;
-      letter-spacing: -4%;
-    }
+  &-body-lg-500 {
+    font-family: "Karla", sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+  }
 
-    &-md {
-      font-size: clamp(12, preferred(12, 17), 17);
-      line-height: 150%;
-      letter-spacing: -4%;
-      &-400 {
-        font-weight: 400;
-      }
-      &-500 {
-        font-weight: 500;
-      }
-    }
+  &-body-md-500 {
+    font-family: "Karla", sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.5;
+  }
 
-    &-sm-400 {
-      font-size: clamp(10, preferred(10, 15), 15);
-      font-weight: 400;
-      line-height: 150%;
-      letter-spacing: -4%;
-    }
+  &-body-md-400 {
+    font-family: "Karla", sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.5;
+  }
 
-    &-tag {
-      font-size: clamp(10, preferred(10, 16), 16);
-      font-family: "Montserrat", sans-serif;
-      font-weight: 600;
-      line-height: 120%;
-      letter-spacing: 2%;
-    }
+  &-body-sm-400 {
+    font-family: "Karla", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.5;
+  }
+
+  &-body-tag {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
   }
 }
