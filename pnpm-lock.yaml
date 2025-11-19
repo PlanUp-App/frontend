@@ -5,12 +5,21 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@hookform/resolvers':
+    specifier: ^5.2.2
+    version: 5.2.2(react-hook-form@7.66.1)
+  '@mantine/form':
+    specifier: ^8.3.9
+    version: 8.3.9(react@19.2.0)
   '@radix-ui/react-slot':
     specifier: ^1.2.4
     version: 1.2.4(@types/react@19.2.5)(react@19.2.0)
   '@tailwindcss/vite':
     specifier: ^4.1.17
     version: 4.1.17(vite@7.2.2)
+  '@tanstack/react-query':
+    specifier: ^5.90.10
+    version: 5.90.10(react@19.2.0)
   '@tanstack/react-router':
     specifier: ^1.136.11
     version: 1.136.11(react-dom@19.2.0)(react@19.2.0)
@@ -26,12 +35,18 @@ dependencies:
   lucide-react:
     specifier: ^0.554.0
     version: 0.554.0(react@19.2.0)
+  mantine-form-zod-resolver:
+    specifier: ^1.3.0
+    version: 1.3.0(@mantine/form@8.3.9)(zod@4.1.12)
   react:
     specifier: ^19.2.0
     version: 19.2.0
   react-dom:
     specifier: ^19.2.0
     version: 19.2.0(react@19.2.0)
+  react-hook-form:
+    specifier: ^7.66.1
+    version: 7.66.1(react@19.2.0)
   sass:
     specifier: ^1.94.1
     version: 1.94.1
@@ -684,6 +699,15 @@ packages:
       levn: 0.4.1
     dev: true
 
+  /@hookform/resolvers@5.2.2(react-hook-form@7.66.1):
+    resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
+    peerDependencies:
+      react-hook-form: ^7.55.0
+    dependencies:
+      '@standard-schema/utils': 0.3.0
+      react-hook-form: 7.66.1(react@19.2.0)
+    dev: false
+
   /@humanfs/core@0.19.1:
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
     engines: {node: '>=18.18.0'}
@@ -731,6 +755,16 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  /@mantine/form@8.3.9(react@19.2.0):
+    resolution: {integrity: sha512-G7eCo5TEWGcsWHrNGwp/o1yPcCYbaMdLq6SClN+wMhAA+qaEO1ZHf9mX8fSOX78nkaoyIrZHGOhbVXcZ7hmVrQ==}
+    peerDependencies:
+      react: ^18.x || ^19.x
+    dependencies:
+      fast-deep-equal: 3.1.3
+      klona: 2.0.6
+      react: 19.2.0
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1067,6 +1101,10 @@ packages:
     requiresBuild: true
     optional: true
 
+  /@standard-schema/utils@0.3.0:
+    resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
+    dev: false
+
   /@tailwindcss/node@4.1.17:
     resolution: {integrity: sha512-csIkHIgLb3JisEFQ0vxr2Y57GUNYh447C8xzwj89U/8fdW8LhProdxvnVH6U8M2Y73QKiTIH+LWbK3V2BBZsAg==}
     dependencies:
@@ -1230,6 +1268,19 @@ packages:
     resolution: {integrity: sha512-l6wcxwDBeh/7Dhles23U1O8lp9kNJmAb2yNjekR6olZwCRNAVA8TCXlVCrueELyFlYZqvQkh0ofxnzG62A1Kkg==}
     engines: {node: '>=12'}
     dev: true
+
+  /@tanstack/query-core@5.90.10:
+    resolution: {integrity: sha512-EhZVFu9rl7GfRNuJLJ3Y7wtbTnENsvzp+YpcAV7kCYiXni1v8qZh++lpw4ch4rrwC0u/EZRnBHIehzCGzwXDSQ==}
+    dev: false
+
+  /@tanstack/react-query@5.90.10(react@19.2.0):
+    resolution: {integrity: sha512-BKLss9Y8PQ9IUjPYQiv3/Zmlx92uxffUOX8ZZNoQlCIZBJPT5M+GOMQj7xislvVQ6l1BstBjcX0XB/aHfFYVNw==}
+    peerDependencies:
+      react: ^18 || ^19
+    dependencies:
+      '@tanstack/query-core': 5.90.10
+      react: 19.2.0
+    dev: false
 
   /@tanstack/react-router@1.136.11(react-dom@19.2.0)(react@19.2.0):
     resolution: {integrity: sha512-IULIonuWY8v6NUoIt1aDNbnLc5xLEZjwKvgwXM5WDP3SPhMXeF5nfquKLDPv306KTzeYqSQHTdbdSUh3nLfmKw==}
@@ -2066,7 +2117,6 @@ packages:
 
   /fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
-    dev: true
 
   /fast-glob@3.3.3:
     resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
@@ -2378,6 +2428,11 @@ packages:
       json-buffer: 3.0.1
     dev: true
 
+  /klona@2.0.6:
+    resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
+    engines: {node: '>= 8'}
+    dev: false
+
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -2533,6 +2588,17 @@ packages:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
+    dev: false
+
+  /mantine-form-zod-resolver@1.3.0(@mantine/form@8.3.9)(zod@4.1.12):
+    resolution: {integrity: sha512-XlXXkJCYuUuOllW0zedYW+m/lbdFQ/bso1Vz+pJOYkxgjhoGvzN2EXWCS2+0iTOT9Q7WnOwWvHmvpTJN3PxSXw==}
+    engines: {node: '>=16.6.0'}
+    peerDependencies:
+      '@mantine/form': '>=7.0.0'
+      zod: '>=3.25.0'
+    dependencies:
+      '@mantine/form': 8.3.9(react@19.2.0)
+      zod: 4.1.12
     dev: false
 
   /math-intrinsics@1.1.0:
@@ -2702,6 +2768,15 @@ packages:
     dependencies:
       react: 19.2.0
       scheduler: 0.27.0
+
+  /react-hook-form@7.66.1(react@19.2.0):
+    resolution: {integrity: sha512-2KnjpgG2Rhbi+CIiIBQQ9Df6sMGH5ExNyFl4Hw9qO7pIqMBR8Bvu9RQyjl3JM4vehzCh9soiNUM/xYMswb2EiA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+    dependencies:
+      react: 19.2.0
+    dev: false
 
   /react-refresh@0.18.0:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
