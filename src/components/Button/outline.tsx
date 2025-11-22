@@ -14,7 +14,7 @@ export function OutlineButton({
     <Link
       to={link}
       className={twMerge(
-        `h-11 flex items-center justify-center px-6 text-white rounded-full border-2 border-white body-md-500`,
+        `h-11 flex items-center justify-center px-6 text-white rounded-full border-2 border-white pup-body-md-500`,
         className
       )}
     >

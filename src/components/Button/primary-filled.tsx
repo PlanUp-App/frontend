@@ -17,7 +17,7 @@ export function PrimaryButton({
   type = "button",
 }: PrimaryButtonProps) {
   const baseClasses = twMerge(
-    "h-11 flex items-center justify-center px-6 text-white rounded-full bg-primary-orange body-md-500 cursor-pointer",
+    "h-11 flex items-center justify-center px-6 text-white rounded-full bg-primary-orange pup-body-md-500 cursor-pointer",
     className
   );
 

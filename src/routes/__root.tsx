@@ -1,4 +1,5 @@
 import type { AuthState } from "@/auth/AuthContext";
+import { Navigation } from "@/components/Navigation";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { Toaster } from "sonner";
 
@@ -8,12 +9,13 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
-    <div>
+    <>
+      <Navigation />
       <Outlet />
       <Toaster
         position="top-center"
         toastOptions={{ descriptionClassName: "pup-body-md-400" }}
       />
-    </div>
+    </>
   ),
 });
