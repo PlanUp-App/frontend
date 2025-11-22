@@ -1,11 +1,22 @@
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { CustomInput } from "@/components/CustomInput";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
+import { useState } from "react";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export const Route = createFileRoute("/login/")({
+  validateSearch: (search) => ({
+    redirect: (search.redirect as string) || "dashboard",
+  }),
+  beforeLoad: ({ context, search }) => {
+    if (context.auth.isAuthenticated) {
+      throw redirect({ to: search.redirect });
+    }
+  },
   component: Index,
 });
 
@@ -17,14 +28,38 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 function Index() {
+  const { auth } = Route.useRouteContext();
+  const navigate = Route.useNavigate();
+  const { redirect } = Route.useSearch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const { getInputProps, onSubmit } = useForm<LoginForm>({
     initialValues: { email: "", password: "" },
     validate: zod4Resolver(loginSchema),
     validateInputOnBlur: true,
   });
 
-  const handleSubmit = (values: LoginForm) => {
-    console.log("Submitted values: ", values);
+  const handleSubmit = async (values: LoginForm) => {
+    setIsLoading(true);
+    setError("");
+    try {
+      await auth.login(values.email, values.password);
+      toast.success("Login Successful");
+      navigate({ to: redirect });
+    } catch (err) {
+      let message = "Something went wrong";
+      if (err instanceof AxiosError) {
+        message = err.response?.data?.message ?? err.message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      setError(message);
+      console.log(err);
+      toast.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -54,6 +89,7 @@ function Index() {
               inputProps={getInputProps("password")}
             />
             <PrimaryButton
+              isLoading={isLoading}
               title="Log In"
               className="uppercase w-full"
               type="submit"

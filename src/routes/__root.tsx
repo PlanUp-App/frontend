@@ -1,5 +1,19 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import type { AuthState } from "@/auth/AuthContext";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import { Toaster } from "sonner";
 
-export const Route = createRootRoute({
-  component: () => <Outlet />,
+interface MyRouterContext {
+  auth: AuthState;
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+  component: () => (
+    <div>
+      <Outlet />
+      <Toaster
+        position="top-center"
+        toastOptions={{ descriptionClassName: "pup-body-md-400" }}
+      />
+    </div>
+  ),
 });

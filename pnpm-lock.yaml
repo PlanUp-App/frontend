@@ -23,6 +23,9 @@ dependencies:
   '@tanstack/react-router':
     specifier: ^1.136.11
     version: 1.136.11(react-dom@19.2.0)(react@19.2.0)
+  '@tanstack/react-router-devtools':
+    specifier: ^1.139.11
+    version: 1.139.11(@tanstack/react-router@1.136.11)(@tanstack/router-core@1.139.11)(@types/node@24.10.1)(csstype@3.2.1)(react-dom@19.2.0)(react@19.2.0)(sass@1.94.1)(solid-js@1.9.10)
   axios:
     specifier: ^1.13.2
     version: 1.13.2
@@ -38,6 +41,9 @@ dependencies:
   mantine-form-zod-resolver:
     specifier: ^1.3.0
     version: 1.3.0(@mantine/form@8.3.9)(zod@4.1.12)
+  next-themes:
+    specifier: ^0.4.6
+    version: 0.4.6(react-dom@19.2.0)(react@19.2.0)
   react:
     specifier: ^19.2.0
     version: 19.2.0
@@ -50,6 +56,9 @@ dependencies:
   sass:
     specifier: ^1.94.1
     version: 1.94.1
+  sonner:
+    specifier: ^2.0.7
+    version: 2.0.7(react-dom@19.2.0)(react@19.2.0)
   tailwind-merge:
     specifier: ^3.4.0
     version: 3.4.0
@@ -1267,7 +1276,6 @@ packages:
   /@tanstack/history@1.139.0:
     resolution: {integrity: sha512-l6wcxwDBeh/7Dhles23U1O8lp9kNJmAb2yNjekR6olZwCRNAVA8TCXlVCrueELyFlYZqvQkh0ofxnzG62A1Kkg==}
     engines: {node: '>=12'}
-    dev: true
 
   /@tanstack/query-core@5.90.10:
     resolution: {integrity: sha512-EhZVFu9rl7GfRNuJLJ3Y7wtbTnENsvzp+YpcAV7kCYiXni1v8qZh++lpw4ch4rrwC0u/EZRnBHIehzCGzwXDSQ==}
@@ -1280,6 +1288,40 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.90.10
       react: 19.2.0
+    dev: false
+
+  /@tanstack/react-router-devtools@1.139.11(@tanstack/react-router@1.136.11)(@tanstack/router-core@1.139.11)(@types/node@24.10.1)(csstype@3.2.1)(react-dom@19.2.0)(react@19.2.0)(sass@1.94.1)(solid-js@1.9.10):
+    resolution: {integrity: sha512-MDg3j4S9OXJ+4vB/EVsun8rihkd3S/vyH6bmmfGHlZhncHxtapdpW2vYPycx/D/xCJcRZLrw1mlI40CbSuAysQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@tanstack/react-router': ^1.139.11
+      '@tanstack/router-core': ^1.139.11
+      react: '>=18.0.0 || >=19.0.0'
+      react-dom: '>=18.0.0 || >=19.0.0'
+    peerDependenciesMeta:
+      '@tanstack/router-core':
+        optional: true
+    dependencies:
+      '@tanstack/react-router': 1.136.11(react-dom@19.2.0)(react@19.2.0)
+      '@tanstack/router-core': 1.139.11
+      '@tanstack/router-devtools-core': 1.139.11(@tanstack/router-core@1.139.11)(@types/node@24.10.1)(csstype@3.2.1)(sass@1.94.1)(solid-js@1.9.10)
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
+      vite: 7.2.2(@types/node@24.10.1)(sass@1.94.1)
+    transitivePeerDependencies:
+      - '@types/node'
+      - csstype
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - solid-js
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
     dev: false
 
   /@tanstack/react-router@1.136.11(react-dom@19.2.0)(react@19.2.0):
@@ -1333,6 +1375,51 @@ packages:
       tiny-invariant: 1.3.3
       tiny-warning: 1.0.3
     dev: true
+
+  /@tanstack/router-core@1.139.11:
+    resolution: {integrity: sha512-85FW4qxlxF3m0Z6aMEaAYHMpUS01oNo4nyDoaN2QP1mwLHkm5C2YhbZvT8i1IYXgS/NxlzVsmbJSpAweO3rv9g==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@tanstack/history': 1.139.0
+      '@tanstack/store': 0.8.0
+      cookie-es: 2.0.0
+      seroval: 1.4.0
+      seroval-plugins: 1.4.0(seroval@1.4.0)
+      tiny-invariant: 1.3.3
+      tiny-warning: 1.0.3
+    dev: false
+
+  /@tanstack/router-devtools-core@1.139.11(@tanstack/router-core@1.139.11)(@types/node@24.10.1)(csstype@3.2.1)(sass@1.94.1)(solid-js@1.9.10):
+    resolution: {integrity: sha512-UzVqGJ3KvID7IdlANX3UBznR3UQs85SnxXd2PtQ+d4lt8zTktjfXoVKxbegzJc+tpzihWAfgbXYVsGcOXMEqFQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@tanstack/router-core': ^1.139.11
+      csstype: ^3.0.10
+      solid-js: '>=1.9.5'
+    peerDependenciesMeta:
+      csstype:
+        optional: true
+    dependencies:
+      '@tanstack/router-core': 1.139.11
+      clsx: 2.1.1
+      csstype: 3.2.1
+      goober: 2.1.18(csstype@3.2.1)
+      solid-js: 1.9.10
+      tiny-invariant: 1.3.3
+      vite: 7.2.2(@types/node@24.10.1)(sass@1.94.1)
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
+    dev: false
 
   /@tanstack/router-generator@1.139.1:
     resolution: {integrity: sha512-HJaJlxilmn/Y2zSLOJ9tCreNaBUJaR2aB4tAJuINcjzd1rvJeB2eKJ5C4kRWD4pcJEznVUvy1sNfeJ3QSBj5Rg==}
@@ -2279,6 +2366,14 @@ packages:
     engines: {node: '>=18'}
     dev: true
 
+  /goober@2.1.18(csstype@3.2.1):
+    resolution: {integrity: sha512-2vFqsaDVIT9Gz7N6kAL++pLpp41l3PfDuusHcjnGLfR6+huZkl6ziX+zgVC3ZxpqWhzH6pyDdGrCeDhMIvwaxw==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dependencies:
+      csstype: 3.2.1
+    dev: false
+
   /gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
@@ -2656,6 +2751,16 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
+  /next-themes@0.4.6(react-dom@19.2.0)(react@19.2.0):
+    resolution: {integrity: sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
+    dev: false
+
   /node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
     requiresBuild: true
@@ -2885,6 +2990,15 @@ packages:
     hasBin: true
     dev: true
 
+  /seroval-plugins@1.3.3(seroval@1.3.2):
+    resolution: {integrity: sha512-16OL3NnUBw8JG1jBLUoZJsLnQq0n5Ua6aHalhJK4fMQkz1lqR7Osz1sA30trBtd9VUDc2NgkuRCn8+/pBwqZ+w==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      seroval: ^1.0
+    dependencies:
+      seroval: 1.3.2
+    dev: false
+
   /seroval-plugins@1.4.0(seroval@1.4.0):
     resolution: {integrity: sha512-zir1aWzoiax6pbBVjoYVd0O1QQXgIL3eVGBMsBsNmM8Ukq90yGaWlfx0AB9dTS8GPqrOrbXn79vmItCUP9U3BQ==}
     engines: {node: '>=10'}
@@ -2892,6 +3006,11 @@ packages:
       seroval: ^1.0
     dependencies:
       seroval: 1.4.0
+
+  /seroval@1.3.2:
+    resolution: {integrity: sha512-RbcPH1n5cfwKrru7v7+zrZvjLurgHhGyso3HTyGtRivGWgYjbOmGuivCQaORNELjNONoK35nj28EoWul9sb1zQ==}
+    engines: {node: '>=10'}
+    dev: false
 
   /seroval@1.4.0:
     resolution: {integrity: sha512-BdrNXdzlofomLTiRnwJTSEAaGKyHHZkbMXIywOh7zlzp4uZnXErEwl9XZ+N1hJSNpeTtNxWvVwN0wUzAIQ4Hpg==}
@@ -2908,6 +3027,24 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
     dev: true
+
+  /solid-js@1.9.10:
+    resolution: {integrity: sha512-Coz956cos/EPDlhs6+jsdTxKuJDPT7B5SVIWgABwROyxjY7Xbr8wkzD68Et+NxnV7DLJ3nJdAC2r9InuV/4Jew==}
+    dependencies:
+      csstype: 3.2.1
+      seroval: 1.3.2
+      seroval-plugins: 1.3.3(seroval@1.3.2)
+    dev: false
+
+  /sonner@2.0.7(react-dom@19.2.0)(react@19.2.0):
+    resolution: {integrity: sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
+    dev: false
 
   /source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}

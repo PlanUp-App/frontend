@@ -5,12 +5,14 @@ interface PrimaryButtonProps {
   title?: string;
   className?: string;
   link?: string;
+  isLoading?: boolean;
   type?: "button" | "submit" | "reset";
 }
 
 export function PrimaryButton({
   title,
   className,
+  isLoading = false,
   link,
   type = "button",
 }: PrimaryButtonProps) {
@@ -28,7 +30,7 @@ export function PrimaryButton({
   }
 
   return (
-    <button type={type} className={baseClasses}>
+    <button type={type} className={baseClasses} disabled={isLoading}>
       {title}
     </button>
   );
