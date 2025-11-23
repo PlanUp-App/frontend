@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { twMerge } from "tailwind-merge";
+import { Spinner } from "../ui/spinner";
 
 interface PrimaryButtonProps {
   title?: string;
@@ -17,7 +18,7 @@ export function PrimaryButton({
   type = "button",
 }: PrimaryButtonProps) {
   const baseClasses = twMerge(
-    "h-11 flex items-center justify-center px-6 text-white rounded-full bg-primary-orange pup-body-md-500 cursor-pointer",
+    `h-11 flex gap-2 items-center justify-center px-6 text-white rounded-full bg-primary-orange pup-body-md-500 ${isLoading ? "cursor-progress" : "cursor-pointer"}`,
     className
   );
 
@@ -31,6 +32,7 @@ export function PrimaryButton({
 
   return (
     <button type={type} className={baseClasses} disabled={isLoading}>
+      {isLoading && <Spinner />}
       {title}
     </button>
   );

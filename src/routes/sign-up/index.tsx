@@ -7,10 +7,12 @@ import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { useSignUp } from "./-queries";
+import { censorEmail } from "@/lib/utils";
 
-export const Route = createFileRoute("/login/")({
+export const Route = createFileRoute("/sign-up/")({
   validateSearch: (search) => ({
-    redirect: (search.redirect as string) || "dashboard",
+    redirect: (search.redirect as string) || "",
   }),
   beforeLoad: ({ context, search }) => {
     if (context.auth.isAuthenticated) {
@@ -20,33 +22,57 @@ export const Route = createFileRoute("/login/")({
   component: Index,
 });
 
-const loginSchema = z.object({
-  email: z.email("Invalid Email"),
-  password: z.string().min(1, { message: "Password is required" }),
-});
+const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+[\]{};:'"\\|,.<>/?`~]).{8,}$/;
 
-type LoginForm = z.infer<typeof loginSchema>;
+const signUpSchema = z
+  .object({
+    name: z
+      .string()
+      .nonempty()
+      .min(2, { message: "Name must be atleast 2 characters" }),
+    email: z.email("Invalid Email"),
+    password: z
+      .string()
+      .min(6, { message: "Password must be atleast 6 characters" })
+      .regex(
+        strongPasswordRegex,
+        "Password must contain upper, lower, number and special character"
+      ),
+    confirmPassword: z.string().nonempty(),
+  })
+  .superRefine(({ password, confirmPassword }, ctx) => {
+    if (password != confirmPassword) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+      });
+    }
+  });
+
+type SignUpForm = z.infer<typeof signUpSchema>;
 
 function Index() {
-  const { auth } = Route.useRouteContext();
-  const navigate = Route.useNavigate();
-  const { redirect } = Route.useSearch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const signUpMutation = useSignUp();
 
-  const { getInputProps, onSubmit } = useForm<LoginForm>({
-    initialValues: { email: "", password: "" },
-    validate: zod4Resolver(loginSchema),
+  const { getInputProps, onSubmit } = useForm<SignUpForm>({
+    initialValues: { name: "", email: "", password: "", confirmPassword: "" },
+    validate: zod4Resolver(signUpSchema),
     validateInputOnBlur: true,
   });
 
-  const handleSubmit = async (values: LoginForm) => {
+  const handleSubmit = async (values: SignUpForm) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...rest } = values;
     setIsLoading(true);
     setError("");
     try {
-      await auth.login(values.email, values.password);
-      toast.success("Login Successful");
-      navigate({ to: redirect });
+      const data = await signUpMutation.mutateAsync(rest);
+      const censoredEmail = censorEmail(data.email);
+      toast.success(`Verification email sent to ${censoredEmail}`);
     } catch (err) {
       let message = "Something went wrong";
       if (err instanceof AxiosError) {
@@ -65,16 +91,23 @@ function Index() {
   return (
     <div className="container">
       <div className="flex items-center justify-center min-h-[calc(100vh-5rem)]">
-        <div className="w-120 pt-2 pb-6 flex flex-col gap-8 h-fit">
+        <div className="w-120 py-20 flex flex-col gap-8 h-fit">
           <div>
             <h1 className="pup-heading-two mb-6 text-neutral-black text-center">
-              Login
+              Sign Up
             </h1>
             <p className="pup-body-md-400 text-neutral-black text-center">
-              Login now to access your account and start planning
+              Create a new account and get started with planning!
             </p>
           </div>
           <form onSubmit={onSubmit(handleSubmit)}>
+            <CustomInput
+              className="mb-6"
+              label="Name"
+              type="text"
+              placeholder="John Doe"
+              inputProps={getInputProps("name")}
+            />
             <CustomInput
               className="mb-6"
               label="Email"
@@ -88,19 +121,25 @@ function Index() {
               type="password"
               inputProps={getInputProps("password")}
             />
+            <CustomInput
+              className="mb-8"
+              label="Confirm Password"
+              type="password"
+              inputProps={getInputProps("confirmPassword")}
+            />
             <PrimaryButton
               isLoading={isLoading}
-              title="Log In"
+              title="Sign Up"
               className="uppercase w-full"
               type="submit"
             />
           </form>
           <div className="flex gap-1 justify-center">
             <p className="pup-body-md-400 text-neutral-black">
-              Don't have an account?
+              Already have an account?
             </p>
-            <Link to="/sign-up" className="pup-body-md-500 text-primary-orange">
-              Sign Up
+            <Link to="/login" className="pup-body-md-500 text-primary-orange">
+              Log In
             </Link>
           </div>
         </div>
