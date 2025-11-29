@@ -1,9 +1,11 @@
 import { queryClient } from "@/utils/queryclient/queryClient";
 import { useLogin, useValidateToken } from "../routes/login/-queries";
 import { AuthContext } from "./AuthContext";
+import { router } from "@/main";
 
 export interface User {
   id: string;
+  email: string;
   name: string;
   profilePicture: string | null;
 }

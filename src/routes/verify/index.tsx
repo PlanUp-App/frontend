@@ -23,6 +23,8 @@ function Index() {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const token = params.get("token");
+  if (!token)
+    router.navigate({ to: "/login", params: { redirect: "dashboard" } });
   const verifyEmailMutation = useVerifyEmail({
     onSuccess: () => {
       toast.success(`Email successfully verified.`);

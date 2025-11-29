@@ -10,7 +10,7 @@ import { AxiosError } from "axios";
 
 export const Route = createFileRoute("/login/")({
   validateSearch: (search) => ({
-    redirect: (search.redirect as string) || "dashboard",
+    redirect: (search.redirect as string) || "/dashboard",
   }),
   beforeLoad: ({ context, search }) => {
     if (context.auth.isAuthenticated) {
@@ -32,7 +32,6 @@ function Index() {
   const navigate = Route.useNavigate();
   const { redirect } = Route.useSearch();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const { getInputProps, onSubmit } = useForm<LoginForm>({
     initialValues: { email: "", password: "" },
@@ -42,7 +41,6 @@ function Index() {
 
   const handleSubmit = async (values: LoginForm) => {
     setIsLoading(true);
-    setError("");
     try {
       await auth.login(values.email, values.password);
       toast.success("Login Successful");
@@ -54,9 +52,8 @@ function Index() {
       } else if (err instanceof Error) {
         message = err.message;
       }
-      setError(message);
       console.log(err);
-      toast.error(error);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
