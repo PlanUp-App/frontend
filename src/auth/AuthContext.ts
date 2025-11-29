@@ -1,10 +1,14 @@
 import { createContext } from "react";
 import type { User } from "./auth";
+import type { UseMutationResult } from "@tanstack/react-query";
+import type { LoginCredentials, LoginResponse } from "@/routes/login/-queries";
+import type { AxiosError } from "axios";
 
 export interface AuthState {
-  isAuthenticated: boolean;
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  loginMutation: UseMutationResult<LoginResponse, AxiosError, LoginCredentials>;
   logout: () => void;
 }
 

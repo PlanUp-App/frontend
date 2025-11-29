@@ -7,14 +7,15 @@ import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { router } from "@/main";
 
 export const Route = createFileRoute("/login/")({
   validateSearch: (search) => ({
-    redirect: (search.redirect as string) || "/dashboard",
+    redirect: search.redirect as string,
   }),
   beforeLoad: ({ context, search }) => {
     if (context.auth.isAuthenticated) {
-      throw redirect({ to: search.redirect });
+      throw redirect({ to: search.redirect || "/my-plans" });
     }
   },
   component: Index,
@@ -29,8 +30,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 function Index() {
   const { auth } = Route.useRouteContext();
-  const navigate = Route.useNavigate();
-  const { redirect } = Route.useSearch();
+  const redirect = Route.useSearch().redirect || "/my-plans";
   const [isLoading, setIsLoading] = useState(false);
 
   const { getInputProps, onSubmit } = useForm<LoginForm>({
@@ -39,24 +39,28 @@ function Index() {
     validateInputOnBlur: true,
   });
 
-  const handleSubmit = async (values: LoginForm) => {
+  const handleSubmit = async ({ email, password }: LoginForm) => {
     setIsLoading(true);
-    try {
-      await auth.login(values.email, values.password);
-      toast.success("Login Successful");
-      navigate({ to: redirect });
-    } catch (err) {
-      let message = "Something went wrong";
-      if (err instanceof AxiosError) {
-        message = err.response?.data?.message ?? err.message;
-      } else if (err instanceof Error) {
-        message = err.message;
+    auth.loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          toast.success("Login Successful");
+          console.log(redirect);
+          router.navigate({ to: redirect });
+        },
+        onError: (err) => {
+          let message = "Something went wrong";
+          if (err instanceof AxiosError) {
+            message = err.response?.data?.message ?? err.message;
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
+          console.log(err);
+          toast.error(message);
+        },
       }
-      console.log(err);
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
+    );
   };
 
   return (

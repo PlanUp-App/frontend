@@ -1,10 +1,9 @@
 import type { User } from "@/auth/auth";
 import axiosInstance from "@/utils/axios/axiosInstance";
-import { queryClient } from "@/utils/queryclient/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export interface Login {
+export interface LoginCredentials {
   email: string;
   password: string;
 }
@@ -16,24 +15,22 @@ export interface LoginResponse {
 }
 
 export const useLogin = () => {
-  return useMutation<LoginResponse, AxiosError, Login>({
-    mutationFn: async (val: Login) => {
+  return useMutation<LoginResponse, AxiosError, LoginCredentials>({
+    mutationFn: async (val: LoginCredentials) => {
       const { data } = await axiosInstance.post("/auth/login", val);
       return data;
-    },
-    onSuccess: () => {
-      queryClient.resetQueries();
     },
     retry: 0,
   });
 };
 
-export const useValidateToken = () => {
+export const useValidateToken = ({ enabled }: { enabled: boolean }) => {
   return useQuery<User>({
     queryKey: ["validate-token"],
     queryFn: async (): Promise<User> => {
       const { data } = await axiosInstance.get("/auth/validate-token");
       return data;
     },
+    enabled,
   });
 };

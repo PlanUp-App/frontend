@@ -1,3 +1,4 @@
+import { router } from "@/main";
 import axios from "axios";
 
 const defaultOptions = {
@@ -18,6 +19,18 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("user");
+      router.navigate({ to: "/login" });
+    }
     return Promise.reject(error);
   }
 );
