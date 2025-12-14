@@ -12,9 +12,9 @@ import { router } from "@/main";
 
 export interface User {
   id: string;
-  email: string;
+  email?: string;
   name: string;
-  profilePicture: string | null;
+  profilePicture?: string | null;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {

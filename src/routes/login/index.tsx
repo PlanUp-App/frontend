@@ -1,5 +1,5 @@
 import { PrimaryButton } from "@/components/Button/primary-filled";
-import { CustomInput } from "@/components/CustomInput";
+import { CustomInput } from "@/components/CustomInput/input";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
@@ -49,7 +49,7 @@ function Index() {
           console.log(redirect);
           router.navigate({ to: redirect });
         },
-        onError: (err) => {
+        onError: (err: unknown) => {
           let message = "Something went wrong";
           if (err instanceof AxiosError) {
             message = err.response?.data?.message ?? err.message;

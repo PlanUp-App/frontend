@@ -1,11 +1,69 @@
-import { useAuth } from "@/auth/useAuth";
+import { PrimaryButton } from "@/components/Button/primary-filled";
+import { SearchInput } from "@/components/CustomInput/search-input";
+import { useDebounce } from "@/components/CustomInput/useDebounce";
+import PlanCard from "@/components/PlanCard";
+import { router } from "@/main";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useGetAllPlans } from "./-queries";
+import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute("/_authenticated/my-plans/")({
   component: Index,
 });
 
 function Index() {
-  const { user } = useAuth();
-  return <div>Hello from my-plans {user?.email}</div>;
+  const search = Route.useSearch().search;
+  const [input, setInput] = useState(search ?? "");
+  const debouncedSearch = useDebounce(input, 300);
+
+  const { data, isLoading, isError } = useGetAllPlans({
+    search: debouncedSearch,
+  });
+
+  useEffect(() => {
+    router.navigate({
+      to: "/my-plans",
+      search: (prev: Record<string, unknown>) => ({
+        ...prev,
+        search: debouncedSearch || undefined, // remove empty param
+      }),
+    });
+  }, [debouncedSearch]);
+
+  return (
+    <section className="py-16">
+      <div className="container">
+        <div className="flex justify-between mb-12">
+          <h1 className="pup-heading-two text-neutral-black">My plans</h1>
+          <PrimaryButton type="button" title="Create New Plan" />
+        </div>
+        <SearchInput
+          placeholder="Search by name..."
+          className="mb-12"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <div className="grid grid-cols-3 gap-6">
+          {isLoading ? (
+            <Spinner />
+          ) : isError ? (
+            "Something went wrong"
+          ) : data ? (
+            data.data.map(({ id, name, coverImage, members }) => (
+              <PlanCard
+                key={id}
+                id={id}
+                name={name}
+                coverImage={coverImage}
+                members={members}
+              />
+            ))
+          ) : (
+            "No plans found. Create a new plan to get started."
+          )}
+        </div>
+      </div>
+    </section>
+  );
 }

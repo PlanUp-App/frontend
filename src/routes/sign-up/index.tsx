@@ -1,5 +1,5 @@
 import { PrimaryButton } from "@/components/Button/primary-filled";
-import { CustomInput } from "@/components/CustomInput";
+import { CustomInput } from "@/components/CustomInput/input";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
