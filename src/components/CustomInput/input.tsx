@@ -3,7 +3,7 @@ import type { GetInputPropsReturnType } from "@mantine/form";
 
 type Props = {
   className?: string;
-  label: string;
+  label?: string;
   placeholder?: string;
   type?: "text" | "password" | "email";
   inputProps?: GetInputPropsReturnType;
@@ -18,9 +18,11 @@ export function CustomInput({
 }: Props) {
   return (
     <div className={className}>
-      <label className="pup-body-md-500 block text-neutral-black mb-1.5">
-        {label}
-      </label>
+      {label && (
+        <label className="pup-body-md-500 block text-neutral-black mb-1.5">
+          {label}
+        </label>
+      )}
       <input
         type={type}
         id={label}

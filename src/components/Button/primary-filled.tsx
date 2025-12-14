@@ -8,6 +8,7 @@ interface PrimaryButtonProps {
   link?: string;
   isLoading?: boolean;
   type?: "button" | "submit" | "reset";
+  onClick?: () => void;
 }
 
 export function PrimaryButton({
@@ -16,6 +17,7 @@ export function PrimaryButton({
   isLoading = false,
   link,
   type = "button",
+  onClick,
 }: PrimaryButtonProps) {
   const baseClasses = twMerge(
     `h-11 flex gap-2 items-center justify-center px-6 text-white rounded-full bg-primary-orange pup-body-md-500 ${isLoading ? "cursor-progress" : "cursor-pointer"}`,
@@ -31,7 +33,12 @@ export function PrimaryButton({
   }
 
   return (
-    <button type={type} className={baseClasses} disabled={isLoading}>
+    <button
+      type={type}
+      className={baseClasses}
+      disabled={isLoading}
+      onClick={onClick}
+    >
       {isLoading && <Spinner />}
       {title}
     </button>
