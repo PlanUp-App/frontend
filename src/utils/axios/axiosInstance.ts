@@ -12,7 +12,7 @@ const axiosInstance = axios.create(defaultOptions);
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("auth_token"); // Changed from "token"
     if (token) {
       config.headers.Authorization = "Bearer " + token;
     }

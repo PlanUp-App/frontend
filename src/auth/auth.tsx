@@ -57,6 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onSuccess: (data) => {
       localStorage.setItem("auth_token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${data.token}`;
       setUser(data.user);
       queryClient.invalidateQueries(); // Refresh all queries
     },
