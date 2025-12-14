@@ -72,6 +72,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.navigate({ to: "/" });
   };
 
+  const updateUser = (updates: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...updates };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -88,6 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         loginMutation,
         logout,
+        updateUser,
       }}
     >
       {children}

@@ -14,6 +14,7 @@ import { Route as VerifyIndexRouteImport } from './routes/verify/index'
 import { Route as SignUpIndexRouteImport } from './routes/sign-up/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AuthenticatedMyPlansIndexRouteImport } from './routes/_authenticated/my-plans/index'
+import { Route as AuthenticatedMyAccountIndexRouteImport } from './routes/_authenticated/my-account/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -41,6 +42,12 @@ const AuthenticatedMyPlansIndexRoute =
     path: '/my-plans/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMyAccountIndexRoute =
+  AuthenticatedMyAccountIndexRouteImport.update({
+    id: '/my-account/',
+    path: '/my-account/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/dashboard/',
@@ -53,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof SignUpIndexRoute
   '/verify': typeof VerifyIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/my-account': typeof AuthenticatedMyAccountIndexRoute
   '/my-plans': typeof AuthenticatedMyPlansIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,6 +68,7 @@ export interface FileRoutesByTo {
   '/sign-up': typeof SignUpIndexRoute
   '/verify': typeof VerifyIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/my-account': typeof AuthenticatedMyAccountIndexRoute
   '/my-plans': typeof AuthenticatedMyPlansIndexRoute
 }
 export interface FileRoutesById {
@@ -69,13 +78,26 @@ export interface FileRoutesById {
   '/sign-up/': typeof SignUpIndexRoute
   '/verify/': typeof VerifyIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/my-account/': typeof AuthenticatedMyAccountIndexRoute
   '/_authenticated/my-plans/': typeof AuthenticatedMyPlansIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/sign-up' | '/verify' | '/dashboard' | '/my-plans'
+  fullPaths:
+    | '/login'
+    | '/sign-up'
+    | '/verify'
+    | '/dashboard'
+    | '/my-account'
+    | '/my-plans'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/sign-up' | '/verify' | '/dashboard' | '/my-plans'
+  to:
+    | '/login'
+    | '/sign-up'
+    | '/verify'
+    | '/dashboard'
+    | '/my-account'
+    | '/my-plans'
   id:
     | '__root__'
     | '/_authenticated'
@@ -83,6 +105,7 @@ export interface FileRouteTypes {
     | '/sign-up/'
     | '/verify/'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/my-account/'
     | '/_authenticated/my-plans/'
   fileRoutesById: FileRoutesById
 }
@@ -130,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMyPlansIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/my-account/': {
+      id: '/_authenticated/my-account/'
+      path: '/my-account'
+      fullPath: '/my-account'
+      preLoaderRoute: typeof AuthenticatedMyAccountIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
       path: '/dashboard'
@@ -142,11 +172,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedMyAccountIndexRoute: typeof AuthenticatedMyAccountIndexRoute
   AuthenticatedMyPlansIndexRoute: typeof AuthenticatedMyPlansIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedMyAccountIndexRoute: AuthenticatedMyAccountIndexRoute,
   AuthenticatedMyPlansIndexRoute: AuthenticatedMyPlansIndexRoute,
 }
 

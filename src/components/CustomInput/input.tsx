@@ -7,6 +7,7 @@ type Props = {
   placeholder?: string;
   type?: "text" | "password" | "email";
   inputProps?: GetInputPropsReturnType;
+  disabled?: boolean;
 };
 
 export function CustomInput({
@@ -15,6 +16,7 @@ export function CustomInput({
   placeholder,
   type = "text",
   inputProps,
+  disabled = false,
 }: Props) {
   return (
     <div className={className}>
@@ -28,7 +30,8 @@ export function CustomInput({
         id={label}
         placeholder={placeholder}
         {...inputProps}
-        className="border-neutral-light-grey border pup-body-medium-400 placeholder:text-neutral-grey text-neutral-black rounded-[8px] px-3.5 py-2.5 w-full"
+        disabled={disabled}
+        className="border-neutral-light-grey border pup-body-medium-400 placeholder:text-neutral-grey text-neutral-black rounded-[8px] px-3.5 py-2.5 w-full disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
       />
       {inputProps?.error && (
         <p className="text-red-500 pup-body-sm-400">{inputProps?.error}</p>

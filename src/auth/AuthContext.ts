@@ -10,6 +10,7 @@ export interface AuthState {
   isLoading: boolean;
   loginMutation: UseMutationResult<LoginResponse, AxiosError, LoginCredentials>;
   logout: () => void;
+  updateUser: (updates: Partial<User>) => void;
 }
 
 export const AuthContext = createContext<AuthState | undefined>(undefined);

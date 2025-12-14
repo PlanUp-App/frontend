@@ -58,7 +58,7 @@ function Index() {
   const [error, setError] = useState("");
   const signUpMutation = useSignUp();
 
-  const { getInputProps, onSubmit } = useForm<SignUpForm>({
+  const { getInputProps, onSubmit, reset } = useForm<SignUpForm>({
     initialValues: { name: "", email: "", password: "", confirmPassword: "" },
     validate: zod4Resolver(signUpSchema),
     validateInputOnBlur: true,
@@ -73,6 +73,7 @@ function Index() {
       const data = await signUpMutation.mutateAsync(rest);
       const censoredEmail = censorEmail(data.email);
       toast.success(`Verification email sent to ${censoredEmail}`);
+      reset();
     } catch (err) {
       let message = "Something went wrong";
       if (err instanceof AxiosError) {

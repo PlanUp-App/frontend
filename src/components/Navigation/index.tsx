@@ -11,25 +11,32 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import type { AuthState } from "@/auth/AuthContext";
+import { router } from "@/main";
+import { ProfileAvatar } from "../PreviewImage";
 
 function NavDropdown({ authData }: { authData: AuthState }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <img
-          className="w-11 h-11 object-cover"
-          src={
-            authData.user?.profilePicture ||
-            "https://cdn.vectorstock.com/i/500p/28/66/gray-profile-silhouette-avatar-vector-21542866.jpg"
-          }
+        <ProfileAvatar
+          src={authData.user?.profilePicture}
+          alt={authData.user?.name}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>{authData.user?.name}</DropdownMenuLabel>
+        <DropdownMenuLabel className="pup-body-md-500">
+          {authData.user?.name}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          onClick={() => router.navigate({ to: "/my-account" })}
+          className="pup-body-md-400 hover:cursor-pointer"
+        >
+          My Account
+        </DropdownMenuItem>
+        <DropdownMenuItem
           onClick={authData.logout}
-          className="text-red-400 hover:text-red-400"
+          className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
         >
           Log Out
         </DropdownMenuItem>
@@ -44,7 +51,7 @@ export function Navigation() {
   return (
     <nav className="w-full bg-white h-20 flex items-center z-50">
       <div className="container flex justify-between">
-        <Link to="/">
+        <Link to={authData.user ? "/my-plans" : "/"}>
           <img src="/planup-logo.svg" />
         </Link>
         {authData.isAuthenticated ? (
