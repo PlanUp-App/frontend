@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as VerifyIndexRouteImport } from './routes/verify/index'
@@ -16,6 +18,13 @@ import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AuthenticatedMyPlansIndexRouteImport } from './routes/_authenticated/my-plans/index'
 import { Route as AuthenticatedMyAccountIndexRouteImport } from './routes/_authenticated/my-account/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedMyPlansPlanIdIndexRouteImport } from './routes/_authenticated/my-plans/$plan-id/index'
+import { Route as AuthenticatedMyPlansPlanIdLayoutRouteImport } from './routes/_authenticated/my-plans/$plan-id/_layout'
+import { Route as AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport } from './routes/_authenticated/my-plans/$plan-id/_layout/dashboard/index'
+
+const AuthenticatedMyPlansPlanIdRouteImport = createFileRoute(
+  '/_authenticated/my-plans/$plan-id',
+)()
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -36,6 +45,12 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMyPlansPlanIdRoute =
+  AuthenticatedMyPlansPlanIdRouteImport.update({
+    id: '/my-plans/$plan-id',
+    path: '/my-plans/$plan-id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedMyPlansIndexRoute =
   AuthenticatedMyPlansIndexRouteImport.update({
     id: '/my-plans/',
@@ -54,6 +69,23 @@ const AuthenticatedDashboardIndexRoute =
     path: '/dashboard/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMyPlansPlanIdIndexRoute =
+  AuthenticatedMyPlansPlanIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedMyPlansPlanIdRoute,
+  } as any)
+const AuthenticatedMyPlansPlanIdLayoutRoute =
+  AuthenticatedMyPlansPlanIdLayoutRouteImport.update({
+    id: '/_layout',
+    getParentRoute: () => AuthenticatedMyPlansPlanIdRoute,
+  } as any)
+const AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute =
+  AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => AuthenticatedMyPlansPlanIdLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginIndexRoute
@@ -62,6 +94,9 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/my-account': typeof AuthenticatedMyAccountIndexRoute
   '/my-plans': typeof AuthenticatedMyPlansIndexRoute
+  '/my-plans/$plan-id': typeof AuthenticatedMyPlansPlanIdLayoutRouteWithChildren
+  '/my-plans/$plan-id/': typeof AuthenticatedMyPlansPlanIdIndexRoute
+  '/my-plans/$plan-id/dashboard': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginIndexRoute
@@ -70,6 +105,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/my-account': typeof AuthenticatedMyAccountIndexRoute
   '/my-plans': typeof AuthenticatedMyPlansIndexRoute
+  '/my-plans/$plan-id': typeof AuthenticatedMyPlansPlanIdIndexRoute
+  '/my-plans/$plan-id/dashboard': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +117,10 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/my-account/': typeof AuthenticatedMyAccountIndexRoute
   '/_authenticated/my-plans/': typeof AuthenticatedMyPlansIndexRoute
+  '/_authenticated/my-plans/$plan-id': typeof AuthenticatedMyPlansPlanIdRouteWithChildren
+  '/_authenticated/my-plans/$plan-id/_layout': typeof AuthenticatedMyPlansPlanIdLayoutRouteWithChildren
+  '/_authenticated/my-plans/$plan-id/': typeof AuthenticatedMyPlansPlanIdIndexRoute
+  '/_authenticated/my-plans/$plan-id/_layout/dashboard/': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,6 +131,9 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/my-account'
     | '/my-plans'
+    | '/my-plans/$plan-id'
+    | '/my-plans/$plan-id/'
+    | '/my-plans/$plan-id/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -98,6 +142,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/my-account'
     | '/my-plans'
+    | '/my-plans/$plan-id'
+    | '/my-plans/$plan-id/dashboard'
   id:
     | '__root__'
     | '/_authenticated'
@@ -107,6 +153,10 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/'
     | '/_authenticated/my-account/'
     | '/_authenticated/my-plans/'
+    | '/_authenticated/my-plans/$plan-id'
+    | '/_authenticated/my-plans/$plan-id/_layout'
+    | '/_authenticated/my-plans/$plan-id/'
+    | '/_authenticated/my-plans/$plan-id/_layout/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -146,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/my-plans/$plan-id': {
+      id: '/_authenticated/my-plans/$plan-id'
+      path: '/my-plans/$plan-id'
+      fullPath: '/my-plans/$plan-id'
+      preLoaderRoute: typeof AuthenticatedMyPlansPlanIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/my-plans/': {
       id: '/_authenticated/my-plans/'
       path: '/my-plans'
@@ -167,19 +224,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/my-plans/$plan-id/': {
+      id: '/_authenticated/my-plans/$plan-id/'
+      path: '/'
+      fullPath: '/my-plans/$plan-id/'
+      preLoaderRoute: typeof AuthenticatedMyPlansPlanIdIndexRouteImport
+      parentRoute: typeof AuthenticatedMyPlansPlanIdRoute
+    }
+    '/_authenticated/my-plans/$plan-id/_layout': {
+      id: '/_authenticated/my-plans/$plan-id/_layout'
+      path: '/my-plans/$plan-id'
+      fullPath: '/my-plans/$plan-id'
+      preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutRouteImport
+      parentRoute: typeof AuthenticatedMyPlansPlanIdRoute
+    }
+    '/_authenticated/my-plans/$plan-id/_layout/dashboard/': {
+      id: '/_authenticated/my-plans/$plan-id/_layout/dashboard/'
+      path: '/dashboard'
+      fullPath: '/my-plans/$plan-id/dashboard'
+      preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedMyPlansPlanIdLayoutRoute
+    }
   }
 }
+
+interface AuthenticatedMyPlansPlanIdLayoutRouteChildren {
+  AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
+}
+
+const AuthenticatedMyPlansPlanIdLayoutRouteChildren: AuthenticatedMyPlansPlanIdLayoutRouteChildren =
+  {
+    AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute:
+      AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute,
+  }
+
+const AuthenticatedMyPlansPlanIdLayoutRouteWithChildren =
+  AuthenticatedMyPlansPlanIdLayoutRoute._addFileChildren(
+    AuthenticatedMyPlansPlanIdLayoutRouteChildren,
+  )
+
+interface AuthenticatedMyPlansPlanIdRouteChildren {
+  AuthenticatedMyPlansPlanIdLayoutRoute: typeof AuthenticatedMyPlansPlanIdLayoutRouteWithChildren
+  AuthenticatedMyPlansPlanIdIndexRoute: typeof AuthenticatedMyPlansPlanIdIndexRoute
+}
+
+const AuthenticatedMyPlansPlanIdRouteChildren: AuthenticatedMyPlansPlanIdRouteChildren =
+  {
+    AuthenticatedMyPlansPlanIdLayoutRoute:
+      AuthenticatedMyPlansPlanIdLayoutRouteWithChildren,
+    AuthenticatedMyPlansPlanIdIndexRoute: AuthenticatedMyPlansPlanIdIndexRoute,
+  }
+
+const AuthenticatedMyPlansPlanIdRouteWithChildren =
+  AuthenticatedMyPlansPlanIdRoute._addFileChildren(
+    AuthenticatedMyPlansPlanIdRouteChildren,
+  )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedMyAccountIndexRoute: typeof AuthenticatedMyAccountIndexRoute
   AuthenticatedMyPlansIndexRoute: typeof AuthenticatedMyPlansIndexRoute
+  AuthenticatedMyPlansPlanIdRoute: typeof AuthenticatedMyPlansPlanIdRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   AuthenticatedMyAccountIndexRoute: AuthenticatedMyAccountIndexRoute,
   AuthenticatedMyPlansIndexRoute: AuthenticatedMyPlansIndexRoute,
+  AuthenticatedMyPlansPlanIdRoute: AuthenticatedMyPlansPlanIdRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
