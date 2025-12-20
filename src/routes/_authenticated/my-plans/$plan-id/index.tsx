@@ -11,5 +11,5 @@ export const Route = createFileRoute("/_authenticated/my-plans/$plan-id/")({
 });
 
 function RouteComponent() {
-  return <div>Hello "/_authenticated/my-plans/$plan-id/"!</div>;
+  return <div>Loading plan</div>;
 }

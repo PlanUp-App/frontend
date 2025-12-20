@@ -15,7 +15,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Link, useMatchRoute } from "@tanstack/react-router";
+import { Link, useLocation, useMatchRoute } from "@tanstack/react-router";
 import {
   MdOutlineAttachMoney,
   MdOutlineDashboard,
@@ -34,17 +34,14 @@ function NavItem({
   icon: any;
   label: string;
 }) {
-  const matchRoute = useMatchRoute();
-  const isActive = !!matchRoute({ to });
+  const location = useLocation();
+  const isActive = location.pathname === to;
 
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
-        className={cn(
-          "flex gap-3 px-4 py-2 h-10 [&>svg]:size-6! rounded-2 text-neutral-black",
-          isActive &&
-            "bg-white text-dark-blue shadow-[1px_2px_5px_rgba(0,0,0,0.08)]"
-        )}
+        data-active={isActive}
+        className="flex gap-3 px-4 py-2 h-10 [&>svg]:size-6! rounded-2 text-neutral-black data-[active=true]:bg-white data-[active=true]:text-dark-blue data-[active=true]:shadow-[1px_2px_5px_rgba(0,0,0,0.08)]"
         asChild
       >
         <Link to={to}>
@@ -102,11 +99,8 @@ export function AppSidebar({ planId }: { planId: string }) {
     },
   });
 
-  const matchRoute = useMatchRoute();
-  const isPhasesActive = !!matchRoute({
-    to: "/my-plans/$planId/phases",
-    params: { planId },
-  });
+  const location = useLocation();
+  const isPhasesActive = location.pathname === `/my-plans/${planId}/phases`;
 
   return (
     <Sidebar>
@@ -124,25 +118,26 @@ export function AppSidebar({ planId }: { planId: string }) {
           />
           <SidebarMenuItem>
             <Collapsible defaultOpen className="group/collapsible">
-              <div className="flex items-center">
-                {/* Clickable link that takes most of the space */}
-                <SidebarMenuButton
-                  className={cn(
-                    "flex-1 flex gap-3 px-4 py-2 h-10 [&>svg]:size-6! rounded-2",
-                    isPhasesActive &&
-                      "bg-white text-dark-blue shadow-[1px_2px_5px_rgba(0,0,0,0.08)]"
-                  )}
-                  asChild
-                >
-                  <Link to="/my-plans/$planId/phases" params={{ planId }}>
+              <div
+                className={cn(
+                  "rounded-[8px] flex items-center gap-3 px-4 py-2 h-10 rounded-2 cursor-pointer",
+                  isPhasesActive &&
+                    "bg-white text-dark-blue shadow-[1px_2px_5px_rgba(0,0,0,0.08)]"
+                )}
+              >
+                <CollapsibleTrigger asChild>
+                  <Link
+                    to="/my-plans/$planId/phases"
+                    params={{ planId }}
+                    className="flex items-center gap-3 flex-1"
+                  >
                     <MdOutlineLayers className="size-6" />
                     <span className="pup-body-md-500">Phases</span>
                   </Link>
-                </SidebarMenuButton>
+                </CollapsibleTrigger>
 
-                {/* Collapsible trigger for the chevron only */}
                 <CollapsibleTrigger asChild>
-                  <button className="px-2 py-2">
+                  <button className="p-0">
                     <MdChevronRight className="size-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
                   </button>
                 </CollapsibleTrigger>

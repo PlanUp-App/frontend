@@ -15,7 +15,7 @@ function RouteComponent() {
     <SidebarProvider>
       <AppSidebar planId={planId} />
       <SidebarInset>
-        <main>
+        <main className="px-16">
           <Outlet />
         </main>
       </SidebarInset>
