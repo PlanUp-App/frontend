@@ -11,6 +11,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UpdatePhaseDialog } from "@/components/Modals/update-phase";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$plan-id/_layout/phases/"
@@ -23,37 +24,52 @@ function PhaseCard({
   order,
   name,
   onClick,
+  planId,
 }: {
   id: string;
   order: number;
   name: string;
   onClick: (id: string) => unknown;
+  planId: string;
 }) {
+  const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
   return (
-    <div className="flex justify-between items-center border-b border-b-off-white py-3">
-      <div className="flex gap-4 items-center">
-        <div className="flex justify-center items-center h-14 w-14 rounded-[4px] pup-body-xl-700 shadow-[1px_2px_5px_rgba(0,0,0,0.18)] bg-white">
-          {order}
+    <>
+      <UpdatePhaseDialog
+        phaseName={name}
+        phaseId={id}
+        open={updateModalIsOpen}
+        onOpenChange={setUpdateModalIsOpen}
+        planId={planId}
+      />
+      <div className="flex justify-between items-center border-b border-b-off-white py-3">
+        <div className="flex gap-4 items-center">
+          <div className="flex justify-center items-center h-14 w-14 rounded-[4px] pup-body-xl-700 shadow-[1px_2px_5px_rgba(0,0,0,0.18)] bg-white">
+            {order}
+          </div>
+          <h3 className="pup-body-xl-400">{name}</h3>
         </div>
-        <h3 className="pup-body-xl-400">{name}</h3>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <MdOutlineMoreVert size={24} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              className="pup-body-md-400 hover:cursor-pointer"
+              onClick={() => setUpdateModalIsOpen(true)}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
+              onClick={() => onClick(id)}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <MdOutlineMoreVert size={24} />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem className="pup-body-md-400 hover:cursor-pointer">
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
-            onClick={() => onClick(id)}
-          >
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    </>
   );
 }
 
@@ -62,6 +78,7 @@ function RouteComponent() {
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
   const { data: phases, isLoading } = useGetPhases(planId);
   const deletePhaseMutation = useDeletePhase(planId);
+  console.log("PlanID: ", planId);
 
   return (
     <>
@@ -96,6 +113,7 @@ function RouteComponent() {
                 key={phase.id}
                 order={index + 1}
                 onClick={deletePhaseMutation.mutate}
+                planId={planId}
               />
             );
           })

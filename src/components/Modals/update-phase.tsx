@@ -9,35 +9,39 @@ import axiosInstance from "@/utils/axios/axiosInstance";
 import { queryClient } from "@/utils/queryclient/queryClient";
 import { toast } from "sonner";
 
-interface CreatePhaseDialog {
+interface UpdatePhaseDialog {
+  phaseName: string;
+  phaseId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   planId: string;
 }
 
-export function CreatePhaseDialog({
+export function UpdatePhaseDialog({
+  phaseName,
+  phaseId,
   open,
   onOpenChange,
   planId,
-}: CreatePhaseDialog) {
-  const createPhaseSchema = z.object({
+}: UpdatePhaseDialog) {
+  const updatePhaseSchema = z.object({
     name: z
       .string()
       .nonempty()
       .min(2, { message: "Name must be atleast 2 characters" }),
   });
-  type CreatePhaseForm = z.infer<typeof createPhaseSchema>;
+  type UpdatePhaseForm = z.infer<typeof updatePhaseSchema>;
 
-  const { getInputProps, onSubmit, reset } = useForm<CreatePhaseForm>({
-    initialValues: { name: "" },
-    validate: zod4Resolver(createPhaseSchema),
+  const { getInputProps, onSubmit, reset } = useForm<UpdatePhaseForm>({
+    initialValues: { name: phaseName },
+    validate: zod4Resolver(updatePhaseSchema),
     validateInputOnBlur: true,
   });
-
-  const createPhaseMutation = useMutation({
-    mutationFn: async (data: CreatePhaseForm) => {
-      const response = await axiosInstance.post(
-        `/plans/${planId}/phases`,
+  console.log(planId);
+  const updatePhaseMutation = useMutation({
+    mutationFn: async (data: UpdatePhaseForm) => {
+      const response = await axiosInstance.patch(
+        `/plans/${planId}/phases/${phaseId}`,
         data
       );
       return response.data;
@@ -46,25 +50,25 @@ export function CreatePhaseDialog({
       queryClient.invalidateQueries({ queryKey: ["phases"] });
       onOpenChange(false);
       reset();
-      toast.success(`Phase Created Successfully`);
+      toast.success(`Phase updated successfully`);
     },
     onError: (error) => {
-      toast.error("Phase could not be created");
+      toast.error(`Phase could not be updated`);
       console.error(error);
     },
   });
 
   const handleSubmit = onSubmit((values) => {
-    createPhaseMutation.mutate(values);
+    updatePhaseMutation.mutate(values);
   });
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader className="mb-2">
-          <h3 className="pup-heading-three">Create New Phase</h3>
+          <h3 className="pup-heading-three">Update Phase</h3>
           <p className="pup-body-sm-400 text-neutral-dark-grey">
-            Create a new phase by typing in the name
+            Update your existing phase
           </p>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -75,10 +79,10 @@ export function CreatePhaseDialog({
             inputProps={getInputProps("name")}
           />
           <PrimaryButton
-            title="Create"
+            title="Update"
             className="uppercase w-full"
             type="submit"
-            isLoading={createPhaseMutation.isPending}
+            isLoading={updatePhaseMutation.isPending}
           />
         </form>
       </DialogContent>
