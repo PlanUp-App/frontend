@@ -23,7 +23,10 @@ import {
   MdChevronRight,
   MdOutlineLayers,
 } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
+import {
+  useGetPhases,
+  type Phase,
+} from "@/routes/_authenticated/my-plans/$plan-id/_layout/phases/-queries";
 
 function NavItem({
   to,
@@ -63,11 +66,10 @@ function PhaseSubItem({
   label: string;
 }) {
   const matchRoute = useMatchRoute();
-  // const isActive = !!matchRoute({
-  //   to: "/my-plans/$planId/phases/$phaseId",
-  //   params: { planId, phaseId },
-  // });
-  const isActive = !true;
+  const isActive = !!matchRoute({
+    to: "/my-plans/$planId/phases/$phaseId",
+    params: { planId, phaseId },
+  });
 
   return (
     <SidebarMenuSubItem>
@@ -91,13 +93,7 @@ function PhaseSubItem({
 }
 
 export function AppSidebar({ planId }: { planId: string }) {
-  const { data: phases, isLoading } = useQuery({
-    queryKey: ["phases", planId],
-    queryFn: async () => {
-      const res = await fetch(`/api/plans/${planId}/phases`);
-      return res.json();
-    },
-  });
+  const { data: phases, isLoading } = useGetPhases(planId);
 
   const location = useLocation();
   const isPhasesActive = location.pathname === `/my-plans/${planId}/phases`;
@@ -117,7 +113,11 @@ export function AppSidebar({ planId }: { planId: string }) {
             label="Dashboard"
           />
           <SidebarMenuItem>
-            <Collapsible defaultOpen className="group/collapsible">
+            <Collapsible
+              defaultOpen={false}
+              className="group/collapsible"
+              open={isPhasesActive}
+            >
               <div
                 className={cn(
                   "rounded-[8px] flex items-center gap-3 px-4 py-2 h-10 rounded-2 cursor-pointer",
@@ -151,8 +151,8 @@ export function AppSidebar({ planId }: { planId: string }) {
                         Loading...
                       </span>
                     </SidebarMenuSubItem>
-                  ) : (
-                    phases?.map((phase: any) => (
+                  ) : phases?.data && phases.data.length > 0 ? (
+                    phases.data.map((phase: Phase) => (
                       <PhaseSubItem
                         key={phase.id}
                         planId={planId}
@@ -160,6 +160,8 @@ export function AppSidebar({ planId }: { planId: string }) {
                         label={phase.name}
                       />
                     ))
+                  ) : (
+                    <div>Add a phase</div>
                   )}
                 </SidebarMenuSub>
               </CollapsibleContent>

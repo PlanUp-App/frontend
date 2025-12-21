@@ -10,7 +10,6 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { "plan-id": planId } = Route.useParams();
-  console.log("Plan:", planId);
   return (
     <SidebarProvider>
       <AppSidebar planId={planId} />

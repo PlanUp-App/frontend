@@ -7,5 +7,5 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  return <div className="pup-heading-three">Dashboard</div>;
+  return <div className="pup-heading-three">Dashboard - Plan Name</div>;
 }
