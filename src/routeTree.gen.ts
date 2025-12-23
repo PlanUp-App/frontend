@@ -23,6 +23,7 @@ import { Route as AuthenticatedMyPlansPlanIdLayoutRouteImport } from './routes/_
 import { Route as AuthenticatedMyPlansPlanIdLayoutPhasesIndexRouteImport } from './routes/_authenticated/my-plans/$plan-id/_layout/phases/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport } from './routes/_authenticated/my-plans/$plan-id/_layout/dashboard/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutBillsIndexRouteImport } from './routes/_authenticated/my-plans/$plan-id/_layout/bills/index'
+import { Route as AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRouteImport } from './routes/_authenticated/my-plans/$plan-id/_layout/phases/$phase-id/index'
 
 const AuthenticatedMyPlansPlanIdRouteImport = createFileRoute(
   '/_authenticated/my-plans/$plan-id',
@@ -100,6 +101,12 @@ const AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute =
     path: '/bills/',
     getParentRoute: () => AuthenticatedMyPlansPlanIdLayoutRoute,
   } as any)
+const AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute =
+  AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRouteImport.update({
+    id: '/phases/$phase-id/',
+    path: '/phases/$phase-id/',
+    getParentRoute: () => AuthenticatedMyPlansPlanIdLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginIndexRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/my-plans/$plan-id/bills': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   '/my-plans/$plan-id/dashboard': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   '/my-plans/$plan-id/phases': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
+  '/my-plans/$plan-id/phases/$phase-id': typeof AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginIndexRoute
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
   '/my-plans/$plan-id/bills': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   '/my-plans/$plan-id/dashboard': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   '/my-plans/$plan-id/phases': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
+  '/my-plans/$plan-id/phases/$phase-id': typeof AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -141,6 +150,7 @@ export interface FileRoutesById {
   '/_authenticated/my-plans/$plan-id/_layout/bills/': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   '/_authenticated/my-plans/$plan-id/_layout/dashboard/': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   '/_authenticated/my-plans/$plan-id/_layout/phases/': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
+  '/_authenticated/my-plans/$plan-id/_layout/phases/$phase-id/': typeof AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/my-plans/$plan-id/bills'
     | '/my-plans/$plan-id/dashboard'
     | '/my-plans/$plan-id/phases'
+    | '/my-plans/$plan-id/phases/$phase-id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/my-plans/$plan-id/bills'
     | '/my-plans/$plan-id/dashboard'
     | '/my-plans/$plan-id/phases'
+    | '/my-plans/$plan-id/phases/$phase-id'
   id:
     | '__root__'
     | '/_authenticated'
@@ -183,6 +195,7 @@ export interface FileRouteTypes {
     | '/_authenticated/my-plans/$plan-id/_layout/bills/'
     | '/_authenticated/my-plans/$plan-id/_layout/dashboard/'
     | '/_authenticated/my-plans/$plan-id/_layout/phases/'
+    | '/_authenticated/my-plans/$plan-id/_layout/phases/$phase-id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRouteImport
       parentRoute: typeof AuthenticatedMyPlansPlanIdLayoutRoute
     }
+    '/_authenticated/my-plans/$plan-id/_layout/phases/$phase-id/': {
+      id: '/_authenticated/my-plans/$plan-id/_layout/phases/$phase-id/'
+      path: '/phases/$phase-id'
+      fullPath: '/my-plans/$plan-id/phases/$phase-id'
+      preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRouteImport
+      parentRoute: typeof AuthenticatedMyPlansPlanIdLayoutRoute
+    }
   }
 }
 
@@ -292,6 +312,7 @@ interface AuthenticatedMyPlansPlanIdLayoutRouteChildren {
   AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
+  AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute
 }
 
 const AuthenticatedMyPlansPlanIdLayoutRouteChildren: AuthenticatedMyPlansPlanIdLayoutRouteChildren =
@@ -302,6 +323,8 @@ const AuthenticatedMyPlansPlanIdLayoutRouteChildren: AuthenticatedMyPlansPlanIdL
       AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute,
     AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute:
       AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute,
+    AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute:
+      AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRoute,
   }
 
 const AuthenticatedMyPlansPlanIdLayoutRouteWithChildren =

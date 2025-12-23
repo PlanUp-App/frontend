@@ -1,7 +1,7 @@
 import { OutlineButton } from "@/components/Button/outline";
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { CreatePhaseDialog } from "@/components/Modals/create-phase";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { useDeletePhase, useGetPhases } from "./-queries";
@@ -47,7 +47,9 @@ function PhaseCard({
           <div className="flex justify-center items-center h-14 w-14 rounded-[4px] pup-body-xl-700 shadow-[1px_2px_5px_rgba(0,0,0,0.18)] bg-white">
             {order}
           </div>
-          <h3 className="pup-body-xl-400">{name}</h3>
+          <Link to={`/plans/${planId}/phases/${id}`}>
+            <h3 className="pup-body-xl-400">{name}</h3>
+          </Link>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger>
