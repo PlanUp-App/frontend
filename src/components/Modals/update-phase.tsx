@@ -37,7 +37,7 @@ export function UpdatePhaseDialog({
     validate: zod4Resolver(updatePhaseSchema),
     validateInputOnBlur: true,
   });
-  console.log(planId);
+
   const updatePhaseMutation = useMutation({
     mutationFn: async (data: UpdatePhaseForm) => {
       const response = await axiosInstance.patch(
