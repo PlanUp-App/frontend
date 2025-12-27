@@ -40,7 +40,6 @@ export const useReorderPhase = (planId: string) =>
   useMutation({
     mutationFn: async (phases: Phase[]) => {
       const phaseOrder = phases.map((phase, index) => ({
-        name: phase.name,
         id: phase.id,
         order: index,
       }));
