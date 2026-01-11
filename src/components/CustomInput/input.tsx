@@ -8,6 +8,8 @@ type Props = {
   type?: "text" | "password" | "email";
   inputProps?: GetInputPropsReturnType;
   disabled?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
 };
 
 export function CustomInput({
@@ -17,6 +19,8 @@ export function CustomInput({
   type = "text",
   inputProps,
   disabled = false,
+  value,
+  onChange,
 }: Props) {
   return (
     <div className={className}>

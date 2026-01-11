@@ -121,6 +121,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.ProseMirror {
+  min-height: 150px; /* ensures typing area matches wrapper */
+  outline: none; /* remove default focus outline */
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
