@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 
 interface DatePickerProps {
-  date?: string; // parent sees string
+  date?: string;
   setDate: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
@@ -47,6 +47,7 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
             mode="single"
             selected={internalDate}
             captionLayout="dropdown"
+            disabled={(date) => date <= new Date()}
             onSelect={(date) => {
               setInternalDate(date);
               setDate(
