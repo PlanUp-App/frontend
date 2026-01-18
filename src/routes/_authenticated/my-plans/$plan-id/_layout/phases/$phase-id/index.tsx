@@ -1,6 +1,7 @@
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import TaskCard from "@/components/TaskCard";
-import TaskDrawer from "@/components/TaskDrawer";
+import TaskDrawer from "@/components/TaskDrawer/add-task";
+import ViewTaskDrawer from "@/components/TaskDrawer/view-task";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { MdOutlineAddCircleOutline } from "react-icons/md";
@@ -26,6 +27,8 @@ function RouteComponent() {
   ];
 
   const [addTaskIsOpen, setAddTaskIsOpen] = useState(false);
+  const [viewTaskIsOpen, setViewTaskIsOpen] = useState(true);
+  const [viewTask, setViewTask] = useState("gFvqHVEH");
   const { "plan-id": planId, "phase-id": phaseId } = Route.useParams();
 
   return (
@@ -35,6 +38,13 @@ function RouteComponent() {
         onOpenChange={setAddTaskIsOpen}
         planId={planId}
         phaseId={phaseId}
+      />
+      <ViewTaskDrawer
+        open={viewTaskIsOpen}
+        onOpenChange={setViewTaskIsOpen}
+        planId={planId}
+        phaseId={phaseId}
+        taskId={viewTask}
       />
       {/* Heading section */}
       <div className="flex justify-between mb-12">

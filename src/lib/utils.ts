@@ -18,3 +18,11 @@ export function censorEmail(email: string): string {
 
   return `${visible}${hidden}@${domain}`;
 }
+
+export const dateFormat = (date: string) => {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(date));
+};

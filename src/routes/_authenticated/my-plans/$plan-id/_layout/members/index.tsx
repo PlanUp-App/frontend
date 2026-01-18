@@ -12,53 +12,13 @@ import { useState } from "react";
 import { MdOutlineMoreVert } from "react-icons/md";
 import { useGetMembers } from "./-queries";
 import { Spinner } from "@/components/ui/spinner";
+import MemberCard from "@/components/MemberCard";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$plan-id/_layout/members/",
 )({
   component: RouteComponent,
 });
-
-type MemberCardProps = {
-  id: string;
-  name: string;
-  email?: string;
-  profilePicture?: string | null;
-  isOwner?: boolean;
-};
-
-function MemberCard({
-  id,
-  name,
-  email,
-  profilePicture,
-  isOwner = false,
-}: MemberCardProps) {
-  return (
-    <div className="py-3 flex justify-between w-full border-b border-b-off-white">
-      <div className="flex gap-4">
-        <ProfileAvatar src={profilePicture} alt={name} className="w-14 h-14" />
-        <div>
-          <h3 className="pup-body-xl-400 text-neutral-black">{`${name}${isOwner ? " (Owner)" : ""}`}</h3>
-          <span className="pup-body-sm-400 text-neutral-grey">{email}</span>
-        </div>
-      </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <MdOutlineMoreVert size={24} />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
-            // onClick={() => onClick(id)}
-          >
-            Remove
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-}
 
 function RouteComponent() {
   const { "plan-id": planId } = Route.useParams();

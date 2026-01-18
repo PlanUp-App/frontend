@@ -15,8 +15,10 @@ import TextEditor from "../TextEditor";
 import MemberSelect, { type MemberOption } from "../MemberSelect";
 import { useGetMembers } from "@/routes/_authenticated/my-plans/$plan-id/_layout/members/-queries";
 import { Spinner } from "../ui/spinner";
-import { useCreateTask } from "./-queries";
+import { useCreateTask, useUpdateTask } from "./-queries";
 import { toast } from "sonner";
+import { queryClient } from "@/utils/queryclient/queryClient";
+import { dateFormat } from "@/lib/utils";
 
 const schema = z.object({
   name: z
@@ -26,39 +28,60 @@ const schema = z.object({
     .default(""),
 });
 
-const dateFormat = (date: string) => {
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(date));
-};
+interface TaskDrawerInitialData {
+  name: string;
+  description: string;
+  dueDate: string;
+  assignee: MemberOption | null;
+  taskId: string;
+}
+
+interface TaskDrawerProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  planId: string;
+  phaseId: string;
+  initialData?: TaskDrawerInitialData;
+  onClose?: () => void;
+}
 
 export default function TaskDrawer({
   open,
   onOpenChange,
   planId,
   phaseId,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  planId: string;
-  phaseId: string;
-}) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("<p></p>");
-  const [assignee, setAssignee] = useState<MemberOption | null>(null);
+  initialData,
+  onClose,
+}: TaskDrawerProps) {
+  const [name, setName] = useState(initialData?.name ?? "");
+  const [description, setDescription] = useState(
+    initialData?.description ?? "<p></p>",
+  );
+  const [assignee, setAssignee] = useState<MemberOption | null>(
+    initialData?.assignee ?? null,
+  );
   const [errors, setErrors] = useState<string>("");
 
   const { data, isLoading } = useGetMembers(planId);
-  const [date, setDate] = useState<string>(() => {
-    const now = new Date();
-    return dateFormat(now.toISOString());
-  });
+  const [date, setDate] = useState<string>(
+    initialData?.dueDate || new Date().toISOString(),
+  );
 
   const createTaskMutation = useCreateTask(planId, phaseId);
+  const updateTaskMutation = useUpdateTask(
+    planId,
+    phaseId,
+    initialData?.taskId ?? "",
+  );
 
   const handleSubmit = () => {
+    const payload = {
+      name,
+      description,
+      dueDate: date,
+      assigneeId: assignee?.value,
+    };
+
     const result = schema.safeParse({
       name,
     });
@@ -71,26 +94,33 @@ export default function TaskDrawer({
       setErrors(nameErrors.join(", "));
       console.log(nameErrors);
     } else {
-      createTaskMutation.mutate(
-        {
-          name: name,
-          dueDate: date,
-          assigneeId: assignee?.value,
-          description,
-        },
-        {
+      if (!initialData)
+        createTaskMutation.mutate(payload, {
           onSuccess: () => {
             toast.success(`Task created successfully`);
             setName("");
             setErrors("");
             setAssignee(null);
             onOpenChange(false);
+            queryClient.invalidateQueries({ queryKey: ["tasks", phaseId] });
           },
           onError: (data) => {
             toast.error(`Task could not be created: ${data.message}`);
           },
-        },
-      );
+        });
+      else
+        updateTaskMutation.mutate(payload, {
+          onSuccess: () => {
+            onClose?.();
+            toast.success(`Task updated successfully`);
+            queryClient.invalidateQueries({
+              queryKey: ["tasks", phaseId, initialData.taskId],
+            });
+          },
+          onError: (data) => {
+            toast.error(`Task could not be updated: ${data.message}`);
+          },
+        });
     }
   };
 

@@ -12,14 +12,19 @@ import StarterKit from "@tiptap/starter-kit";
 
 const extensions = [
   StarterKit.configure({
+    paragraph: {
+      HTMLAttributes: {
+        class: "mb-2 pup-body-md-400",
+      },
+    },
     orderedList: {
       HTMLAttributes: {
-        class: "list-decimal",
+        class: "list-decimal ml-6",
       },
     },
     bulletList: {
       HTMLAttributes: {
-        class: "list-disc",
+        class: "list-disc ml-6",
       },
     },
     code: {
@@ -29,18 +34,7 @@ const extensions = [
     },
     horizontalRule: {
       HTMLAttributes: {
-        class: "my-2",
-      },
-    },
-    codeBlock: {
-      HTMLAttributes: {
-        class: "bg-primary text-primary-foreground p-2 text-sm rounded-md p-1",
-      },
-    },
-    heading: {
-      levels: [1, 2, 3, 4],
-      HTMLAttributes: {
-        class: "tiptap-heading",
+        class: "my-4",
       },
     },
   }),
