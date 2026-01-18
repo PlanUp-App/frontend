@@ -94,7 +94,7 @@ export default function TaskDrawer({
       setErrors(nameErrors.join(", "));
       console.log(nameErrors);
     } else {
-      if (!initialData)
+      if (!initialData?.taskId)
         createTaskMutation.mutate(payload, {
           onSuccess: () => {
             toast.success(`Task created successfully`);
@@ -114,7 +114,7 @@ export default function TaskDrawer({
             onClose?.();
             toast.success(`Task updated successfully`);
             queryClient.invalidateQueries({
-              queryKey: ["tasks", phaseId, initialData.taskId],
+              queryKey: ["tasks", phaseId],
             });
           },
           onError: (data) => {

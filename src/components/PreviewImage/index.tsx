@@ -48,7 +48,7 @@ export function ProfileAvatar({
       src={src}
       alt={alt}
       className={`${sizeClasses[size]} ${className} ${borderClass}
-                  rounded-full object-cover shadow-md shrink-0`}
+                  rounded-full object-cover shadow-md shrink-0 aspect-square`}
     />
   );
 }
