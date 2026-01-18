@@ -1,22 +1,11 @@
+import type { User } from "@/auth/auth";
 import axiosInstance from "@/utils/axios/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 
 export interface Members {
   id: string;
-  owner: {
-    id: string;
-    name: string;
-    email: string;
-    profilePicture: string | null;
-  };
-  members: {
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      profilePicture: string | null;
-    };
-  }[];
+  owner: User;
+  members: { user: User }[];
 }
 
 export const useGetMembers = (planId: string) =>

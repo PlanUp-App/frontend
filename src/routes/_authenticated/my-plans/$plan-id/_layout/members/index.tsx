@@ -14,7 +14,7 @@ import { useGetMembers } from "./-queries";
 import { Spinner } from "@/components/ui/spinner";
 
 export const Route = createFileRoute(
-  "/_authenticated/my-plans/$plan-id/_layout/members/"
+  "/_authenticated/my-plans/$plan-id/_layout/members/",
 )({
   component: RouteComponent,
 });
@@ -22,7 +22,7 @@ export const Route = createFileRoute(
 type MemberCardProps = {
   id: string;
   name: string;
-  email: string;
+  email?: string;
   profilePicture?: string | null;
   isOwner?: boolean;
 };

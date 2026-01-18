@@ -13,13 +13,13 @@ import {
 
 interface DatePickerProps {
   date?: string;
-  setDate: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setDate: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function DatePicker({ date, setDate }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
-  const [internalDate, setInternalDate] = React.useState<Date | undefined>(
-    date ? new Date(date) : undefined,
+  const [internalDate, setInternalDate] = React.useState<Date>(
+    date ? new Date(date) : new Date(),
   );
 
   return (
@@ -29,7 +29,7 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
           <Button
             variant="outline"
             id="date"
-            className="w-48 justify-between font-normal"
+            className="w-48 justify-between font-normal h-11 cursor-pointer"
           >
             {internalDate
               ? internalDate.toLocaleDateString("en-GB", {
@@ -49,14 +49,8 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
             captionLayout="dropdown"
             disabled={(date) => date <= new Date()}
             onSelect={(date) => {
-              setInternalDate(date);
-              setDate(
-                date?.toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                }),
-              );
+              setInternalDate(date || new Date());
+              setDate(date?.toISOString() || new Date().toISOString());
               setOpen(false);
             }}
           />

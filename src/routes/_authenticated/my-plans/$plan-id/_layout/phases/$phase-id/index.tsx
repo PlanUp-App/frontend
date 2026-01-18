@@ -26,10 +26,16 @@ function RouteComponent() {
   ];
 
   const [addTaskIsOpen, setAddTaskIsOpen] = useState(false);
+  const { "plan-id": planId, "phase-id": phaseId } = Route.useParams();
 
   return (
     <>
-      <TaskDrawer open={addTaskIsOpen} onOpenChange={setAddTaskIsOpen} />
+      <TaskDrawer
+        open={addTaskIsOpen}
+        onOpenChange={setAddTaskIsOpen}
+        planId={planId}
+        phaseId={phaseId}
+      />
       {/* Heading section */}
       <div className="flex justify-between mb-12">
         <h1 className="pup-heading-three">First Phase of Plan</h1>
