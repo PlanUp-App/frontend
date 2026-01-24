@@ -42,7 +42,7 @@ export function UpdatePhaseDialog({
     mutationFn: async (data: UpdatePhaseForm) => {
       const response = await axiosInstance.patch(
         `/plans/${planId}/phases/${phaseId}`,
-        data
+        data,
       );
       return response.data;
     },

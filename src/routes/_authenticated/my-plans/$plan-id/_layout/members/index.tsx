@@ -1,15 +1,7 @@
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { AddMemberDialog } from "@/components/Modals/add-member";
-import { ProfileAvatar } from "@/components/PreviewImage";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { MdOutlineMoreVert } from "react-icons/md";
 import { useGetMembers } from "./-queries";
 import { Spinner } from "@/components/ui/spinner";
 import MemberCard from "@/components/MemberCard";
@@ -32,7 +24,7 @@ function RouteComponent() {
         onOpenChange={setAddMemberModalIsOpen}
         planId={planId}
       />
-      <div className="flex justify-between mb-12">
+      <div className="flex justify-between content-center mb-12 py-4 sticky top-0 bg-white">
         <h1 className="pup-heading-three">Members</h1>
         <div className="flex gap-3">
           <PrimaryButton

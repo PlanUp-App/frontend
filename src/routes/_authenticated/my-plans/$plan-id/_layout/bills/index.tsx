@@ -1,11 +1,21 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { PrimaryButton } from "@/components/Button/primary-filled";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  '/_authenticated/my-plans/$plan-id/_layout/bills/',
+  "/_authenticated/my-plans/$plan-id/_layout/bills/",
 )({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <div>Hello "/_authenticated/my-plans/$plan-id/_layout/bills/"!</div>
+  return (
+    <>
+      <div className="flex justify-between mb-12">
+        <h1 className="pup-heading-three">Bills</h1>
+        <div className="flex gap-3">
+          <PrimaryButton title="Add Bill" type="button" />
+        </div>
+      </div>
+    </>
+  );
 }
