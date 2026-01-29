@@ -161,6 +161,7 @@ export default function TaskDrawer({
         ) : (
           <MemberSelect
             data={data?.data ?? null}
+            label="Assignee"
             selectedMember={assignee}
             setSelectedMember={setAssignee}
           />

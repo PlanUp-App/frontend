@@ -49,12 +49,18 @@ interface MemberSelectProps {
   data: Members | null;
   selectedMember: MemberOption | null;
   setSelectedMember: (member: MemberOption | null) => void;
+  label?: string;
+  className?: string;
+  disabledMemberIds?: Set<string>;
 }
 
 export default function MemberSelect({
   data,
   selectedMember,
   setSelectedMember,
+  label,
+  className,
+  disabledMemberIds,
 }: MemberSelectProps) {
   const [open, setOpen] = useState(false);
   const members = transformMembers(data);
@@ -67,10 +73,12 @@ export default function MemberSelect({
   );
   console.log(filteredMembers);
   return (
-    <div className="w-full">
-      <label className="pup-body-md-500 block text-neutral-black mb-1.5">
-        Assignee
-      </label>
+    <div className={className}>
+      {label && (
+        <label className="pup-body-md-500 block text-neutral-black mb-1.5">
+          {label}
+        </label>
+      )}
       <Popover open={open} onOpenChange={setOpen} modal={true}>
         <PopoverTrigger asChild>
           <Button
@@ -116,34 +124,45 @@ export default function MemberSelect({
             >
               <CommandEmpty>No member found.</CommandEmpty>
               <CommandGroup>
-                {filteredMembers.map((member) => (
-                  <CommandItem
-                    className="flex px-2 py-2 justify-center items-center cursor-pointer hover:bg-off-white mb-2"
-                    key={member.value}
-                    value={member.value}
-                    onSelect={() => {
-                      setSelectedMember(
-                        selectedMember?.value !== member.value ? member : null,
-                      );
-                      setOpen(false);
-                    }}
-                  >
-                    <ProfileAvatar
-                      src={member.profilePicture}
-                      alt={member.label}
-                      className="mr-2"
-                    />
-                    {member.label}
-                    <MdOutlineCheck
+                {filteredMembers.map((member) => {
+                  const isDisabled =
+                    disabledMemberIds?.has(member.value) &&
+                    member.value !== selectedMember?.value;
+                  return (
+                    <CommandItem
                       className={cn(
-                        "ml-auto",
-                        selectedMember?.value === member.value
-                          ? "opacity-100"
-                          : "opacity-0",
+                        "flex px-2 py-2 justify-center items-center cursor-pointer hover:bg-off-white mb-2",
+                        isDisabled && "opacity-50 pointer-events-none",
                       )}
-                    />
-                  </CommandItem>
-                ))}
+                      key={member.value}
+                      value={member.value}
+                      onSelect={() => {
+                        if (isDisabled) return;
+                        setSelectedMember(
+                          selectedMember?.value !== member.value
+                            ? member
+                            : null,
+                        );
+                        setOpen(false);
+                      }}
+                    >
+                      <ProfileAvatar
+                        src={member.profilePicture}
+                        alt={member.label}
+                        className="mr-2"
+                      />
+                      {member.label}
+                      <MdOutlineCheck
+                        className={cn(
+                          "ml-auto",
+                          selectedMember?.value === member.value
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                    </CommandItem>
+                  );
+                })}
               </CommandGroup>
             </CommandList>
           </Command>
