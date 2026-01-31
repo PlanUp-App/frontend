@@ -52,6 +52,7 @@ interface MemberSelectProps {
   label?: string;
   className?: string;
   disabledMemberIds?: Set<string>;
+  error?: string;
 }
 
 export default function MemberSelect({
@@ -61,6 +62,7 @@ export default function MemberSelect({
   label,
   className,
   disabledMemberIds,
+  error,
 }: MemberSelectProps) {
   const [open, setOpen] = useState(false);
   const members = transformMembers(data);
@@ -71,7 +73,7 @@ export default function MemberSelect({
       member.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
       member.email?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
-  console.log(filteredMembers);
+
   return (
     <div className={className}>
       {label && (
@@ -110,6 +112,7 @@ export default function MemberSelect({
             <MdOutlineKeyboardArrowDown className="text-neutral-grey" />
           </Button>
         </PopoverTrigger>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
         <PopoverContent className="py-2 px-2">
           <Command shouldFilter={false}>
             <CommandInput

@@ -5,7 +5,7 @@ type Props = {
   className?: string;
   label?: string;
   placeholder?: string;
-  type?: "text" | "password" | "email";
+  type?: string;
   inputProps?: GetInputPropsReturnType;
   disabled?: boolean;
   value?: string;

@@ -5,14 +5,15 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { CustomInput } from "../CustomInput/input";
-import MemberSelect, { type MemberOption } from "../MemberSelect";
+import MemberSelect from "../MemberSelect";
 import { PrimaryButton } from "../Button/primary-filled";
 import { OutlineButton } from "../Button/outline";
 import { SimpleSelect } from "../Select";
-import { useState } from "react";
 import { useGetMembers } from "@/routes/_authenticated/my-plans/$plan-id/_layout/members/-queries";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
+import { BillSplitType, useCreateBill } from "./-queries";
+import { useEffect } from "react";
 
 export interface AddBillProps {
   open: boolean;
@@ -21,7 +22,13 @@ export interface AddBillProps {
   onClose?: () => void;
 }
 
-const BillSplitTypeEnum = z.enum(["Equal", "Percentage", "Amount"]);
+const BillSplitTypeEnum = z.enum(BillSplitType);
+
+const SPLIT_TYPE_ITEMS = [
+  { value: BillSplitType.EQUAL, label: "Equal" },
+  { value: BillSplitType.PERCENTAGE, label: "Percentage" },
+  { value: BillSplitType.AMOUNT, label: "Amount" },
+] as const;
 
 const memberOptionSchema = z.object({
   value: z.string(),
@@ -32,20 +39,28 @@ const memberOptionSchema = z.object({
 
 const billSplitSchema = z.object({
   member: memberOptionSchema.nullable(),
-  amount: z.number().positive().optional(),
-  percentage: z.number().positive().optional(),
+  amount: z.coerce.number().positive("Amount must be positive").optional(),
+  percentage: z.coerce
+    .number()
+    .positive("Percentage must be positive")
+    .optional(),
 });
 
 const createBillSchema = z
   .object({
-    planId: z.string().min(1),
+    planId: z.string().nonempty(),
     taskId: z.string().optional(),
-    title: z.string().min(1),
-    amount: z.number().positive(),
+    title: z
+      .string()
+      .min(1, { error: "Name is required" })
+      .nonempty({ error: "Name is required" }),
+    amount: z.coerce.number().positive({ error: "Amount must be positive" }),
     category: z.string().optional(),
     attachmentUrl: z.url().optional(),
     splitType: BillSplitTypeEnum,
-    paidBy: memberOptionSchema.nullable().optional(),
+    paidBy: z
+      .union([memberOptionSchema, z.null(), z.undefined()])
+      .refine((val) => val != null, { message: "Member is required" }),
     split: z.array(billSplitSchema).min(1),
   })
   .superRefine((data, ctx) => {
@@ -69,13 +84,13 @@ const createBillSchema = z
         ctx.addIssue({
           path: ["split", index, "member"],
           message: "This member is already selected",
-          code: z.ZodIssueCode.custom,
+          code: "custom",
         });
       } else {
         seen.add(userId);
       }
-      /* EQUAL */
-      if (splitType === "Equal") {
+      // equal
+      if (splitType === BillSplitType.EQUAL) {
         if (entry.amount != null || entry.percentage != null) {
           ctx.addIssue({
             path: ["split", index],
@@ -85,8 +100,8 @@ const createBillSchema = z
         }
       }
 
-      /* PERCENTAGE */
-      if (splitType === "Percentage") {
+      // percentage
+      if (splitType === BillSplitType.PERCENTAGE) {
         if (entry.percentage == null) {
           ctx.addIssue({
             path: ["split", index, "percentage"],
@@ -115,8 +130,8 @@ const createBillSchema = z
         }
       }
 
-      /* AMOUNT */
-      if (splitType === "Amount") {
+      // amount
+      if (splitType === BillSplitType.AMOUNT) {
         if (entry.amount == null) {
           ctx.addIssue({
             path: ["split", index, "amount"],
@@ -135,8 +150,8 @@ const createBillSchema = z
       }
     });
 
-    /* OPTIONAL: percentage sum must be 100 */
-    if (splitType === "Percentage") {
+    // percentage sum 100
+    if (splitType === BillSplitType.PERCENTAGE) {
       const totalPercentage = split.reduce(
         (sum, s) => sum + (s.percentage ?? 0),
         0,
@@ -167,18 +182,28 @@ export default function AddBill({
       amount: 0,
       category: "",
       attachmentUrl: "",
-      splitType: "Equal",
+      splitType: BillSplitType.EQUAL,
       paidBy: undefined,
       split: [
         {
           member: null as any,
+          amount: 0,
+          percentage: 0,
         },
       ],
     },
     validate: (values) => {
       const result = createBillSchema.safeParse(values);
       if (result.success) return {};
-      return result.error.flatten().fieldErrors;
+
+      const errors: Record<string, string> = {};
+
+      result.error.issues.forEach((issue) => {
+        const path = issue.path.join(".");
+        errors[path] = issue.message;
+      });
+
+      return errors;
     },
   });
 
@@ -189,6 +214,42 @@ export default function AddBill({
       .map((s) => s.member?.value)
       .filter((v): v is string => !!v),
   );
+  const createBillMutation = useCreateBill(planId);
+
+  const onSubmit = form.onSubmit((values) => {
+    const payload = {
+      planId: values.planId,
+      taskId: values.taskId,
+      title: values.title,
+      amount: values.amount,
+      category: values.category || undefined,
+      attachmentUrl: values.attachmentUrl || undefined,
+      splitType: values.splitType,
+      paidById: values.paidBy?.value,
+
+      split: values.split.map((s) => ({
+        userId: s.member!.value,
+        amount: s.amount,
+        percentage: s.percentage,
+      })),
+    };
+
+    createBillMutation.mutate(payload);
+  });
+
+  useEffect(() => {
+    if (form.values.splitType === BillSplitType.AMOUNT) {
+      const total = form.values.split.reduce(
+        (sum, s) => sum + (s.amount ?? 0),
+        0,
+      );
+      if (form.values.amount !== total) {
+        form.setFieldValue("amount", total);
+      }
+    }
+  }, [form.values.split, form.values.splitType]);
+
+  console.log(form.values);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -198,92 +259,115 @@ export default function AddBill({
             {form.values.title || "New Bill"}
           </h3>
         </div>
-        <CustomInput label="Name" {...form.getInputProps("title")} />
-        <CustomInput label="Category" {...form.getInputProps("category")} />
-        <CustomInput label="Task" />
-        <MemberSelect
-          data={members?.data ?? null}
-          label="Paid by"
-          selectedMember={form.values.paidBy ?? null}
-          setSelectedMember={(member) => form.setFieldValue("paidBy", member)}
-        />
-        <SimpleSelect
-          label="Split Type"
-          items={["Equal", "Percentage", "Amount"]}
-          value={form.values.splitType}
-          onValueChange={(value) => {
-            form.setFieldValue("splitType", value);
-          }}
-        />
-        {(form.values.splitType === "Equal" ||
-          form.values.splitType === "Percentage") && (
-          <CustomInput label="Total" />
-        )}
-        <div>
-          <label className="pup-body-md-500 block text-neutral-black mb-1.5">
-            Split between
-          </label>
-          {form.values.split.map((_, index) => (
-            <div key={index} className="flex gap-2 mb-1.5">
-              <MemberSelect
-                data={members?.data ?? null}
-                selectedMember={form.values.split[index].member}
-                setSelectedMember={(member) =>
-                  form.setFieldValue(`split.${index}.member`, member)
-                }
-                disabledMemberIds={selectedMemberIds}
-                className="flex-1"
-              />
+        <form onSubmit={onSubmit}>
+          <div className="flex flex-col gap-4">
+            <CustomInput
+              label="Name"
+              inputProps={form.getInputProps("title")}
+            />
+            <CustomInput
+              label="Category"
+              inputProps={form.getInputProps("category")}
+            />
+            <CustomInput label="Task" />
+            <MemberSelect
+              data={members?.data ?? null}
+              label="Paid by"
+              selectedMember={form.values.paidBy ?? null}
+              setSelectedMember={(member) =>
+                form.setFieldValue("paidBy", member)
+              }
+              error={form.errors["paidBy"] as string | undefined}
+            />
 
-              {form.values.splitType !== "Equal" && (
-                <CustomInput
-                  placeholder={
-                    form.values.splitType === "Percentage"
-                      ? "Percent"
-                      : "Amount"
-                  }
-                  {...form.getInputProps(
-                    form.values.splitType === "Percentage"
-                      ? `split.${index}.percentage`
-                      : `split.${index}.amount`,
+            <SimpleSelect
+              label="Split Type"
+              items={SPLIT_TYPE_ITEMS}
+              value={form.values.splitType}
+              onValueChange={(value) => {
+                form.setFieldValue("splitType", value);
+              }}
+            />
+            <CustomInput
+              label="Total"
+              inputProps={form.getInputProps("amount")}
+              disabled={form.values.splitType === BillSplitType.AMOUNT}
+            />
+            <div>
+              <label className="pup-body-md-500 block text-neutral-black mb-1.5">
+                Split between
+              </label>
+              {form.values.split.map((_, index) => (
+                <div key={index} className="flex gap-2 mb-1.5">
+                  <MemberSelect
+                    data={members?.data ?? null}
+                    selectedMember={form.values.split[index].member}
+                    setSelectedMember={(member) =>
+                      form.setFieldValue(`split.${index}.member`, member)
+                    }
+                    disabledMemberIds={selectedMemberIds}
+                    className="flex-1"
+                    error={
+                      form.errors[`split.${index}.member`] as string | undefined
+                    }
+                  />
+
+                  {form.values.splitType !== BillSplitType.EQUAL && (
+                    <CustomInput
+                      type="number"
+                      placeholder={
+                        form.values.splitType === BillSplitType.PERCENTAGE
+                          ? "Percent"
+                          : "Amount"
+                      }
+                      inputProps={form.getInputProps(
+                        form.values.splitType === BillSplitType.PERCENTAGE
+                          ? `split.${index}.percentage`
+                          : `split.${index}.amount`,
+                      )}
+                    />
                   )}
-                />
-              )}
 
+                  <button
+                    type="button"
+                    className="cursor-pointer disabled:cursor-not-allowed"
+                    disabled={form.values.split.length === 1}
+                    onClick={() => {
+                      form.removeListItem("split", index);
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              {form.errors.split && (
+                <p className="text-red-500 pup-body-sm-400">
+                  {form.errors.split}
+                </p>
+              )}
               <button
                 type="button"
-                className="cursor-pointer disabled:cursor-not-allowed"
-                disabled={form.values.split.length === 1}
-                onClick={() => {
-                  form.removeListItem("split", index);
-                }}
+                className="pup-body-md-500 py-1 text-dark-blue"
+                onClick={() => form.insertListItem("split", { member: null })}
               >
-                ✕
+                + Add member
               </button>
             </div>
-          ))}
-          <button
-            type="button"
-            className="pup-body-md-500 py-1 text-dark-blue"
-            onClick={() => form.insertListItem("split", { member: null })}
-          >
-            + Add member
-          </button>
-        </div>
-        <SheetFooter>
-          <PrimaryButton
-            type="submit"
-            title="Save changes"
-            // onClick={handleSubmit}
-            // isLoading={createTaskMutation.isPending}
-          />
-          <SheetClose asChild>
-            <OutlineButton
-              title="Close"
-              className="border-primary-orange text-primary-orange"
-            />
-          </SheetClose>
-        </SheetFooter>
+            <SheetFooter>
+              <PrimaryButton
+                type="submit"
+                title="Save changes"
+                isLoading={createBillMutation.isPending}
+              />
+              <SheetClose asChild>
+                <OutlineButton
+                  title="Close"
+                  className="border-primary-orange text-primary-orange"
+                />
+              </SheetClose>
+            </SheetFooter>
+          </div>
+        </form>
       </SheetContent>
     </Sheet>
   );

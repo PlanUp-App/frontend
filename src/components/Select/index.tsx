@@ -7,8 +7,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface SimpleSelectProps<T extends string> {
-  items: readonly T[];
+export interface SimpleSelectItem<T extends string> {
+  value: T;
+  label: string;
+}
+
+export interface SimpleSelectProps<T extends string> {
+  items: readonly SimpleSelectItem<T>[];
   value: T;
   placeholder?: string;
   onValueChange: (value: T) => void;
@@ -45,8 +50,8 @@ export function SimpleSelect<T extends string>({
         <SelectContent>
           <SelectGroup>
             {items.map((item) => (
-              <SelectItem key={item} value={item}>
-                {item}
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
           </SelectGroup>
