@@ -26,3 +26,11 @@ export const dateFormat = (date: string) => {
     year: "numeric",
   }).format(new Date(date));
 };
+
+export function toSentenceCase(str: string) {
+  if (!str) return "";
+
+  return str
+    .toLowerCase()
+    .replace(/(^\s*\w|[.!?]\s*\w)/g, (match) => match.toUpperCase());
+}

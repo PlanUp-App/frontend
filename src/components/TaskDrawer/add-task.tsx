@@ -5,7 +5,7 @@ import {
   SheetContent,
   SheetFooter,
 } from "@/components/ui/sheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PrimaryButton } from "../Button/primary-filled";
 import { OutlineButton } from "../Button/outline";
 import { CustomInput } from "../CustomInput/input";
@@ -74,6 +74,21 @@ export default function TaskDrawer({
     initialData?.taskId ?? "",
   );
 
+  const resetForm = () => {
+    setName("");
+    setDescription("<p></p>");
+    setDate(new Date().toISOString());
+    setAssignee(null);
+    setErrors("");
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      resetForm();
+    }
+    onOpenChange(newOpen);
+  };
+
   const handleSubmit = () => {
     const payload = {
       name,
@@ -125,7 +140,7 @@ export default function TaskDrawer({
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent className="max-w-[50%] min-w-[40%] px-8 py-12 overflow-scroll">
         <div className="flex gap-3 items-center">
           <h3 className="pup-body-xl-700 text-neutral-black">

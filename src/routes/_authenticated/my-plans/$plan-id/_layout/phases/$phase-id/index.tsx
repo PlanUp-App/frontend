@@ -3,8 +3,7 @@ import TaskCard from "@/components/TaskCard";
 import TaskDrawer from "@/components/TaskDrawer/add-task";
 import ViewTaskDrawer from "@/components/TaskDrawer/view-task";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useRef } from "react";
-import { MdOutlineAddCircleOutline } from "react-icons/md";
+import { useState, useRef, useEffect } from "react";
 import { useGetTasks, type Task } from "./-queries";
 
 export const Route = createFileRoute(
@@ -30,6 +29,38 @@ function groupTasksByDate(tasks: Task[]) {
   }, {});
 }
 
+function findClosestDate(dates: string[]): string | null {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Parse dates and filter out "No Date"
+  const parsedDates = dates
+    .filter((date) => date !== "No Date")
+    .map((dateStr) => {
+      const date = new Date(dateStr);
+      return { dateStr, date, timestamp: date.getTime() };
+    })
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  if (parsedDates.length === 0) return null;
+
+  // Find today's date
+  const todayMatch = parsedDates.find((d) => {
+    const date = new Date(d.date);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime() === today.getTime();
+  });
+
+  if (todayMatch) return todayMatch.dateStr;
+
+  // Find closest future date
+  const futureDate = parsedDates.find((d) => d.timestamp >= today.getTime());
+  if (futureDate) return futureDate.dateStr;
+
+  // If no future dates, return the last date
+  return parsedDates[parsedDates.length - 1].dateStr;
+}
+
 function RouteComponent() {
   const [addTaskIsOpen, setAddTaskIsOpen] = useState(false);
   const [viewTaskIsOpen, setViewTaskIsOpen] = useState(false);
@@ -41,12 +72,30 @@ function RouteComponent() {
   const groupedTasks = groupTasksByDate(tasks);
 
   const dateRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const hasScrolled = useRef(false);
+
   const scrollToDate = (date: string) => {
     const element = dateRefs.current[date];
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  // Auto-scroll on initial load
+  useEffect(() => {
+    if (!isLoading && tasks.length > 0 && !hasScrolled.current) {
+      const dates = Object.keys(groupedTasks);
+      const targetDate = findClosestDate(dates);
+
+      if (targetDate) {
+        // Use setTimeout to ensure refs are set
+        setTimeout(() => {
+          scrollToDate(targetDate);
+          hasScrolled.current = true;
+        }, 100);
+      }
+    }
+  }, [isLoading, data?.tasks]);
 
   return (
     <>
@@ -109,12 +158,6 @@ function RouteComponent() {
                       }}
                     />
                   ))}
-                  {/* <button className="cursor-pointer">
-                    <MdOutlineAddCircleOutline
-                      size={32}
-                      className="text-dark-blue"
-                    />
-                  </button> */}
                 </div>
               </div>
             ))}
