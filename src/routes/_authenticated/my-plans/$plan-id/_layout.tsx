@@ -1,9 +1,10 @@
 import { AppSidebar } from "@/components/AppSidebar";
+import { ChatBubble } from "@/components/ChatBubble";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/_authenticated/my-plans/$plan-id/_layout"
+  "/_authenticated/my-plans/$plan-id/_layout",
 )({
   component: RouteComponent,
 });
@@ -17,6 +18,7 @@ function RouteComponent() {
         <main className="px-16">
           <Outlet />
         </main>
+        <ChatBubble />
       </SidebarInset>
     </SidebarProvider>
   );

@@ -93,15 +93,15 @@ const createBillSchema = z
         seen.add(userId);
       }
       // equal
-      if (splitType === BillSplitType.EQUAL) {
-        if (entry.amount != null || entry.percentage != null) {
-          ctx.addIssue({
-            path: ["split", index],
-            message: "Equal split should not include amount or percentage",
-            code: "custom",
-          });
-        }
-      }
+      // if (splitType === BillSplitType.EQUAL) {
+      //   if (entry.amount != null || entry.percentage != null) {
+      //     ctx.addIssue({
+      //       path: ["split", index],
+      //       message: "Equal split should not include amount or percentage",
+      //       code: "custom",
+      //     });
+      //   }
+      // }
 
       // percentage
       if (splitType === BillSplitType.PERCENTAGE) {

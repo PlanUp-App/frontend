@@ -22,6 +22,7 @@ import {
   MdOutlinePeopleAlt,
   MdChevronRight,
   MdOutlineLayers,
+  MdOutlineSettings,
 } from "react-icons/md";
 import {
   useGetPhases,
@@ -67,7 +68,7 @@ function PhaseSubItem({
 }) {
   const location = useLocation();
   const isActive = location.pathname.includes(
-    `/my-plans/${planId}/phases/${phaseId}`
+    `/my-plans/${planId}/phases/${phaseId}`,
   );
 
   return (
@@ -75,7 +76,7 @@ function PhaseSubItem({
       <SidebarMenuSubButton
         className={cn(
           "h-10 py-2 pup-body-md-400 text-neutral-dark-grey",
-          isActive && "text-neutral-black pup-body-md-500"
+          isActive && "text-neutral-black pup-body-md-500",
         )}
         asChild
       >
@@ -95,14 +96,16 @@ export function AppSidebar({ planId }: { planId: string }) {
 
   const location = useLocation();
   const isPhasesActive = location.pathname.includes(
-    `/my-plans/${planId}/phases`
+    `/my-plans/${planId}/phases`,
   );
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader className="bg-off-white">
         <div className="my-4 mx-6">
-          <img src="/planup-logo.svg" width="100px" />
+          <Link to={"/my-plans"}>
+            <img src="/planup-logo.svg" width="100px" />
+          </Link>
         </div>
       </SidebarHeader>
       <SidebarContent className="bg-off-white px-4">
@@ -122,7 +125,7 @@ export function AppSidebar({ planId }: { planId: string }) {
                 className={cn(
                   "rounded-[8px] flex items-center gap-3 px-4 py-2 h-10 rounded-2 cursor-pointer",
                   isPhasesActive &&
-                    "bg-white text-dark-blue shadow-[1px_2px_5px_rgba(0,0,0,0.08)]"
+                    "bg-white text-dark-blue shadow-[1px_2px_5px_rgba(0,0,0,0.08)]",
                 )}
               >
                 <Link
@@ -174,6 +177,11 @@ export function AppSidebar({ planId }: { planId: string }) {
             to={`/my-plans/${planId}/members`}
             icon={MdOutlinePeopleAlt}
             label="Members"
+          />
+          <NavItem
+            to={`/my-plans/${planId}/settings`}
+            icon={MdOutlineSettings}
+            label="Configurations"
           />
         </SidebarMenu>
       </SidebarContent>

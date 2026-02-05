@@ -1,5 +1,4 @@
 import { MdOutlineChevronRight } from "react-icons/md";
-import { ProfileAvatar } from "../PreviewImage";
 import type { Bill } from "./-queries";
 import { toSentenceCase } from "@/lib/utils";
 

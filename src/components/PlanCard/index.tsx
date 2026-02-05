@@ -1,9 +1,8 @@
 import { Link } from "@tanstack/react-router";
 
 export type Member = {
-  id: string;
-  name: string;
-  profilePicture?: string;
+  joinedAt: string;
+  user: { id: string; name: string; profilePicture?: string };
 };
 
 export type PlanCardProps = {
@@ -16,7 +15,7 @@ export type PlanCardProps = {
 function membersToString(members: Member[] | undefined) {
   if (!members || members.length === 0) return "";
 
-  const names = members.map((m) => m.name);
+  const names = members.map((m) => m.user.name);
 
   if (names.length <= 6) {
     // For small groups, just join nicely
