@@ -7,7 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import { useGetTasks, type Task } from "./-queries";
 
 export const Route = createFileRoute(
-  "/_authenticated/my-plans/$plan-id/_layout/phases/$phase-id/",
+  "/_authenticated/my-plans/$planId/_layout/phases/$phaseId/",
 )({
   component: RouteComponent,
 });
@@ -65,7 +65,7 @@ function RouteComponent() {
   const [addTaskIsOpen, setAddTaskIsOpen] = useState(false);
   const [viewTaskIsOpen, setViewTaskIsOpen] = useState(false);
   const [viewTask, setViewTask] = useState("");
-  const { "plan-id": planId, "phase-id": phaseId } = Route.useParams();
+  const { planId: planId, phaseId: phaseId } = Route.useParams();
   const { data, isLoading } = useGetTasks(planId, phaseId);
   const tasks = data?.tasks || [];
 

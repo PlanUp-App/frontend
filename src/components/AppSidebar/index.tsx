@@ -27,7 +27,7 @@ import {
 import {
   useGetPhases,
   type Phase,
-} from "@/routes/_authenticated/my-plans/$plan-id/_layout/phases/-queries";
+} from "@/routes/_authenticated/my-plans/$planId/_layout/phases/-queries";
 
 function NavItem({
   to,

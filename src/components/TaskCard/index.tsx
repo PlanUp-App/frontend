@@ -1,6 +1,6 @@
 import { MdOutlineChevronRight } from "react-icons/md";
 import { ProfileAvatar } from "../PreviewImage";
-import type { Task } from "@/routes/_authenticated/my-plans/$plan-id/_layout/phases/$phase-id/-queries";
+import type { Task } from "@/routes/_authenticated/my-plans/$planId/_layout/phases/$phaseId/-queries";
 import { dateFormat } from "@/lib/utils";
 
 interface TaskCardProps {

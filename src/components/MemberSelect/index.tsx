@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { ProfileAvatar } from "../PreviewImage";
-import type { Members } from "@/routes/_authenticated/my-plans/$plan-id/_layout/members/-queries";
+import type { Members } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
 
 export interface MemberOption {
   value: string;

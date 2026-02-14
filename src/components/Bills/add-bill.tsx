@@ -9,7 +9,7 @@ import MemberSelect from "../MemberSelect";
 import { PrimaryButton } from "../Button/primary-filled";
 import { OutlineButton } from "../Button/outline";
 import { SimpleSelect } from "../Select";
-import { useGetMembers } from "@/routes/_authenticated/my-plans/$plan-id/_layout/members/-queries";
+import { useGetMembers } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { BillSplitType, useCreateBill, useUpdateBill } from "./-queries";

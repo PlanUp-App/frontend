@@ -10,13 +10,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 export const Route = createFileRoute(
-  "/_authenticated/my-plans/$plan-id/_layout/bills/",
+  "/_authenticated/my-plans/$planId/_layout/bills/",
 )({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { "plan-id": planId } = Route.useParams();
+  const { planId: planId } = Route.useParams();
   const [addBillIsOpen, setAddBillIsOpen] = useState(false);
   const [viewBillIsOpen, setViewBillIsOpen] = useState(false);
   const [viewBill, setViewBill] = useState("");

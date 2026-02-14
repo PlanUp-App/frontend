@@ -13,7 +13,7 @@ import z from "zod";
 import { DatePicker } from "../DatePicker";
 import TextEditor from "../TextEditor";
 import MemberSelect, { type MemberOption } from "../MemberSelect";
-import { useGetMembers } from "@/routes/_authenticated/my-plans/$plan-id/_layout/members/-queries";
+import { useGetMembers } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
 import { Spinner } from "../ui/spinner";
 import { useCreateTask, useUpdateTask } from "./-queries";
 import { toast } from "sonner";

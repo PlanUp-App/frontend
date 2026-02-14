@@ -20,7 +20,7 @@ import { UpdatePhaseDialog } from "@/components/Modals/update-phase";
 import { Reorder } from "framer-motion";
 
 export const Route = createFileRoute(
-  "/_authenticated/my-plans/$plan-id/_layout/phases/"
+  "/_authenticated/my-plans/$planId/_layout/phases/",
 )({
   component: RouteComponent,
 });
@@ -88,7 +88,7 @@ function PhaseCard({
 }
 
 function RouteComponent() {
-  const { "plan-id": planId } = Route.useParams();
+  const { planId: planId } = Route.useParams();
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
   const { data: phases, isLoading } = useGetPhases(planId);
   const [items, setItems] = useState<Phase[]>([]);

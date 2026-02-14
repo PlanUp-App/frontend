@@ -7,13 +7,13 @@ import { Spinner } from "@/components/ui/spinner";
 import MemberCard from "@/components/MemberCard";
 
 export const Route = createFileRoute(
-  "/_authenticated/my-plans/$plan-id/_layout/members/",
+  "/_authenticated/my-plans/$planId/_layout/members/",
 )({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { "plan-id": planId } = Route.useParams();
+  const { planId: planId } = Route.useParams();
   const [addMemberModalIsOpen, setAddMemberModalIsOpen] = useState(false);
   const { data, isLoading } = useGetMembers(planId);
   console.log();
