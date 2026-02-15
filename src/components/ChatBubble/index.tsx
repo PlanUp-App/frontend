@@ -1,36 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { MdClose, MdSend, MdChatBubbleOutline } from "react-icons/md";
 import { cn } from "@/lib/utils";
-
-interface User {
-  id: string;
-  name: string;
-  profilePicture: string | null;
-}
-
-interface Message {
-  id: string;
-  text: string;
-  userId: string;
-  user: User;
-  timestamp: Date;
-}
+import { useChat } from "@/hooks/useChat";
 
 interface ChatBubbleProps {
   planId: string;
   currentUserId: string;
-  currentUser: User;
+  token: string;
 }
 
-export function ChatBubble({
-  planId,
-  currentUserId,
-  currentUser,
-}: ChatBubbleProps) {
+export function ChatBubble({ planId, currentUserId, token }: ChatBubbleProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { messages, sendMessage, connected } = useChat(planId, token);
   const [input, setInput] = useState("");
-  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+  // const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -57,20 +40,9 @@ export function ChatBubble({
 
   const handleSend = async () => {
     if (!input.trim()) return;
-
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      text: input,
-      userId: currentUserId,
-      user: currentUser,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, newMessage]);
+    sendMessage(input);
     setInput("");
-
-    // TODO: Send to API
-    // await sendMessage(planId, { text: input });
+    setInput("");
   };
 
   const getInitials = (name: string) => {
@@ -86,7 +58,7 @@ export function ChatBubble({
     if (index === 0) return false;
     const current = messages[index];
     const previous = messages[index - 1];
-    return current.userId === previous.userId;
+    return current.senderId === previous.senderId;
   };
 
   return (
@@ -118,11 +90,11 @@ export function ChatBubble({
               </div>
             ) : (
               messages.map((message, index) => {
-                const isOwn = message.userId === currentUserId;
+                const isOwn = message.sender.id === currentUserId;
                 const showAvatar = !isConsecutiveMessage(index);
                 const isLastFromUser =
                   index === messages.length - 1 ||
-                  messages[index + 1].userId !== message.userId;
+                  messages[index + 1].sender.id !== message.sender.id;
 
                 return (
                   <div
@@ -136,15 +108,15 @@ export function ChatBubble({
                     {/* Avatar */}
                     {showAvatar && !isOwn && (
                       <div className="flex-shrink-0 mt-1">
-                        {message.user.profilePicture ? (
+                        {message.sender.profilePicture ? (
                           <img
-                            src={message.user.profilePicture}
-                            alt={message.user.name}
+                            src={message.sender.profilePicture}
+                            alt={message.sender.name}
                             className="w-8 h-8 rounded-full object-cover"
                           />
                         ) : (
                           <div className="w-8 h-8 rounded-full bg-primary-orange text-white flex items-center justify-center text-xs font-medium">
-                            {getInitials(message.user.name)}
+                            {getInitials(message.sender.name)}
                           </div>
                         )}
                       </div>
@@ -154,7 +126,7 @@ export function ChatBubble({
                       {/* Name (only for first message in sequence) */}
                       {showAvatar && !isOwn && (
                         <span className="text-xs text-neutral-dark-grey mb-1 ml-1 pup-body-sm-500">
-                          {message.user.name}
+                          {message.sender.name}
                         </span>
                       )}
 
@@ -173,14 +145,14 @@ export function ChatBubble({
                         )}
                       >
                         <p className="pup-body-sm-400 break-words">
-                          {message.text}
+                          {message.content}
                         </p>
                       </div>
 
                       {/* Timestamp (only for last message in sequence) */}
                       {isLastFromUser && (
                         <span className="text-xs text-neutral-grey mt-1 px-1">
-                          {message.timestamp.toLocaleTimeString([], {
+                          {new Date(message.createdAt).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
@@ -194,13 +166,13 @@ export function ChatBubble({
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Typing Indicator */}
+          {/* Typing Indicator
           {typingUsers.size > 0 && (
             <div className="px-4 py-2 text-xs text-neutral-grey pup-body-sm-400">
               {Array.from(typingUsers).join(", ")}{" "}
               {typingUsers.size === 1 ? "is" : "are"} typing...
             </div>
-          )}
+          )} */}
 
           {/* Input */}
           <div className="border-t border-neutral-light-grey p-4">

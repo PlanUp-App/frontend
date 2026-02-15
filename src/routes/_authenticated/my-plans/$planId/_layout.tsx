@@ -13,8 +13,8 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { planId: planId } = Route.useParams();
   const { user, isAuthenticated } = useAuth();
-  if (!user || !isAuthenticated) return;
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("auth_token");
+  if (!user || !isAuthenticated || !token) return;
   return (
     <SidebarProvider>
       <AppSidebar planId={planId} />
@@ -22,7 +22,7 @@ function RouteComponent() {
         <main className="px-16">
           <Outlet />
         </main>
-        <ChatBubble planId={planId} currentUserId={user?.id} token={""} />
+        <ChatBubble planId={planId} currentUserId={user?.id} token={token} />
       </SidebarInset>
     </SidebarProvider>
   );
