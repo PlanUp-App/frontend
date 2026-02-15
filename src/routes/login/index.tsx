@@ -8,6 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { router } from "@/main";
+import { GoogleButton } from "@/components/Button/google-button";
 
 export const Route = createFileRoute("/login/")({
   validateSearch: (search) => ({
@@ -32,6 +33,11 @@ function Index() {
   const { auth } = Route.useRouteContext();
   const redirect = Route.useSearch().redirect || "/my-plans";
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${"http://localhost:7001"}/auth/google/login`;
+    console.log("Redirecting to google...");
+  };
 
   const { getInputProps, onSubmit } = useForm<LoginForm>({
     initialValues: { email: "", password: "" },
@@ -59,7 +65,7 @@ function Index() {
           console.log(err);
           toast.error(message);
         },
-      }
+      },
     );
   };
 
@@ -96,6 +102,7 @@ function Index() {
               type="submit"
             />
           </form>
+          <GoogleButton className="w-full" onClick={handleGoogleLogin} />
           <div className="flex gap-1 justify-center">
             <p className="pup-body-md-400 text-neutral-black">
               Don't have an account?

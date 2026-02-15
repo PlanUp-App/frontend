@@ -1,5 +1,6 @@
 import { queryClient } from "@/utils/queryclient/queryClient";
 import {
+  useValidateToken,
   type LoginCredentials,
   type LoginResponse,
 } from "../routes/login/-queries";
@@ -21,25 +22,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlToken = urlParams.get("token");
+  const storedToken = localStorage.getItem("auth_token");
+  const token = urlToken || storedToken;
+
+  if (urlToken) localStorage.setItem("auth_token", urlToken);
+
   // Initialize auth state from localStorage
   useEffect(() => {
-    const initAuth = () => {
-      const token = localStorage.getItem("auth_token");
-      const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem("user");
+    // If we have a URL token, skip restoring from localStorage —
+    // wait for validation to complete instead
+    if (!urlToken && storedToken && storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("user");
+      }
+    }
+    // Don't set isLoading false yet if we have a URL token to validate
+    if (!urlToken) {
+      setIsLoading(false);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-      if (token && storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch (e) {
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("user");
-        }
+  const { data, isError, isSuccess, isPending } = useValidateToken({
+    enabled: !!token && (urlToken ? true : !isLoading),
+  });
+
+  useEffect(() => {
+    if (!token) return;
+
+    if (data) {
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      // Clean up the URL token param without a page reload
+      if (urlToken) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("token");
+        window.history.replaceState({}, "", url.toString());
       }
       setIsLoading(false);
-    };
+    }
 
-    initAuth();
-  }, []);
+    if (isError) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("user");
+      delete axiosInstance.defaults.headers.common["Authorization"];
+      setUser(null);
+      setIsLoading(false);
+    }
+  }, [data, isError]);
 
   // Login mutation
   const loginMutation = useMutation<
@@ -50,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async (credentials: LoginCredentials) => {
       const response = await axiosInstance.post<LoginResponse>(
         "/auth/login",
-        credentials
+        credentials,
       );
       return response.data;
     },
@@ -70,6 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     queryClient.clear();
     router.navigate({ to: "/" });
+    queryClient.invalidateQueries();
   };
 
   const updateUser = (updates: Partial<User>) => {
