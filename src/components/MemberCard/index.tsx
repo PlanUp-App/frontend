@@ -6,12 +6,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import type { PlanRole } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
 
 type MemberCardProps = {
   id: string;
   name: string;
   email?: string;
   profilePicture?: string | null;
+  role?: PlanRole;
   isOwner?: boolean;
   hasOptions?: boolean;
 };
@@ -21,33 +23,38 @@ export default function MemberCard({
   name,
   email,
   profilePicture,
+  role,
   isOwner = false,
   hasOptions = true,
 }: MemberCardProps) {
+  // const roleLabel = isOwner ? "Owner" : role === "ADMIN" ? "Admin" : "Member";
+
   return (
     <div className="py-3 flex justify-between w-full border-b border-b-off-white">
       <div className="flex gap-4">
         <ProfileAvatar src={profilePicture} alt={name} className="w-14 h-14" />
         <div>
-          <h3 className="pup-body-xl-400 text-neutral-black">{`${name}${isOwner ? " (Owner)" : ""}`}</h3>
+          <h3 className="pup-body-xl-400 text-neutral-black">
+            {name}{" "}
+            <span className="text-neutral-grey">{isOwner && "(Owner)"}</span>
+          </h3>
           <span className="pup-body-sm-400 text-neutral-grey">{email}</span>
         </div>
       </div>
-      {hasOptions && (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <MdOutlineMoreVert size={24} />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
-              // onClick={() => onClick(id)}
-            >
-              Remove
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+      <div className="flex items-center gap-3">
+        {hasOptions && !isOwner && (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MdOutlineMoreVert size={24} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400">
+                Remove
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
     </div>
   );
 }
