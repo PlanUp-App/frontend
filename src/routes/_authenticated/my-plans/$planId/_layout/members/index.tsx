@@ -24,11 +24,17 @@ type Tab = "members" | "requests";
 function RouteComponent() {
   const { planId } = Route.useParams();
   const [addMemberModalIsOpen, setAddMemberModalIsOpen] = useState(false);
+  const role = localStorage.getItem(`plan_role_${planId}`);
+  const isOwner = role === "OWNER";
   const [activeTab, setActiveTab] = useState<Tab>("members");
 
   const { data: members, isLoading: membersLoading } = useGetMembers(planId);
-  const { data: requests, isLoading: requestsLoading } =
-    useGetPendingRequests(planId);
+  const {
+    data: requests,
+    isLoading: requestsLoading,
+    error: requestsError,
+  } = useGetPendingRequests(planId, isOwner);
+  const isForbidden = (requestsError as any)?.response?.status === 403;
   const approveMutation = useApproveJoinRequest(planId);
   const rejectMutation = useRejectJoinRequest(planId);
 
@@ -36,10 +42,14 @@ function RouteComponent() {
 
   const tabs: { label: string; value: Tab }[] = [
     { label: "Members", value: "members" },
-    {
-      label: `Requests${requests && requests.length > 0 ? ` (${requests.length})` : ""}`,
-      value: "requests",
-    },
+    ...(isOwner && !isForbidden
+      ? [
+          {
+            label: `Requests${requests && requests.length > 0 ? ` (${requests.length})` : ""}`,
+            value: "requests" as Tab,
+          },
+        ]
+      : []),
   ];
 
   return (

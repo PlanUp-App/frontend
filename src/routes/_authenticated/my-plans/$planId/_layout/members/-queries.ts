@@ -34,7 +34,10 @@ export interface JoinRequest {
   };
 }
 
-export const useGetPendingRequests = (planId: string) =>
+export const useGetPendingRequests = (
+  planId: string,
+  isOwner: boolean = false,
+) =>
   useQuery({
     queryKey: ["joinRequests", planId],
     queryFn: async () => {
@@ -43,6 +46,7 @@ export const useGetPendingRequests = (planId: string) =>
       );
       return res.data;
     },
+    enabled: isOwner,
   });
 
 export const useApproveJoinRequest = (planId: string) =>

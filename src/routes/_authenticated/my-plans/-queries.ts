@@ -44,3 +44,13 @@ export const useGetAllPlans = ({
     },
   });
 };
+
+export const useGetMyRole = (planId: string) =>
+  useQuery({
+    queryKey: ["myRole", planId],
+    queryFn: async () => {
+      const res = await axiosInstance.get(`/plans/${planId}/role`);
+      localStorage.setItem(`plan_role_${planId}`, res.data.role);
+      return res.data;
+    },
+  });

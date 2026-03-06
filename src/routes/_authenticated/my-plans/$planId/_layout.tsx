@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { ChatBubble } from "@/components/ChatBubble";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { useGetMyRole } from "../-queries";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$planId/_layout",
@@ -14,6 +15,7 @@ function RouteComponent() {
   const { planId: planId } = Route.useParams();
   const { user, isAuthenticated } = useAuth();
   const token = localStorage.getItem("auth_token");
+  useGetMyRole(planId);
   if (!user || !isAuthenticated || !token) return;
   return (
     <SidebarProvider>
