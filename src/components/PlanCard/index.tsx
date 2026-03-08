@@ -42,7 +42,13 @@ export default function PlanCard({
     <div>
       <Link to={`/my-plans/${id}`}>
         <figure>
-          <img src={coverImage} className="aspect-4/3 object-cover" />
+          <img
+            src={
+              coverImage ||
+              "https://res.cloudinary.com/dxu7hcg4g/image/upload/v1764864772/Placeholder_Plan_pohwic.png"
+            }
+            className="aspect-4/3 object-cover"
+          />
         </figure>
         <div className="py-4">
           <h3 className="pup-heading-three mb-2 text-neutral-black">{name}</h3>
