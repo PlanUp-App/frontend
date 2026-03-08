@@ -13,6 +13,7 @@ import { useAuth } from "@/auth/useAuth";
 import { AxiosError } from "axios";
 import axiosInstance from "@/utils/axios/axiosInstance";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/utils/queryclient/queryClient";
 
 interface EditProfileDialogProps {
   open: boolean;
@@ -108,9 +109,10 @@ export function EditProfileDialog({
       { name, bio },
       {
         onSuccess: (data) => {
-          updateUser(data);
+          updateUser(data.user);
           toast.success("Profile updated");
           handleOpenChange(false);
+          queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
         },
         onError: (err: unknown) => {
           const message =

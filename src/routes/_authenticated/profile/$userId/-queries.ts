@@ -3,9 +3,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 export interface UpdateAccountResponse {
-  name: string;
-  profilePicture: string;
-  email: string;
+  message: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    bio: string;
+    profilePicture: string;
+    coverImage: string;
+  };
 }
 
 export interface UpdateAccountValues {
@@ -16,7 +22,10 @@ export interface UpdateAccountValues {
 export const useUpdateAccount = (userId: string) => {
   return useMutation<UpdateAccountResponse, AxiosError, UpdateAccountValues>({
     mutationFn: async (val: UpdateAccountValues) => {
-      const { data } = await axiosInstance.post(`/users/${userId}/update`, val);
+      const { data } = await axiosInstance.patch(
+        `/users/${userId}/update`,
+        val,
+      );
       return data;
     },
     retry: 0,
