@@ -158,7 +158,6 @@ export function EditProfileDialog({
     { id: "profile", label: "Profile", icon: <User size={15} /> },
     { id: "password", label: "Password", icon: <Lock size={15} /> },
   ];
-  console.log(Object.keys(profileForm.getInputProps("name")));
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
