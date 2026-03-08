@@ -226,30 +226,20 @@ export default function Index() {
   if (!data) return null;
 
   return (
-    <div className="container mt-12">
+    <div>
       {/* Cover Image */}
-      <div className="relative h-52 rounded-t-2xl overflow-hidden bg-neutral-900">
-        {data.coverImage ? (
+      <div className="relative h-80 overflow-hidden bg-neutral-900 bg-linear-to-r from-orange-200 via-orange-400 to-orange-600">
+        {data.coverImage && (
           <img
             src={data.coverImage}
             alt="Cover"
             className="w-full h-full object-cover"
           />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900">
-            <div
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage: `radial-gradient(circle at 20% 50%, #F26419 0%, transparent 50%),
-                                  radial-gradient(circle at 80% 20%, #fb923c 0%, transparent 40%)`,
-              }}
-            />
-          </div>
         )}
       </div>
 
       {/* Profile Card */}
-      <div className="bg-white border border-off-white rounded-b-2xl px-8 pb-8">
+      <div className="container bg-white border border-off-white rounded-b-2xl px-8 pb-8">
         <div className="flex items-end justify-between">
           <div className="-mt-16 z-10">
             <ProfileAvatar
@@ -297,7 +287,7 @@ export default function Index() {
         <div className="border-t border-off-white mb-12" />
 
         <div>
-          <h2 className="pup-heading-three text-neutral-black mb-4">
+          <h2 className="pup-heading-three text-neutral-black mb-8">
             Public plans
           </h2>
           {data.publicPlans.length === 0 ? (
