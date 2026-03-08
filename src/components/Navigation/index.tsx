@@ -29,10 +29,18 @@ function NavDropdown({ authData }: { authData: AuthState }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => router.navigate({ to: "/my-account" })}
+          onClick={() => router.navigate({ to: `/my-plans` })}
           className="pup-body-md-400 hover:cursor-pointer"
         >
-          My Account
+          My Plans
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() =>
+            router.navigate({ to: `/profile/${authData.user?.id}` })
+          }
+          className="pup-body-md-400 hover:cursor-pointer"
+        >
+          My Profile
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={authData.logout}

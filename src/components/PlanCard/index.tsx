@@ -7,7 +7,7 @@ export type Member = {
 
 export type PlanCardProps = {
   id: string;
-  coverImage: string;
+  coverImage?: string;
   name: string;
   members?: Member[];
 };
@@ -34,7 +34,7 @@ function membersToString(members: Member[] | undefined) {
 
 export default function PlanCard({
   id,
-  coverImage,
+  coverImage = "https://res.cloudinary.com/dxu7hcg4g/image/upload/v1764864772/Placeholder_Plan_pohwic.png",
   name,
   members,
 }: PlanCardProps) {

@@ -1,3 +1,4 @@
+import { OutlineButton } from "@/components/Button/outline";
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -182,10 +183,7 @@ const Logo = () => (
 );
 function RouteComponent() {
   return (
-    <div
-      className="text-neutral-900 bg-white overflow-x-hidden"
-      style={{ fontFamily: "'Satoshi', sans-serif" }}
-    >
+    <div className="text-neutral-900 bg-white overflow-x-hidden">
       {/* HERO */}
       <section className="relative min-h-[calc(100vh-80px)] flex items-center pb-24">
         <div
@@ -196,7 +194,7 @@ function RouteComponent() {
           }}
         />
         <div className="absolute inset-0 bg-neutral-black opacity-50" />
-        <div className="relative z-10 px-16 max-w-2xl ">
+        <div className="container relative z-10 px-16 max-w-2xl ">
           <h1 className="pup-heading-one text-white mb-6">
             Plan Up.
             <br />
@@ -245,8 +243,8 @@ function RouteComponent() {
         </div>
       </section>
 
-      {/* COLLABORATE
-      <section className="px-16 py-24 bg-neutral-50 grid grid-cols-2 gap-20 items-center">
+      {/* COLLABORATE */}
+      <section className="container px-16 py-24 bg-neutral-50 grid grid-cols-2 gap-20 items-center">
         <div
           className="grid grid-cols-2 gap-4"
           style={{ gridTemplateRows: "1fr 1fr" }}
@@ -274,14 +272,12 @@ function RouteComponent() {
             everyone in sync—ensuring smooth collaboration from planning to
             completion.
           </p>
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-[1.5px] border-[#F26419] text-[#F26419] text-sm font-semibold hover:bg-[#F26419] hover:text-white transition-all duration-200 group"
-          >
-            GO TO APP <ArrowRight />
-          </a>
+          <OutlineButton
+            title="Go To App"
+            className="text-primary-orange border-primary-orange"
+          />
         </div>
-      </section> */}
+      </section>
 
       {/* CTA */}
       <section className="container relative py-32 text-center overflow-hidden">

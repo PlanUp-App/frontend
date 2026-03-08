@@ -305,12 +305,12 @@ export default function Index() {
               No public plans yet.
             </p>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-6">
               {data.publicPlans.map((plan) => (
                 <PlanCard
                   key={plan.id}
                   id={plan.id}
-                  coverImage={plan.coverImage}
+                  coverImage={plan.coverImage || undefined}
                   name={plan.name}
                 />
               ))}
