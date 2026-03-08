@@ -10,6 +10,7 @@ export interface UpdateAccountResponse {
 
 export interface UpdateAccountValues {
   name: string;
+  bio?: string;
 }
 
 export const useUpdateAccount = (userId: string) => {
