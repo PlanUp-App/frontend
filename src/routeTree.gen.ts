@@ -22,6 +22,7 @@ import { Route as AuthenticatedMyPlansPlanIdLayoutRouteImport } from './routes/_
 import { Route as AuthenticatedMyPlansPlanIdLayoutPhasesIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/phases/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutMembersIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/members/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/dashboard/index'
+import { Route as AuthenticatedMyPlansPlanIdLayoutConfigIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/config/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutBillsIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/bills/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutPhasesPhaseIdIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/phases/$phaseId/index'
 
@@ -97,6 +98,12 @@ const AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute =
     path: '/dashboard/',
     getParentRoute: () => AuthenticatedMyPlansPlanIdLayoutRoute,
   } as any)
+const AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute =
+  AuthenticatedMyPlansPlanIdLayoutConfigIndexRouteImport.update({
+    id: '/config/',
+    path: '/config/',
+    getParentRoute: () => AuthenticatedMyPlansPlanIdLayoutRoute,
+  } as any)
 const AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute =
   AuthenticatedMyPlansPlanIdLayoutBillsIndexRouteImport.update({
     id: '/bills/',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/my-plans/$planId/': typeof AuthenticatedMyPlansPlanIdIndexRoute
   '/profile/$userId/': typeof AuthenticatedProfileUserIdIndexRoute
   '/my-plans/$planId/bills/': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
+  '/my-plans/$planId/config/': typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   '/my-plans/$planId/dashboard/': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   '/my-plans/$planId/members/': typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   '/my-plans/$planId/phases/': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
@@ -136,6 +144,7 @@ export interface FileRoutesByTo {
   '/my-plans/$planId': typeof AuthenticatedMyPlansPlanIdIndexRoute
   '/profile/$userId': typeof AuthenticatedProfileUserIdIndexRoute
   '/my-plans/$planId/bills': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
+  '/my-plans/$planId/config': typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   '/my-plans/$planId/dashboard': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   '/my-plans/$planId/members': typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   '/my-plans/$planId/phases': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
@@ -154,6 +163,7 @@ export interface FileRoutesById {
   '/_authenticated/my-plans/$planId/': typeof AuthenticatedMyPlansPlanIdIndexRoute
   '/_authenticated/profile/$userId/': typeof AuthenticatedProfileUserIdIndexRoute
   '/_authenticated/my-plans/$planId/_layout/bills/': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
+  '/_authenticated/my-plans/$planId/_layout/config/': typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   '/_authenticated/my-plans/$planId/_layout/dashboard/': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   '/_authenticated/my-plans/$planId/_layout/members/': typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   '/_authenticated/my-plans/$planId/_layout/phases/': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/my-plans/$planId/'
     | '/profile/$userId/'
     | '/my-plans/$planId/bills/'
+    | '/my-plans/$planId/config/'
     | '/my-plans/$planId/dashboard/'
     | '/my-plans/$planId/members/'
     | '/my-plans/$planId/phases/'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/my-plans/$planId'
     | '/profile/$userId'
     | '/my-plans/$planId/bills'
+    | '/my-plans/$planId/config'
     | '/my-plans/$planId/dashboard'
     | '/my-plans/$planId/members'
     | '/my-plans/$planId/phases'
@@ -204,6 +216,7 @@ export interface FileRouteTypes {
     | '/_authenticated/my-plans/$planId/'
     | '/_authenticated/profile/$userId/'
     | '/_authenticated/my-plans/$planId/_layout/bills/'
+    | '/_authenticated/my-plans/$planId/_layout/config/'
     | '/_authenticated/my-plans/$planId/_layout/dashboard/'
     | '/_authenticated/my-plans/$planId/_layout/members/'
     | '/_authenticated/my-plans/$planId/_layout/phases/'
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedMyPlansPlanIdLayoutRoute
     }
+    '/_authenticated/my-plans/$planId/_layout/config/': {
+      id: '/_authenticated/my-plans/$planId/_layout/config/'
+      path: '/config'
+      fullPath: '/my-plans/$planId/config/'
+      preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRouteImport
+      parentRoute: typeof AuthenticatedMyPlansPlanIdLayoutRoute
+    }
     '/_authenticated/my-plans/$planId/_layout/bills/': {
       id: '/_authenticated/my-plans/$planId/_layout/bills/'
       path: '/bills'
@@ -330,6 +350,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedMyPlansPlanIdLayoutRouteChildren {
   AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
+  AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
   AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
@@ -340,6 +361,8 @@ const AuthenticatedMyPlansPlanIdLayoutRouteChildren: AuthenticatedMyPlansPlanIdL
   {
     AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute:
       AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute,
+    AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute:
+      AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute,
     AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute:
       AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute,
     AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute:

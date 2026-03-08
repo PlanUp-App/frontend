@@ -179,7 +179,7 @@ export function AppSidebar({ planId }: { planId: string }) {
             label="Members"
           />
           <NavItem
-            to={`/my-plans/${planId}/settings`}
+            to={`/my-plans/${planId}/config`}
             icon={MdOutlineSettings}
             label="Configurations"
           />
