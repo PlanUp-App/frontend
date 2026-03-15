@@ -17,6 +17,7 @@ type MemberCardProps = {
   role?: PlanRole;
   isOwner?: boolean;
   hasOptions?: boolean;
+  type?: "lg" | "sm";
 };
 
 export default function MemberCard({
@@ -27,35 +28,59 @@ export default function MemberCard({
   role,
   isOwner = false,
   hasOptions = true,
+  type = "lg",
 }: MemberCardProps) {
   // const roleLabel = isOwner ? "Owner" : role === "ADMIN" ? "Admin" : "Member";
 
-  return (
-    <div className="py-3 flex justify-between w-full border-b border-b-off-white">
-      <div className="flex gap-4">
-        <ProfileAvatar src={profilePicture} alt={name} className="w-14 h-14" />
-        <div>
-          <Link to={`/profile/${id}`}>
-            <h3 className="pup-body-xl-400 text-neutral-black">
-              {name}{" "}
-              <span className="text-neutral-grey">{isOwner && "(Owner)"}</span>
-            </h3>
-          </Link>
-          <span className="pup-body-sm-400 text-neutral-grey">{email}</span>
+  if (type === "lg")
+    return (
+      <div className="py-3 flex justify-between w-full border-b border-b-off-white">
+        <div className="flex gap-4">
+          <ProfileAvatar
+            src={profilePicture}
+            alt={name}
+            className="w-14 h-14"
+          />
+          <div>
+            <Link to={`/profile/${id}`}>
+              <h3 className="pup-body-xl-400 text-neutral-black">
+                {name}{" "}
+                <span className="text-neutral-grey">
+                  {isOwner && "(Owner)"}
+                </span>
+              </h3>
+            </Link>
+            <span className="pup-body-sm-400 text-neutral-grey">{email}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {hasOptions && !isOwner && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <MdOutlineMoreVert size={24} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400">
+                  Remove
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
-      <div className="flex items-center gap-3">
-        {hasOptions && !isOwner && (
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <MdOutlineMoreVert size={24} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400">
-                Remove
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+    );
+
+  return (
+    <div key={id} className="flex items-center gap-3">
+      <ProfileAvatar src={profilePicture} alt={name} size="md" />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          <p className="pup-body-md-400 text-neutral-black truncate">{name}</p>
+        </div>
+        {role && (
+          <p className="pup-body-sm-400 text-neutral-grey capitalize">
+            {role.toLowerCase()}
+          </p>
         )}
       </div>
     </div>

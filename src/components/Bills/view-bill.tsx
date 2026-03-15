@@ -72,7 +72,7 @@ export default function ViewBill({
 
               {bill?.paidBy && (
                 <div>
-                  <label className="pup-body-md-500 block text-neutral-black mb-2">
+                  <label className="pup-body-md-500 block text-neutral-black mb-4">
                     Paid by:
                   </label>
                   <MemberCard
@@ -81,20 +81,21 @@ export default function ViewBill({
                     email={bill.paidBy.email}
                     profilePicture={bill.paidBy.profilePicture}
                     hasOptions={false}
+                    type="sm"
                   />
                 </div>
               )}
 
               {bill?.split && bill.split.length > 0 && (
                 <div>
-                  <label className="pup-body-md-500 block text-neutral-black mb-2">
+                  <label className="pup-body-md-500 block text-neutral-black mb-4">
                     Split between:
                   </label>
                   <div className="space-y-2">
                     {bill.split.map((split) => (
                       <div
                         key={split.id}
-                        className="flex items-center justify-between"
+                        className="flex items-center justify-between mb-4"
                       >
                         <MemberCard
                           id={split.user.id}
@@ -102,6 +103,7 @@ export default function ViewBill({
                           email={split.user.email}
                           profilePicture={split.user.profilePicture}
                           hasOptions={false}
+                          type="sm"
                         />
                         <span className="pup-body-md-400 text-neutral-grey">
                           {split.amount.toLocaleString("en-US", {

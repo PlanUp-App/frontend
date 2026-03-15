@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format, isPast, isToday, isTomorrow } from "date-fns";
+import { ProfileAvatar } from "@/components/PreviewImage";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$planId/_layout/dashboard/",
@@ -85,31 +86,7 @@ const DUMMY_DASHBOARD: PlanDashboard = {
       id: "m2",
       role: "ADMIN",
       joinedAt: "2025-01-02T00:00:00Z",
-      user: { id: "u2", name: "Rina Maharjan", profilePicture: null },
-    },
-    {
-      id: "m3",
-      role: "MEMBER",
-      joinedAt: "2025-01-03T00:00:00Z",
-      user: { id: "u3", name: "Arjun Thapa", profilePicture: null },
-    },
-    {
-      id: "m4",
-      role: "MEMBER",
-      joinedAt: "2025-01-04T00:00:00Z",
-      user: { id: "u4", name: "Priya Shrestha", profilePicture: null },
-    },
-    {
-      id: "m5",
-      role: "MEMBER",
-      joinedAt: "2025-01-05T00:00:00Z",
-      user: { id: "u5", name: "Dev Karki", profilePicture: null },
-    },
-    {
-      id: "m6",
-      role: "MEMBER",
-      joinedAt: "2025-01-06T00:00:00Z",
-      user: { id: "u6", name: "Meera Lama", profilePicture: null },
+      user: { id: "u2", name: "Shlok Dhital", profilePicture: null },
     },
   ],
   recentTasks: [
@@ -234,34 +211,6 @@ function roleIcon(role: "OWNER" | "ADMIN" | "MEMBER") {
   return null;
 }
 
-function Avatar({
-  src,
-  name,
-  size = "sm",
-}: {
-  src: string | null;
-  name: string;
-  size?: "sm" | "md";
-}) {
-  const dim = size === "sm" ? "w-8 h-8 text-xs" : "w-10 h-10 text-sm";
-  return src ? (
-    <img
-      src={src}
-      alt={name}
-      className={cn("rounded-full object-cover shrink-0", dim)}
-    />
-  ) : (
-    <div
-      className={cn(
-        "rounded-full bg-orange-100 text-primary-orange font-medium flex items-center justify-center shrink-0",
-        dim,
-      )}
-    >
-      {name[0].toUpperCase()}
-    </div>
-  );
-}
-
 function StatCard({
   label,
   value,
@@ -346,11 +295,10 @@ function RouteComponent() {
           iconBg="bg-amber-50"
         />
         <StatCard
-          label="Unpaid Bills"
-          value={`$${stats.unpaidAmount.toFixed(2)}`}
+          label="Unpaid Amount"
+          value={`Rs. ${stats.unpaidAmount.toFixed(2)}`}
           icon={<Receipt size={20} className="text-red-400" />}
           iconBg="bg-red-50"
-          sub={`${stats.totalBills} bill${stats.totalBills !== 1 ? "s" : ""} total`}
         />
       </div>
 
@@ -441,9 +389,9 @@ function RouteComponent() {
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {task.assignee && (
-                          <Avatar
+                          <ProfileAvatar
                             src={task.assignee.profilePicture}
-                            name={task.assignee.name}
+                            alt={task.assignee.name}
                             size="sm"
                           />
                         )}
@@ -537,9 +485,9 @@ function RouteComponent() {
           <div className="flex flex-col gap-3">
             {members.map((member) => (
               <div key={member.id} className="flex items-center gap-3">
-                <Avatar
+                <ProfileAvatar
                   src={member.user.profilePicture}
-                  name={member.user.name}
+                  alt={member.user.name}
                   size="md"
                 />
                 <div className="flex-1 min-w-0">

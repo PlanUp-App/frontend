@@ -55,7 +55,7 @@ export default function ViewTaskDrawer({
                 <RichTextParser html={task?.data.description} />
               </div>
               <div>
-                <label className="pup-body-md-500 block text-neutral-black">
+                <label className="pup-body-md-500 block text-neutral-black mb-4">
                   Assigned to:
                 </label>
                 {task?.data.assignee ? (
@@ -65,6 +65,7 @@ export default function ViewTaskDrawer({
                     email={task?.data.assignee.email}
                     profilePicture={task?.data.assignee.profilePicture}
                     hasOptions={false}
+                    type="sm"
                   />
                 ) : (
                   <p>No one</p>
