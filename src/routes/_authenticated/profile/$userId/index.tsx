@@ -17,6 +17,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { EditProfileDialog } from "@/components/Modals/edit-profile";
 import { queryClient } from "@/utils/queryclient/queryClient";
 import { useGetProfile } from "./-queries";
+import { ReportButton } from "@/components/Button/report-button";
 
 export default function Index() {
   const { userId } = Route.useParams();
@@ -162,7 +163,7 @@ export default function Index() {
             )}
           </div>
 
-          {isSelf && (
+          {isSelf ? (
             <>
               <OutlineButton
                 title="Edit Profile"
@@ -178,6 +179,8 @@ export default function Index() {
                 }}
               />
             </>
+          ) : (
+            <ReportButton userId={userId} userName={data.name} />
           )}
         </div>
 

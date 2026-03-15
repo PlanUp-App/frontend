@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import type { PlanRole } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
+import { Link } from "@tanstack/react-router";
 
 type MemberCardProps = {
   id: string;
@@ -34,10 +35,12 @@ export default function MemberCard({
       <div className="flex gap-4">
         <ProfileAvatar src={profilePicture} alt={name} className="w-14 h-14" />
         <div>
-          <h3 className="pup-body-xl-400 text-neutral-black">
-            {name}{" "}
-            <span className="text-neutral-grey">{isOwner && "(Owner)"}</span>
-          </h3>
+          <Link to={`/profile/${id}`}>
+            <h3 className="pup-body-xl-400 text-neutral-black">
+              {name}{" "}
+              <span className="text-neutral-grey">{isOwner && "(Owner)"}</span>
+            </h3>
+          </Link>
           <span className="pup-body-sm-400 text-neutral-grey">{email}</span>
         </div>
       </div>

@@ -7,6 +7,7 @@ interface PrimaryButtonProps {
   className?: string;
   link?: string;
   isLoading?: boolean;
+  disabled?: boolean;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
 }
@@ -15,13 +16,17 @@ export function PrimaryButton({
   title,
   className,
   isLoading = false,
+  disabled,
   link,
   type = "button",
   onClick,
 }: PrimaryButtonProps) {
   const baseClasses = twMerge(
-    `h-11 flex gap-2 items-center justify-center px-6 text-white rounded-full bg-primary-orange pup-body-md-500 ${isLoading ? "cursor-progress" : "cursor-pointer"}`,
-    className
+    `h-11 flex gap-2 items-center justify-center px-6 text-white rounded-full bg-primary-orange pup-body-md-500`,
+    className,
+    isLoading || disabled
+      ? "cursor-not-allowed opacity-50"
+      : "cursor-pointer hover:bg-primary-orange/90",
   );
 
   if (link) {
@@ -36,7 +41,7 @@ export function PrimaryButton({
     <button
       type={type}
       className={baseClasses}
-      disabled={isLoading}
+      disabled={disabled || isLoading}
       onClick={onClick}
     >
       {isLoading && <Spinner />}

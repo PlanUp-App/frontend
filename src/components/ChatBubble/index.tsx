@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { MdClose, MdSend, MdChatBubbleOutline } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { useChat } from "@/hooks/useChat";
-import { useQuery } from "@tanstack/react-query";
 import { ProfileAvatar } from "../PreviewImage";
+import { Link } from "@tanstack/react-router";
 
 interface ChatBubbleProps {
   planId: string;
@@ -76,15 +76,6 @@ export function ChatBubble({ planId, currentUserId, token }: ChatBubbleProps) {
     setInput("");
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   const groupedMessages = groupMessagesByDay(messages);
 
   return (
@@ -152,12 +143,14 @@ export function ChatBubble({ planId, currentUserId, token }: ChatBubbleProps) {
                           )}
                         >
                           {!isConsecutive && !isOwn && (
-                            <div className="flex-shrink-0 mt-1">
-                              <ProfileAvatar
-                                src={message.sender.profilePicture}
-                                alt={message.sender.name}
-                              />
-                            </div>
+                            <Link to={`/profile/${message.sender.id}`}>
+                              <div className="flex-shrink-0 mt-1">
+                                <ProfileAvatar
+                                  src={message.sender.profilePicture}
+                                  alt={message.sender.name}
+                                />
+                              </div>
+                            </Link>
                           )}
 
                           <div
