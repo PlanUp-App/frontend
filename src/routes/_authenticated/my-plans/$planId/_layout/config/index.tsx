@@ -139,10 +139,9 @@ function RouteComponent() {
         <PrimaryButton
           title="Save Changes"
           type="submit"
-          isLoading={updateMutation.isPending}
+          isLoading={updateMutation.isPending || isLoading}
         />
       </div>
-
       <div className="flex flex-col gap-10 max-w-2xl">
         {/* Cover Image */}
         <div>

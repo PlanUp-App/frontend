@@ -1,4 +1,5 @@
-// components/ProfileAvatar/ProfileAvatar.tsx
+import { cn } from "@/lib/utils";
+
 interface ProfileAvatarProps {
   src?: string | null;
   alt?: string;
@@ -11,8 +12,8 @@ export function ProfileAvatar({
   src,
   alt = "Profile",
   size = "md",
-  className = "",
-  showBorder = true,
+  className,
+  showBorder = false,
 }: ProfileAvatarProps) {
   const sizeClasses = {
     xs: "w-6 h-6 text-xs",
@@ -29,14 +30,20 @@ export function ProfileAvatar({
     .toUpperCase()
     .slice(0, 2);
 
-  const borderClass = showBorder ? "border-2 border-gray-200" : "";
+  const base = cn(
+    sizeClasses[size],
+    "rounded-full shrink-0",
+    showBorder && "border-2 border-gray-200",
+    className,
+  );
 
   if (!src) {
     return (
       <div
-        className={`${sizeClasses[size]} ${className} ${borderClass}
-                    bg-neutral-grey text-white  rounded-full flex items-center justify-center font-semibold
-                    shadow-md shrink-0`}
+        className={cn(
+          base,
+          "bg-orange-100 text-primary-orange font-medium flex items-center justify-center shrink-0",
+        )}
       >
         {initials}
       </div>
@@ -47,8 +54,7 @@ export function ProfileAvatar({
     <img
       src={src}
       alt={alt}
-      className={`${sizeClasses[size]} ${className} ${borderClass}
-                  rounded-full object-cover shadow-md shrink-0 aspect-square`}
+      className={cn(base, "object-cover shadow-md aspect-square")}
     />
   );
 }
