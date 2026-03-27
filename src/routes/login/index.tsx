@@ -4,7 +4,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { router } from "@/main";
@@ -14,11 +14,11 @@ export const Route = createFileRoute("/login/")({
   validateSearch: (search) => ({
     redirect: search.redirect as string,
   }),
-  beforeLoad: ({ context, search }) => {
-    if (context.auth.isAuthenticated) {
-      throw redirect({ to: search.redirect || "/my-plans" });
-    }
-  },
+  // beforeLoad: ({ context, search }) => {
+  //   if (context.auth.isAuthenticated) {
+  //     throw redirect({ to: search.redirect || "/my-plans" });
+  //   }
+  // },
   component: Index,
 });
 
@@ -33,6 +33,12 @@ function Index() {
   const { auth } = Route.useRouteContext();
   const redirect = Route.useSearch().redirect || "/my-plans";
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      router.navigate({ to: redirect });
+    }
+  }, [auth.isAuthenticated, redirect]);
 
   const handleGoogleLogin = () => {
     window.location.href = `${"http://localhost:7001"}/auth/google/login`;
@@ -54,6 +60,7 @@ function Index() {
           toast.success("Login Successful");
           console.log(redirect);
           router.navigate({ to: redirect });
+          setIsLoading(false);
         },
         onError: (err: unknown) => {
           let message = "Something went wrong";
@@ -64,6 +71,7 @@ function Index() {
           }
           console.log(err);
           toast.error(message);
+          setIsLoading(false);
         },
       },
     );

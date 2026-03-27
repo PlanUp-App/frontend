@@ -10,6 +10,7 @@ import type { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axios/axiosInstance";
 import { router } from "@/main";
+import { toast } from "sonner";
 
 export interface User {
   id: string;
@@ -70,6 +71,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (isError) {
       localStorage.removeItem("auth_token");
       localStorage.removeItem("user");
+      toast.error("Your login session has expired. Please log in again.", {
+        duration: 8000,
+      });
       delete axiosInstance.defaults.headers.common["Authorization"];
       setUser(null);
       setIsLoading(false);
