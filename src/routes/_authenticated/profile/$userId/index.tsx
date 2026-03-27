@@ -230,6 +230,9 @@ export default function Index() {
                   id={plan.id}
                   coverImage={plan.coverImage || undefined}
                   name={plan.name}
+                  isPublic={plan.visibility === "PUBLIC"}
+                  memberCount={plan.memberCount}
+                  members={[]}
                 />
               ))}
             </div>

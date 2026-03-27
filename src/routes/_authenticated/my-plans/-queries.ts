@@ -3,6 +3,8 @@ import type { Member } from "@/components/PlanCard";
 import axiosInstance from "@/utils/axios/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 
+type PlanVisibility = "PUBLIC" | "PRIVATE";
+
 interface getAllPlansParams {
   search?: string;
   limit?: number;
@@ -18,6 +20,7 @@ interface getAllPlansResponse {
   createdAt: string;
   owner: User;
   members: Member[];
+  visibility: PlanVisibility;
 }
 
 export const useGetAllPlans = ({

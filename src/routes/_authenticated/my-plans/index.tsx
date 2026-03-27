@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useGetAllPlans } from "./-queries";
 import { Spinner } from "@/components/ui/spinner";
 import { CreatePlanDialog } from "@/components/Modals/create-plan";
+import { useAuth } from "@/auth/useAuth";
 
 export const Route = createFileRoute("/_authenticated/my-plans/")({
   component: Index,
@@ -18,6 +19,7 @@ function Index() {
   const [input, setInput] = useState(search ?? "");
   const debouncedSearch = useDebounce(input, 300);
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
+  const { user } = useAuth();
 
   const { data, isLoading, isError } = useGetAllPlans({
     search: debouncedSearch,
@@ -60,13 +62,15 @@ function Index() {
           ) : isError ? (
             "Something went wrong"
           ) : data?.data && data.data.length > 0 ? (
-            data.data.map(({ id, name, coverImage, members }) => (
+            data.data.map(({ id, name, coverImage, members, visibility }) => (
               <PlanCard
                 key={id}
                 id={id}
+                currentUserId={user?.id}
                 name={name}
                 coverImage={coverImage}
                 members={members}
+                isPublic={visibility === "PUBLIC"}
               />
             ))
           ) : (

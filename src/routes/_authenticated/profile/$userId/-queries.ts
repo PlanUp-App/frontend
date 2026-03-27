@@ -37,6 +37,7 @@ export interface ProfilePlan {
   name: string;
   coverImage?: string | null;
   memberCount?: number;
+  visibility: "PUBLIC" | "PRIVATE";
 }
 
 export interface UserProfile {
