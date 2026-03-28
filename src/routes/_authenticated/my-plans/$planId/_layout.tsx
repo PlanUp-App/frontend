@@ -26,7 +26,7 @@ function RouteComponent() {
           <NavDropdown />
         </header>
         <main className="px-16">
-          <div className="p-8 max-w-5xl mx-auto">
+          <div className="p-8 max-w-6xl mx-auto">
             <Outlet />
           </div>
         </main>

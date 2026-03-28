@@ -5,7 +5,7 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { CustomInput } from "../CustomInput/input";
-import MemberSelect from "../MemberSelect";
+import MemberSelect, { type MemberOption } from "../MemberSelect";
 import { PrimaryButton } from "../Button/primary-filled";
 import { OutlineButton } from "../Button/outline";
 import { SimpleSelect } from "../Select";
@@ -61,13 +61,20 @@ const createBillSchema = z
     category: z.string().optional(),
     attachmentUrl: z.url().optional(),
     splitType: BillSplitTypeEnum,
-    paidBy: z
-      .union([memberOptionSchema, z.null(), z.undefined()])
-      .refine((val) => val != null, { message: "Member is required" }),
+    paidBy: memberOptionSchema.optional(),
     split: z.array(billSplitSchema).min(1),
   })
   .superRefine((data, ctx) => {
-    const { splitType, split } = data;
+    const { splitType, split, paidBy } = data;
+
+    if (!paidBy) {
+      ctx.addIssue({
+        path: ["paidBy"],
+        message: "Member is required",
+        code: "custom",
+      });
+    }
+
     const seen = new Set<string>();
 
     if (!splitType) return;
@@ -316,11 +323,11 @@ export default function AddBill({
             />
             {/* <CustomInput label="Task" /> */}
             <MemberSelect
-              data={members?.data ?? null}
+              data={members ?? null}
               label="Paid by"
               selectedMember={form.values.paidBy ?? null}
               setSelectedMember={(member) =>
-                form.setFieldValue("paidBy", member)
+                form.setFieldValue("paidBy", member ?? undefined)
               }
               error={form.errors["paidBy"] as string | undefined}
             />
@@ -346,7 +353,7 @@ export default function AddBill({
               {form.values.split.map((_, index) => (
                 <div key={index} className="flex gap-2 mb-1.5">
                   <MemberSelect
-                    data={members?.data ?? null}
+                    data={members ?? null}
                     selectedMember={form.values.split[index].member}
                     setSelectedMember={(member) =>
                       form.setFieldValue(`split.${index}.member`, member)

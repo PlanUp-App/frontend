@@ -2,6 +2,7 @@ import { useGetBills } from "@/components/Bills/-queries";
 import AddBill from "@/components/Bills/add-bill";
 import BillCard from "@/components/Bills/bill-card";
 import ViewBill from "@/components/Bills/view-bill";
+import { OutlineButton } from "@/components/Button/outline";
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { SearchInput } from "@/components/CustomInput/search-input";
 import { useDebounce } from "@/components/CustomInput/useDebounce";
@@ -51,6 +52,7 @@ function RouteComponent() {
       <div className="flex justify-between mb-12 items-center">
         <h1 className="pup-heading-three">Bills</h1>
         <div className="flex gap-3">
+          <OutlineButton title="View Report" type="button" onClick={() => {}} />
           <PrimaryButton
             title="Add Bill"
             type="button"

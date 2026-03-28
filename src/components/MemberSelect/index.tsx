@@ -25,7 +25,7 @@ export interface MemberOption {
   profilePicture?: string | null;
 }
 
-const transformMembers = (data: PlanMember[] | null): MemberOption[] => {
+export const transformMembers = (data: PlanMember[] | null): MemberOption[] => {
   if (data === null || !data) return [];
 
   const members: MemberOption[] = data.map((m) => ({
