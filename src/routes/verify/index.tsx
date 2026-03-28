@@ -11,18 +11,13 @@ import { toast } from "sonner";
 import { router } from "@/main";
 
 export const Route = createFileRoute("/verify/")({
-  beforeLoad: ({ context }) => {
-    if (context.auth.isAuthenticated) {
-      throw redirect({ to: "/login/" });
-    }
-  },
   component: Index,
 });
 
 function Index() {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
-  const token = params.get("token");
+  const token = params.get("verificationToken");
   if (!token)
     router.navigate({ to: "/login", params: { redirect: "dashboard" } });
   const verifyEmailMutation = useVerifyEmail({
