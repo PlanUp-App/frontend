@@ -10,7 +10,7 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
-      <Navigation />
+      {/* <Navigation /> */}
       <Outlet />
       <Toaster
         position="top-center"

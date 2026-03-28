@@ -1,5 +1,6 @@
 import { OutlineButton } from "@/components/Button/outline";
 import { PrimaryButton } from "@/components/Button/primary-filled";
+import { Navigation } from "@/components/Navigation";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -183,176 +184,175 @@ const Logo = () => (
 );
 function RouteComponent() {
   return (
-    <div className="text-neutral-900 bg-white overflow-x-hidden">
-      {/* HERO */}
-      <section className="relative min-h-[calc(100vh-80px)] flex items-center pb-24">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80')",
-          }}
-        />
-        <div className="absolute inset-0 bg-neutral-black opacity-50" />
-        <div className="container relative z-10 px-16 max-w-2xl ">
-          <h1 className="pup-heading-one text-white mb-6">
-            Plan Up.
-            <br />
-            Live More.
-          </h1>
-          <p className="pup-body-md-400 text-white mb-8">
-            Create your first plan, invite your friends, and make organizing
-            group activities effortlessly.
-          </p>
-          <PrimaryButton
-            title="GET STARTED NOW"
-            link="/sign-up"
-            className="w-fit"
+    <>
+      <Navigation />
+      <div className="text-neutral-900 bg-white overflow-x-hidden">
+        {/* HERO */}
+        <section className="relative min-h-[calc(100vh-80px)] flex items-center pb-24">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80')",
+            }}
           />
-        </div>
-      </section>
+          <div className="absolute inset-0 bg-neutral-black opacity-50" />
+          <div className="container relative z-10 px-16 max-w-2xl ">
+            <h1 className="pup-heading-one text-white mb-6">
+              Plan Up.
+              <br />
+              Live More.
+            </h1>
+            <p className="pup-body-md-400 text-white mb-8">
+              Create your first plan, invite your friends, and make organizing
+              group activities effortlessly.
+            </p>
+            <PrimaryButton
+              title="GET STARTED NOW"
+              link="/sign-up"
+              className="w-fit"
+            />
+          </div>
+        </section>
 
-      {/* FEATURES */}
-      <section className="container py-28">
-        <div className="mb-16">
-          <p className="pup-body-tag text-primary-orange uppercase mb-4">
-            Product Overview
-          </p>
-          <h2 className="pup-heading-two leading-tight text-neutral-black max-w-xl">
-            Make Group Activities Easier than Ever
-          </h2>
-        </div>
-        <div className="grid grid-cols-4 gap-10">
-          {FEATURES.map((f, i) => (
-            <div
-              key={f.title}
-              className="feature-card"
-              // ref={(el) => (featureRefs.current[i] = el)}
-            >
-              <div className="w-10 h-10 bg-[#F26419] rounded-xl flex items-center justify-center text-white mb-4">
-                {f.icon}
+        {/* FEATURES */}
+        <section className="container py-28">
+          <div className="mb-16">
+            <p className="pup-body-tag text-primary-orange uppercase mb-4">
+              Product Overview
+            </p>
+            <h2 className="pup-heading-two leading-tight text-neutral-black max-w-xl">
+              Make Group Activities Easier than Ever
+            </h2>
+          </div>
+          <div className="grid grid-cols-4 gap-10">
+            {FEATURES.map((f, i) => (
+              <div key={f.title} className="feature-card">
+                <div className="w-10 h-10 bg-[#F26419] rounded-xl flex items-center justify-center text-white mb-4">
+                  {f.icon}
+                </div>
+                <h3 className="font-semibold text-lg text-neutral-900 mb-2">
+                  {f.title}
+                </h3>
+                <p className="text-sm text-neutral-500 leading-relaxed">
+                  {f.description}
+                </p>
               </div>
-              <h3 className="font-semibold text-lg text-neutral-900 mb-2">
-                {f.title}
-              </h3>
-              <p className="text-sm text-neutral-500 leading-relaxed">
-                {f.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* COLLABORATE */}
-      <section className="container px-16 py-24 bg-neutral-50 grid grid-cols-2 gap-20 items-center">
-        <div
-          className="grid grid-cols-2 gap-4"
-          style={{ gridTemplateRows: "1fr 1fr" }}
-        >
-          <div className="row-span-2 rounded-2xl overflow-hidden min-h-[380px]">
-            <ImagePlaceholder />
-          </div>
-          <div className="rounded-2xl overflow-hidden min-h-[180px]">
-            <ImagePlaceholder />
-          </div>
-          <div className="rounded-2xl overflow-hidden min-h-[180px]">
-            <ImagePlaceholder />
-          </div>
-        </div>
-        <div className="py-5">
-          <p className="pup-body-tag text-primary-orange uppercase mb-4">
-            Seamless Collaboration
-          </p>
-          <h2 className="pup-heading-two leading-tight text-neutral-black max-w-xl">
-            Collaborate with ease
-          </h2>
-          <p className="text-[15px] text-neutral-500 leading-relaxed mb-9">
-            Stay connected with real-time updates, instant chat, and smart
-            notifications. Coordinate effortlessly, share ideas, and keep
-            everyone in sync—ensuring smooth collaboration from planning to
-            completion.
-          </p>
-          <OutlineButton
-            title="Go To App"
-            className="text-primary-orange border-primary-orange"
-          />
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="container relative py-32 text-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=1400&q=80')",
-          }}
-        />
-        <div className="absolute inset-0 bg-neutral-black/60" />
-        <div className="relative z-10">
-          <h2 className="pup-heading-two text-white mb-4">
-            Make Plans Come to Life
-          </h2>
-          <p className="pup-body-md-400 text-white mb-10">
-            Turn every idea into action — plan, track, and collaborate
-            instantly.
-          </p>
-          <PrimaryButton
-            title="Sign Up Now"
-            link="/sign-up"
-            className="w-fit mx-auto"
-          />
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      {/* <footer className="px-16 py-12 flex items-center justify-between border-t border-neutral-100 flex-wrap gap-6">
-        <div className="flex items-center gap-10">
-          <Logo />
-          <div className="flex gap-7">
-            {NAV_LINKS.map((l) => (
-              <a
-                key={l.label}
-                href={l.href}
-                className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
-              >
-                {l.label}
-              </a>
             ))}
           </div>
-        </div>
-        <div className="flex items-center gap-3">
-          {SOCIALS.map((s) => (
+        </section>
+
+        {/* COLLABORATE */}
+        <section className="container px-16 py-24 bg-neutral-50 grid grid-cols-2 gap-20 items-center">
+          <div
+            className="grid grid-cols-2 gap-4"
+            style={{ gridTemplateRows: "1fr 1fr" }}
+          >
+            <div className="row-span-2 rounded-2xl overflow-hidden min-h-[380px]">
+              <ImagePlaceholder />
+            </div>
+            <div className="rounded-2xl overflow-hidden min-h-[180px]">
+              <ImagePlaceholder />
+            </div>
+            <div className="rounded-2xl overflow-hidden min-h-[180px]">
+              <ImagePlaceholder />
+            </div>
+          </div>
+          <div className="py-5">
+            <p className="pup-body-tag text-primary-orange uppercase mb-4">
+              Seamless Collaboration
+            </p>
+            <h2 className="pup-heading-two leading-tight text-neutral-black max-w-xl">
+              Collaborate with ease
+            </h2>
+            <p className="text-[15px] text-neutral-500 leading-relaxed mb-9">
+              Stay connected with real-time updates, instant chat, and smart
+              notifications. Coordinate effortlessly, share ideas, and keep
+              everyone in sync—ensuring smooth collaboration from planning to
+              completion.
+            </p>
+            <OutlineButton
+              title="Go To App"
+              className="text-primary-orange border-primary-orange"
+            />
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="container relative py-32 text-center overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=1400&q=80')",
+            }}
+          />
+          <div className="absolute inset-0 bg-neutral-black/60" />
+          <div className="relative z-10">
+            <h2 className="pup-heading-two text-white mb-4">
+              Make Plans Come to Life
+            </h2>
+            <p className="pup-body-md-400 text-white mb-10">
+              Turn every idea into action — plan, track, and collaborate
+              instantly.
+            </p>
+            <PrimaryButton
+              title="Sign Up Now"
+              link="/sign-up"
+              className="w-fit mx-auto"
+            />
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        {/* <footer className="px-16 py-12 flex items-center justify-between border-t border-neutral-100 flex-wrap gap-6">
+      <div className="flex items-center gap-10">
+        <Logo />
+        <div className="flex gap-7">
+          {NAV_LINKS.map((l) => (
             <a
-              key={s.label}
-              href="#"
-              aria-label={s.label}
-              className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:border-[#F26419] hover:text-[#F26419] transition-all"
+              key={l.label}
+              href={l.href}
+              className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
             >
-              {s.icon}
+              {l.label}
             </a>
           ))}
         </div>
-      </footer> */}
-      {/* <div className="px-16 py-5 flex items-center justify-between border-t border-neutral-100 flex-wrap gap-3">
-        <p className="text-xs text-neutral-400">
-          © 2025 PlanUp. All rights reserved.
-        </p>
-        <div className="flex gap-5">
+      </div>
+      <div className="flex items-center gap-3">
+        {SOCIALS.map((s) => (
           <a
+            key={s.label}
             href="#"
-            className="text-xs text-neutral-400 hover:text-[#F26419] transition-colors"
+            aria-label={s.label}
+            className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:border-[#F26419] hover:text-[#F26419] transition-all"
           >
-            Privacy Policy
+            {s.icon}
           </a>
-          <a
-            href="#"
-            className="text-xs text-neutral-400 hover:text-[#F26419] transition-colors"
-          >
-            Terms of Service
-          </a>
-        </div>
-      </div> */}
-    </div>
+        ))}
+      </div>
+    </footer> */}
+        {/* <div className="px-16 py-5 flex items-center justify-between border-t border-neutral-100 flex-wrap gap-3">
+      <p className="text-xs text-neutral-400">
+        © 2025 PlanUp. All rights reserved.
+      </p>
+      <div className="flex gap-5">
+        <a
+          href="#"
+          className="text-xs text-neutral-400 hover:text-[#F26419] transition-colors"
+        >
+          Privacy Policy
+        </a>
+        <a
+          href="#"
+          className="text-xs text-neutral-400 hover:text-[#F26419] transition-colors"
+        >
+          Terms of Service
+        </a>
+      </div>
+    </div> */}
+      </div>
+    </>
   );
 }

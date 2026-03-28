@@ -71,9 +71,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (isError) {
       localStorage.removeItem("auth_token");
       localStorage.removeItem("user");
-      toast.error("Your login session has expired. Please log in again.", {
-        duration: 8000,
-      });
+      // toast.error("Your login session has expired. Please log in again.", {
+      //   duration: 8000,
+      // });
       delete axiosInstance.defaults.headers.common["Authorization"];
       setUser(null);
       setIsLoading(false);

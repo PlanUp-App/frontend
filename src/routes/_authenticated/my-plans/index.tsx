@@ -9,6 +9,7 @@ import { useGetAllPlans } from "./-queries";
 import { Spinner } from "@/components/ui/spinner";
 import { CreatePlanDialog } from "@/components/Modals/create-plan";
 import { useAuth } from "@/auth/useAuth";
+import { Navigation } from "@/components/Navigation";
 
 export const Route = createFileRoute("/_authenticated/my-plans/")({
   component: Index,
@@ -36,48 +37,51 @@ function Index() {
   }, [debouncedSearch]);
 
   return (
-    <section className="py-16">
-      <CreatePlanDialog
-        open={createModalIsOpen}
-        onOpenChange={setCreateModalIsOpen}
-      />
-      <div className="container">
-        <div className="flex justify-between mb-12">
-          <h1 className="pup-heading-two text-neutral-black">My plans</h1>
-          <PrimaryButton
-            type="button"
-            title="Create New Plan"
-            onClick={() => setCreateModalIsOpen(true)}
-          />
-        </div>
-        <SearchInput
-          placeholder="Search by name..."
-          className="mb-12"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+    <>
+      <Navigation />
+      <section className="py-16">
+        <CreatePlanDialog
+          open={createModalIsOpen}
+          onOpenChange={setCreateModalIsOpen}
         />
-        <div className="grid grid-cols-3 gap-6">
-          {isLoading ? (
-            <Spinner />
-          ) : isError ? (
-            "Something went wrong"
-          ) : data?.data && data.data.length > 0 ? (
-            data.data.map(({ id, name, coverImage, members, visibility }) => (
-              <PlanCard
-                key={id}
-                id={id}
-                currentUserId={user?.id}
-                name={name}
-                coverImage={coverImage}
-                members={members}
-                isPublic={visibility === "PUBLIC"}
-              />
-            ))
-          ) : (
-            "No plans found."
-          )}
+        <div className="container">
+          <div className="flex justify-between mb-12">
+            <h1 className="pup-heading-two text-neutral-black">My plans</h1>
+            <PrimaryButton
+              type="button"
+              title="Create New Plan"
+              onClick={() => setCreateModalIsOpen(true)}
+            />
+          </div>
+          <SearchInput
+            placeholder="Search by name..."
+            className="mb-12"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <div className="grid grid-cols-3 gap-6">
+            {isLoading ? (
+              <Spinner />
+            ) : isError ? (
+              "Something went wrong"
+            ) : data?.data && data.data.length > 0 ? (
+              data.data.map(({ id, name, coverImage, members, visibility }) => (
+                <PlanCard
+                  key={id}
+                  id={id}
+                  currentUserId={user?.id}
+                  name={name}
+                  coverImage={coverImage}
+                  members={members}
+                  isPublic={visibility === "PUBLIC"}
+                />
+              ))
+            ) : (
+              "No plans found."
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
