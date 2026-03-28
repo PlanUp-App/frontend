@@ -175,7 +175,7 @@ export default function TaskDrawer({
           <Spinner />
         ) : (
           <MemberSelect
-            data={data?.data ?? null}
+            data={data ?? null}
             label="Assignee"
             selectedMember={assignee}
             setSelectedMember={setAssignee}

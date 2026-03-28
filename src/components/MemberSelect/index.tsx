@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { ProfileAvatar } from "../PreviewImage";
-import type { Members } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
+import type { PlanMember } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
 
 export interface MemberOption {
   value: string;
@@ -25,28 +25,21 @@ export interface MemberOption {
   profilePicture?: string | null;
 }
 
-const transformMembers = (data: Members | null): MemberOption[] => {
+const transformMembers = (data: PlanMember[] | null): MemberOption[] => {
   if (data === null || !data) return [];
 
-  const owner: MemberOption = {
-    value: data.owner.id,
-    label: data.owner.name,
-    email: data.owner.email,
-    profilePicture: data.owner.profilePicture,
-  };
-
-  const members: MemberOption[] = data.members.map((m) => ({
+  const members: MemberOption[] = data.map((m) => ({
     value: m.user.id,
     label: m.user.name,
     email: m.user.email,
     profilePicture: m.user.profilePicture,
   }));
 
-  return [owner, ...members];
+  return members;
 };
 
 interface MemberSelectProps {
-  data: Members | null;
+  data: PlanMember[] | null;
   selectedMember: MemberOption | null;
   setSelectedMember: (member: MemberOption | null) => void;
   label?: string;
