@@ -9,6 +9,7 @@ import { StrikeThroughToolbar } from "@/components/toolbars/strikethrough";
 import { ToolbarProvider } from "@/components/toolbars/toolbar-provider";
 import { EditorContent, type Extension, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useEffect } from "react";
 
 const extensions = [
   StarterKit.configure({
@@ -54,6 +55,13 @@ export default function TextEditor({ content, setContent }: TextEditorProps) {
       setContent(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (!editor || !content) return;
+    if (editor.getHTML() === content) return;
+
+    editor.commands.setContent(content);
+  }, [content, editor]);
 
   if (!editor) {
     return null;

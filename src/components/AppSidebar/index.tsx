@@ -99,6 +99,9 @@ export function AppSidebar({ planId }: { planId: string }) {
     `/my-plans/${planId}/phases`,
   );
 
+  const roleKey = `plan_role_${planId}`;
+  const planRole = localStorage.getItem(roleKey);
+
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader className="bg-off-white">
@@ -178,11 +181,13 @@ export function AppSidebar({ planId }: { planId: string }) {
             icon={MdOutlinePeopleAlt}
             label="Members"
           />
-          <NavItem
-            to={`/my-plans/${planId}/config`}
-            icon={MdOutlineSettings}
-            label="Configurations"
-          />
+          {planRole === "OWNER" && (
+            <NavItem
+              to={`/my-plans/${planId}/config`}
+              icon={MdOutlineSettings}
+              label="Configurations"
+            />
+          )}
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>

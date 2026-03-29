@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import z from "zod";
@@ -21,8 +21,6 @@ export const Route = createFileRoute(
   component: RouteComponent,
 });
 
-// ── Schemas ───────────────────────────────────────────────────────────────────
-
 const settingsSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   maxMembers: z
@@ -33,8 +31,6 @@ const settingsSchema = z.object({
 });
 
 type SettingsForm = z.infer<typeof settingsSchema>;
-
-// ── Component ─────────────────────────────────────────────────────────────────
 
 function RouteComponent() {
   const { planId } = Route.useParams();
@@ -127,6 +123,18 @@ function RouteComponent() {
     updateMutation.mutate(values);
   });
 
+  useEffect(() => {
+    if (!plan) return;
+
+    form.setValues({
+      name: plan.name ?? "",
+      maxMembers: plan.config?.maxMembers ?? 100,
+    });
+    setDescription(plan.description ?? "");
+    setIsPublic(plan.visibility === "PUBLIC");
+    setAcceptJoinRequest(plan.config?.acceptJoinRequest ?? false);
+  }, [plan]);
+
   if (isLoading) return <span>Loading...</span>;
   if (!plan) return null;
 
@@ -201,7 +209,9 @@ function RouteComponent() {
           <label className="pup-body-md-500 block text-neutral-black mb-1.5">
             Description
           </label>
-          <TextEditor content={description} setContent={setDescription} />
+          {plan && (
+            <TextEditor content={description} setContent={setDescription} />
+          )}
         </div>
 
         <div className="border-t border-off-white" />
