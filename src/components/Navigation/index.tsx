@@ -13,24 +13,30 @@ export function Navigation() {
         <Link to={authData.user ? "/my-plans" : "/"}>
           <img src="/planup-logo.svg" />
         </Link>
-        {authData.isAuthenticated ? (
-          <div>
+        <div className="flex items-center gap-6">
+          <Link
+            to="/public-plans"
+            className="text-sm font-medium text-neutral-black hover:text-primary-orange transition-colors"
+          >
+            Public Plans
+          </Link>
+          {authData.isAuthenticated ? (
             <NavDropdown />
-          </div>
-        ) : (
-          <div className="flex gap-4">
-            <OutlineButton
-              className="uppercase border-primary-orange text-primary-orange"
-              title="Log In"
-              link="/login"
-            />
-            <PrimaryButton
-              className="uppercase"
-              title="Sign Up"
-              link="/sign-up"
-            />
-          </div>
-        )}
+          ) : (
+            <div className="flex gap-4">
+              <OutlineButton
+                className="uppercase border-primary-orange text-primary-orange"
+                title="Log In"
+                link="/login"
+              />
+              <PrimaryButton
+                className="uppercase"
+                title="Sign Up"
+                link="/sign-up"
+              />
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

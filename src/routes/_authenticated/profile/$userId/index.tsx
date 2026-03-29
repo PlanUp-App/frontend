@@ -233,6 +233,7 @@ export default function Index() {
                   <PlanCard
                     key={plan.id}
                     id={plan.id}
+                    linkTo={`/public-plans/${plan.id}`}
                     coverImage={plan.coverImage || undefined}
                     name={plan.name}
                     isPublic={plan.visibility === "PUBLIC"}

@@ -13,6 +13,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyIndexRouteImport } from './routes/verify/index'
 import { Route as SignUpIndexRouteImport } from './routes/sign-up/index'
+import { Route as PublicPlansIndexRouteImport } from './routes/public-plans/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as PublicPlansPlanIdIndexRouteImport } from './routes/public-plans/$planId/index'
 import { Route as AuthenticatedMyPlansIndexRouteImport } from './routes/_authenticated/my-plans/index'
@@ -45,6 +46,11 @@ const VerifyIndexRoute = VerifyIndexRouteImport.update({
 const SignUpIndexRoute = SignUpIndexRouteImport.update({
   id: '/sign-up/',
   path: '/sign-up/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicPlansIndexRoute = PublicPlansIndexRouteImport.update({
+  id: '/public-plans/',
+  path: '/public-plans/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
@@ -133,6 +139,7 @@ const AuthenticatedMyPlansPlanIdLayoutBillsReportIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login/': typeof LoginIndexRoute
+  '/public-plans/': typeof PublicPlansIndexRoute
   '/sign-up/': typeof SignUpIndexRoute
   '/verify/': typeof VerifyIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
+  '/public-plans': typeof PublicPlansIndexRoute
   '/sign-up': typeof SignUpIndexRoute
   '/verify': typeof VerifyIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login/': typeof LoginIndexRoute
+  '/public-plans/': typeof PublicPlansIndexRoute
   '/sign-up/': typeof SignUpIndexRoute
   '/verify/': typeof VerifyIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login/'
+    | '/public-plans/'
     | '/sign-up/'
     | '/verify/'
     | '/dashboard/'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/public-plans'
     | '/sign-up'
     | '/verify'
     | '/dashboard'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/login/'
+    | '/public-plans/'
     | '/sign-up/'
     | '/verify/'
     | '/_authenticated/dashboard/'
@@ -252,6 +264,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginIndexRoute: typeof LoginIndexRoute
+  PublicPlansIndexRoute: typeof PublicPlansIndexRoute
   SignUpIndexRoute: typeof SignUpIndexRoute
   VerifyIndexRoute: typeof VerifyIndexRoute
   PublicPlansPlanIdIndexRoute: typeof PublicPlansPlanIdIndexRoute
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-up'
       fullPath: '/sign-up/'
       preLoaderRoute: typeof SignUpIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/public-plans/': {
+      id: '/public-plans/'
+      path: '/public-plans'
+      fullPath: '/public-plans/'
+      preLoaderRoute: typeof PublicPlansIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login/': {
@@ -445,6 +465,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginIndexRoute: LoginIndexRoute,
+  PublicPlansIndexRoute: PublicPlansIndexRoute,
   SignUpIndexRoute: SignUpIndexRoute,
   VerifyIndexRoute: VerifyIndexRoute,
   PublicPlansPlanIdIndexRoute: PublicPlansPlanIdIndexRoute,

@@ -1,37 +1,32 @@
-import { PrimaryButton } from "@/components/Button/primary-filled";
+import { createFileRoute } from "@tanstack/react-router";
 import { SearchInput } from "@/components/CustomInput/search-input";
 import { useDebounce } from "@/components/CustomInput/useDebounce";
 import PlanCard from "@/components/PlanCard";
 import { router } from "@/main";
-import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useGetAllPlans } from "./-queries";
+import { useGetPublicPlans } from "./-queries";
 import { Spinner } from "@/components/ui/spinner";
-import { CreatePlanDialog } from "@/components/Modals/create-plan";
-import { useAuth } from "@/auth/useAuth";
 import { Navigation } from "@/components/Navigation";
 
-export const Route = createFileRoute("/_authenticated/my-plans/")({
-  component: Index,
+export const Route = createFileRoute("/public-plans/")({
+  component: RouteComponent,
 });
 
-function Index() {
+function RouteComponent() {
   const search = Route.useSearch().search;
   const [input, setInput] = useState(search ?? "");
   const debouncedSearch = useDebounce(input, 300);
-  const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
-  const { user } = useAuth();
 
-  const { data, isLoading, isError } = useGetAllPlans({
+  const { data, isLoading, isError } = useGetPublicPlans({
     search: debouncedSearch,
   });
 
   useEffect(() => {
     router.navigate({
-      to: "/my-plans",
+      to: "/public-plans",
       search: (prev: Record<string, unknown>) => ({
         ...prev,
-        search: debouncedSearch || undefined, // remove empty param
+        search: debouncedSearch || undefined,
       }),
     });
   }, [debouncedSearch]);
@@ -40,18 +35,9 @@ function Index() {
     <>
       <Navigation />
       <section className="py-16">
-        <CreatePlanDialog
-          open={createModalIsOpen}
-          onOpenChange={setCreateModalIsOpen}
-        />
         <div className="container">
           <div className="flex justify-between mb-12">
-            <h1 className="pup-heading-two text-neutral-black">My plans</h1>
-            <PrimaryButton
-              type="button"
-              title="Create New Plan"
-              onClick={() => setCreateModalIsOpen(true)}
-            />
+            <h1 className="pup-heading-two text-neutral-black">Public Plans</h1>
           </div>
           <SearchInput
             placeholder="Search by name..."
@@ -64,21 +50,20 @@ function Index() {
               <Spinner />
             ) : isError ? (
               "Something went wrong"
-            ) : data?.data && data.data.length > 0 ? (
-              data.data.map(({ id, name, coverImage, members, visibility }) => (
+            ) : data && data.length > 0 ? (
+              data.map(({ id, name, coverImage, _count, visibility }) => (
                 <PlanCard
                   key={id}
-                  linkTo={`/my-plans/${id}`}
+                  linkTo={`/public-plans/${id}`}
                   id={id}
-                  currentUserId={user?.id}
                   name={name}
-                  coverImage={coverImage}
-                  members={members}
+                  coverImage={coverImage ?? undefined}
+                  memberCount={_count.members}
                   isPublic={visibility === "PUBLIC"}
                 />
               ))
             ) : (
-              "No plans found."
+              "No public plans found."
             )}
           </div>
         </div>

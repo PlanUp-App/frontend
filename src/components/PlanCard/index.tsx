@@ -11,9 +11,10 @@ export type PlanCardProps = {
   coverImage?: string;
   currentUserId?: string;
   name: string;
-  members: Member[];
+  members?: Member[];
   memberCount?: number;
   isPublic?: boolean;
+  linkTo: string;
 };
 
 function membersToString(
@@ -46,10 +47,11 @@ export default function PlanCard({
   currentUserId,
   isPublic,
   memberCount,
+  linkTo,
 }: PlanCardProps) {
   return (
     <div>
-      <Link to={`/my-plans/${id}`}>
+      <Link to={linkTo}>
         <figure className="relative">
           <img
             src={
