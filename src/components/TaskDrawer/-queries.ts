@@ -1,5 +1,6 @@
 import type { User } from "@/auth/auth";
 import axiosInstance from "@/utils/axios/axiosInstance";
+import { queryClient } from "@/utils/queryclient/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export interface CreateTaskRequest {
@@ -29,13 +30,14 @@ export interface GetTaskResponse {
   assigneeId: string | null;
   dueDate: string | null;
   phaseId: string | null;
+  isComplete: boolean;
   creatorId: string;
   createdAt: Date;
 }
 
 export const useGetTask = (planId: string, phaseId: string, taskId: string) => {
   return useQuery({
-    queryKey: ["tasks", phaseId, taskId],
+    queryKey: ["tasks", planId, taskId],
     queryFn: async () => {
       const res = await axiosInstance.get<GetTaskResponse>(
         `/plans/${planId}/phases/${phaseId}/tasks/${taskId}`,
@@ -59,5 +61,27 @@ export const useUpdateTask = (
         request,
       );
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", planId, taskId] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", planId] });
+    },
   });
 };
+
+export const useMarkTaskComplete = (
+  planId: string,
+  phaseId: string,
+  taskId: string,
+) =>
+  useMutation({
+    mutationFn: async () => {
+      const res = await axiosInstance.patch(
+        `plans/${planId}/phases/${phaseId}/tasks/${taskId}/complete`,
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks", planId, taskId] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", planId] });
+    },
+  });

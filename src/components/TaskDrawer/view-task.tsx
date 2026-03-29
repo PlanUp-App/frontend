@@ -2,12 +2,13 @@ import { OutlineButton } from "../Button/outline";
 import { PrimaryButton } from "../Button/primary-filled";
 import { SheetContent, SheetFooter, SheetClose, Sheet } from "../ui/sheet";
 import { Spinner } from "../ui/spinner";
-import { useGetTask } from "./-queries";
-import { dateFormat } from "@/lib/utils";
+import { useGetTask, useMarkTaskComplete } from "./-queries";
+import { cn, dateFormat } from "@/lib/utils";
 import { RichTextParser } from "../RichTextParser";
 import MemberCard from "../MemberCard";
 import { useState } from "react";
 import TaskDrawer from "./add-task";
+import { CheckCircle2, Circle } from "lucide-react";
 
 export default function ViewTaskDrawer({
   open,
@@ -27,8 +28,15 @@ export default function ViewTaskDrawer({
     isLoading,
     isError,
   } = useGetTask(planId, phaseId, taskId);
+  const { mutate: toggleComplete, isPending: isToggling } = useMarkTaskComplete(
+    planId,
+    phaseId,
+    taskId,
+  );
 
   const [isEdit, setIsEdit] = useState(false);
+
+  const isComplete = task?.data.isComplete;
 
   if (!isEdit)
     return (
@@ -41,7 +49,23 @@ export default function ViewTaskDrawer({
           ) : (
             <>
               <div className="flex gap-3 items-center">
-                <h3 className="pup-body-xl-700 text-neutral-black">
+                <button
+                  onClick={() => toggleComplete()}
+                  disabled={isToggling}
+                  className="shrink-0 cursor-pointer transition-opacity hover:opacity-70 disabled:opacity-40"
+                >
+                  {isComplete ? (
+                    <CheckCircle2 size={20} className="text-green-500" />
+                  ) : (
+                    <Circle size={20} className="text-neutral-300" />
+                  )}
+                </button>
+                <h3
+                  className={cn(
+                    "pup-body-xl-700 text-neutral-black",
+                    isComplete && "line-through text-neutral-grey",
+                  )}
+                >
                   {task?.data.name}
                 </h3>
                 <span>•</span>

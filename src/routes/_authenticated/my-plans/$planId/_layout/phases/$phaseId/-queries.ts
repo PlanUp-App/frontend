@@ -9,16 +9,17 @@ export interface Task {
   assigneeId: string | null;
   assignee: User | null;
   creatorId: string;
-  dueDate: Date | null;
+  dueDate: string | null;
   phaseId: string | null;
   createdAt: Date;
+  isComplete: boolean;
 }
 
 export interface PhaseResponse {
   id: string;
   name: string;
   order: number;
-  createdAt: Date;
+  createdAt: string;
   planId: string;
   tasks: Task[];
   _count: {

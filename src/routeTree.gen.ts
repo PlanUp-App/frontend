@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyIndexRouteImport } from './routes/verify/index'
 import { Route as SignUpIndexRouteImport } from './routes/sign-up/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as PublicPlansPlanIdIndexRouteImport } from './routes/public-plans/$planId/index'
 import { Route as AuthenticatedMyPlansIndexRouteImport } from './routes/_authenticated/my-plans/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedProfileUserIdIndexRouteImport } from './routes/_authenticated/profile/$userId/index'
@@ -49,6 +50,11 @@ const SignUpIndexRoute = SignUpIndexRouteImport.update({
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicPlansPlanIdIndexRoute = PublicPlansPlanIdIndexRouteImport.update({
+  id: '/public-plans/$planId/',
+  path: '/public-plans/$planId/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedMyPlansIndexRoute =
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/verify/': typeof VerifyIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/my-plans/': typeof AuthenticatedMyPlansIndexRoute
+  '/public-plans/$planId/': typeof PublicPlansPlanIdIndexRoute
   '/my-plans/$planId': typeof AuthenticatedMyPlansPlanIdLayoutRouteWithChildren
   '/my-plans/$planId/': typeof AuthenticatedMyPlansPlanIdIndexRoute
   '/profile/$userId/': typeof AuthenticatedProfileUserIdIndexRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByTo {
   '/verify': typeof VerifyIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/my-plans': typeof AuthenticatedMyPlansIndexRoute
+  '/public-plans/$planId': typeof PublicPlansPlanIdIndexRoute
   '/my-plans/$planId': typeof AuthenticatedMyPlansPlanIdIndexRoute
   '/profile/$userId': typeof AuthenticatedProfileUserIdIndexRoute
   '/my-plans/$planId/bills': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/verify/': typeof VerifyIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/my-plans/': typeof AuthenticatedMyPlansIndexRoute
+  '/public-plans/$planId/': typeof PublicPlansPlanIdIndexRoute
   '/_authenticated/my-plans/$planId/_layout': typeof AuthenticatedMyPlansPlanIdLayoutRouteWithChildren
   '/_authenticated/my-plans/$planId/': typeof AuthenticatedMyPlansPlanIdIndexRoute
   '/_authenticated/profile/$userId/': typeof AuthenticatedProfileUserIdIndexRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/verify/'
     | '/dashboard/'
     | '/my-plans/'
+    | '/public-plans/$planId/'
     | '/my-plans/$planId'
     | '/my-plans/$planId/'
     | '/profile/$userId/'
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
     | '/verify'
     | '/dashboard'
     | '/my-plans'
+    | '/public-plans/$planId'
     | '/my-plans/$planId'
     | '/profile/$userId'
     | '/my-plans/$planId/bills'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/verify/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/my-plans/'
+    | '/public-plans/$planId/'
     | '/_authenticated/my-plans/$planId/_layout'
     | '/_authenticated/my-plans/$planId/'
     | '/_authenticated/profile/$userId/'
@@ -242,6 +254,7 @@ export interface RootRouteChildren {
   LoginIndexRoute: typeof LoginIndexRoute
   SignUpIndexRoute: typeof SignUpIndexRoute
   VerifyIndexRoute: typeof VerifyIndexRoute
+  PublicPlansPlanIdIndexRoute: typeof PublicPlansPlanIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -279,6 +292,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login/'
       preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/public-plans/$planId/': {
+      id: '/public-plans/$planId/'
+      path: '/public-plans/$planId'
+      fullPath: '/public-plans/$planId/'
+      preLoaderRoute: typeof PublicPlansPlanIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/my-plans/': {
@@ -427,6 +447,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginIndexRoute: LoginIndexRoute,
   SignUpIndexRoute: SignUpIndexRoute,
   VerifyIndexRoute: VerifyIndexRoute,
+  PublicPlansPlanIdIndexRoute: PublicPlansPlanIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

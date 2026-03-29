@@ -6,6 +6,7 @@ import { OutlineButton } from "@/components/Button/outline";
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { SearchInput } from "@/components/CustomInput/search-input";
 import { useDebounce } from "@/components/CustomInput/useDebounce";
+import { Spinner } from "@/components/ui/spinner";
 import { router } from "@/main";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -35,7 +36,13 @@ function RouteComponent() {
     });
   }, [debouncedSearch]);
 
-  const { data } = useGetBills({ planId, search });
+  const { data, isLoading } = useGetBills({ planId, search });
+  if (isLoading)
+    return (
+      <div className="flex justify-center mt-24">
+        <Spinner />
+      </div>
+    );
   return (
     <>
       <AddBill
