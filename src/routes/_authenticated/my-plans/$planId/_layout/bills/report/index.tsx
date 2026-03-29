@@ -34,7 +34,7 @@ const fmt = (n: number) =>
 
 const COLORS: { bg: string; text: string; bar: string }[] = [
   { bg: "bg-orange-50", text: "text-primary-orange", bar: "bg-primary-orange" },
-  { bg: "bg-blue-50", text: "text-blue-500", bar: "bg-blue-500" },
+  { bg: "bg-blue-50", text: "text-dark-blue", bar: "bg-dark-blue" },
   { bg: "bg-green-50", text: "text-green-500", bar: "bg-green-500" },
   { bg: "bg-purple-50", text: "text-purple-500", bar: "bg-purple-500" },
   { bg: "bg-amber-50", text: "text-amber-500", bar: "bg-amber-500" },
@@ -175,7 +175,7 @@ function ReportPage() {
         <StatCard
           label="Plan Total"
           value={fmt(summary.planTotalExpenditure)}
-          icon={<MdReceiptLong size={20} className="text-blue-500" />}
+          icon={<MdReceiptLong size={20} className="text-dark-blue" />}
           iconBg="bg-blue-50"
         />
         <StatCard
@@ -482,11 +482,11 @@ function ReportPage() {
             <div className="flex flex-col gap-4">
               {[
                 {
-                  icon: <MdPayments size={16} className="text-blue-500" />,
+                  icon: <MdPayments size={16} className="text-dark-blue" />,
                   iconBg: "bg-blue-50",
                   label: "Settled Amount",
                   value: fmt(summary.myTotalPaidSettled),
-                  valueColor: "text-blue-500",
+                  valueColor: "text-dark-blue",
                 },
                 {
                   icon: <MdArrowUpward size={16} className="text-red-400" />,

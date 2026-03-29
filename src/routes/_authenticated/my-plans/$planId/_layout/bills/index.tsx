@@ -59,7 +59,14 @@ function RouteComponent() {
       <div className="flex justify-between mb-12 items-center">
         <h1 className="pup-heading-three">Bills</h1>
         <div className="flex gap-3">
-          <OutlineButton title="View Report" type="button" onClick={() => {}} />
+          <OutlineButton
+            className="border-primary-orange text-primary-orange"
+            title="View Report"
+            type="button"
+            onClick={() => {
+              router.navigate({ to: `report` });
+            }}
+          />
           <PrimaryButton
             title="Add Bill"
             type="button"
