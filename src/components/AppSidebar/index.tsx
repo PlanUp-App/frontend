@@ -19,6 +19,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import {
   MdOutlineAttachMoney,
   MdOutlineDashboard,
+  MdOutlineInsertDriveFile,
   MdOutlinePeopleAlt,
   MdChevronRight,
   MdOutlineLayers,
@@ -175,6 +176,11 @@ export function AppSidebar({ planId }: { planId: string }) {
             to={`/my-plans/${planId}/bills`}
             icon={MdOutlineAttachMoney}
             label="Bills"
+          />
+          <NavItem
+            to={`/my-plans/${planId}/files`}
+            icon={MdOutlineInsertDriveFile}
+            label="Files"
           />
           <NavItem
             to={`/my-plans/${planId}/members`}

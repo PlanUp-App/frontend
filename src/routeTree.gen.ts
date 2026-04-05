@@ -23,6 +23,7 @@ import { Route as AuthenticatedMyPlansPlanIdIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedMyPlansPlanIdLayoutRouteImport } from './routes/_authenticated/my-plans/$planId/_layout'
 import { Route as AuthenticatedMyPlansPlanIdLayoutPhasesIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/phases/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutMembersIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/members/index'
+import { Route as AuthenticatedMyPlansPlanIdLayoutFilesIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/files/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/dashboard/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutConfigIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/config/index'
 import { Route as AuthenticatedMyPlansPlanIdLayoutBillsIndexRouteImport } from './routes/_authenticated/my-plans/$planId/_layout/bills/index'
@@ -105,6 +106,12 @@ const AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute =
     path: '/members/',
     getParentRoute: () => AuthenticatedMyPlansPlanIdLayoutRoute,
   } as any)
+const AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute =
+  AuthenticatedMyPlansPlanIdLayoutFilesIndexRouteImport.update({
+    id: '/files/',
+    path: '/files/',
+    getParentRoute: () => AuthenticatedMyPlansPlanIdLayoutRoute,
+  } as any)
 const AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute =
   AuthenticatedMyPlansPlanIdLayoutDashboardIndexRouteImport.update({
     id: '/dashboard/',
@@ -151,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/my-plans/$planId/bills/': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   '/my-plans/$planId/config/': typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   '/my-plans/$planId/dashboard/': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
+  '/my-plans/$planId/files/': typeof AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute
   '/my-plans/$planId/members/': typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   '/my-plans/$planId/phases/': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
   '/my-plans/$planId/bills/report/': typeof AuthenticatedMyPlansPlanIdLayoutBillsReportIndexRoute
@@ -170,6 +178,7 @@ export interface FileRoutesByTo {
   '/my-plans/$planId/bills': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   '/my-plans/$planId/config': typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   '/my-plans/$planId/dashboard': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
+  '/my-plans/$planId/files': typeof AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute
   '/my-plans/$planId/members': typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   '/my-plans/$planId/phases': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
   '/my-plans/$planId/bills/report': typeof AuthenticatedMyPlansPlanIdLayoutBillsReportIndexRoute
@@ -192,6 +201,7 @@ export interface FileRoutesById {
   '/_authenticated/my-plans/$planId/_layout/bills/': typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   '/_authenticated/my-plans/$planId/_layout/config/': typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   '/_authenticated/my-plans/$planId/_layout/dashboard/': typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
+  '/_authenticated/my-plans/$planId/_layout/files/': typeof AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute
   '/_authenticated/my-plans/$planId/_layout/members/': typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   '/_authenticated/my-plans/$planId/_layout/phases/': typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
   '/_authenticated/my-plans/$planId/_layout/bills/report/': typeof AuthenticatedMyPlansPlanIdLayoutBillsReportIndexRoute
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/my-plans/$planId/bills/'
     | '/my-plans/$planId/config/'
     | '/my-plans/$planId/dashboard/'
+    | '/my-plans/$planId/files/'
     | '/my-plans/$planId/members/'
     | '/my-plans/$planId/phases/'
     | '/my-plans/$planId/bills/report/'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/my-plans/$planId/bills'
     | '/my-plans/$planId/config'
     | '/my-plans/$planId/dashboard'
+    | '/my-plans/$planId/files'
     | '/my-plans/$planId/members'
     | '/my-plans/$planId/phases'
     | '/my-plans/$planId/bills/report'
@@ -254,6 +266,7 @@ export interface FileRouteTypes {
     | '/_authenticated/my-plans/$planId/_layout/bills/'
     | '/_authenticated/my-plans/$planId/_layout/config/'
     | '/_authenticated/my-plans/$planId/_layout/dashboard/'
+    | '/_authenticated/my-plans/$planId/_layout/files/'
     | '/_authenticated/my-plans/$planId/_layout/members/'
     | '/_authenticated/my-plans/$planId/_layout/phases/'
     | '/_authenticated/my-plans/$planId/_layout/bills/report/'
@@ -370,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRouteImport
       parentRoute: typeof AuthenticatedMyPlansPlanIdLayoutRoute
     }
+    '/_authenticated/my-plans/$planId/_layout/files/': {
+      id: '/_authenticated/my-plans/$planId/_layout/files/'
+      path: '/files'
+      fullPath: '/my-plans/$planId/files/'
+      preLoaderRoute: typeof AuthenticatedMyPlansPlanIdLayoutFilesIndexRouteImport
+      parentRoute: typeof AuthenticatedMyPlansPlanIdLayoutRoute
+    }
     '/_authenticated/my-plans/$planId/_layout/dashboard/': {
       id: '/_authenticated/my-plans/$planId/_layout/dashboard/'
       path: '/dashboard'
@@ -412,6 +432,7 @@ interface AuthenticatedMyPlansPlanIdLayoutRouteChildren {
   AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutBillsIndexRoute
   AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute
   AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute
+  AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute
   AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute
   AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute
   AuthenticatedMyPlansPlanIdLayoutBillsReportIndexRoute: typeof AuthenticatedMyPlansPlanIdLayoutBillsReportIndexRoute
@@ -426,6 +447,8 @@ const AuthenticatedMyPlansPlanIdLayoutRouteChildren: AuthenticatedMyPlansPlanIdL
       AuthenticatedMyPlansPlanIdLayoutConfigIndexRoute,
     AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute:
       AuthenticatedMyPlansPlanIdLayoutDashboardIndexRoute,
+    AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute:
+      AuthenticatedMyPlansPlanIdLayoutFilesIndexRoute,
     AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute:
       AuthenticatedMyPlansPlanIdLayoutMembersIndexRoute,
     AuthenticatedMyPlansPlanIdLayoutPhasesIndexRoute:
