@@ -8,6 +8,7 @@ export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  token: string | null;
   loginMutation: UseMutationResult<LoginResponse, AxiosError, LoginCredentials>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => void;

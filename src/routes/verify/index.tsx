@@ -2,7 +2,6 @@ import {
   createFileRoute,
   Link,
   redirect,
-  useLocation,
 } from "@tanstack/react-router";
 import { useVerifyEmail } from "./-queries";
 import { useEffect } from "react";
@@ -11,19 +10,31 @@ import { toast } from "sonner";
 import { router } from "@/main";
 
 export const Route = createFileRoute("/verify/")({
+  validateSearch: (
+    search: Record<string, unknown>
+  ): { verificationToken?: string } => {
+    return {
+      verificationToken: search.verificationToken as string | undefined,
+    };
+  },
+  beforeLoad: ({ search }) => {
+    if (!search.verificationToken) {
+      throw redirect({
+        to: "/login",
+        search: { redirect: "dashboard" },
+      });
+    }
+  },
   component: Index,
 });
 
 function Index() {
-  const { search } = useLocation();
-  const params = new URLSearchParams(search);
-  const token = params.get("verificationToken");
-  if (!token)
-    router.navigate({ to: "/login", params: { redirect: "dashboard" } });
+  const { verificationToken: token } = Route.useSearch();
+
   const verifyEmailMutation = useVerifyEmail({
     onSuccess: () => {
       toast.success(`Email successfully verified.`);
-      router.navigate({ to: "/login/" });
+      router.navigate({ to: "/login" });
     },
   });
 
