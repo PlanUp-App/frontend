@@ -3,7 +3,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { Crown, Shield, Users, Calendar, Globe } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { Navigation } from "@/components/Navigation";
 import { useGetPublicPlan, useRequestToJoin } from "./-queries";
@@ -34,8 +33,9 @@ function RouteComponent() {
     mutate: requestToJoin,
     isPending,
     isSuccess,
+    isError: isRequestError,
+    reset,
   } = useRequestToJoin(planId);
-  const [requested, setRequested] = useState(false);
 
   if (isLoading)
     return (
@@ -58,7 +58,6 @@ function RouteComponent() {
   );
   const owner = sorted.find((m) => m.role === "OWNER");
 
-  const hasRequested = requested || isSuccess;
 
   const canJoin =
     plan.config.acceptJoinRequest ||
@@ -133,16 +132,20 @@ function RouteComponent() {
               </div>
               {isAuthenticated && canJoin ? (
                 <PrimaryButton
-                  title={hasRequested ? "Request Sent" : "Request to Join"}
+                  title={
+                    isSuccess
+                      ? "Request Sent"
+                      : isError
+                        ? "Retry Request"
+                        : "Request to Join"
+                  }
                   onClick={() => {
+                    if (isRequestError) reset();
                     requestToJoin();
-                    setRequested(true);
                   }}
-                  isLoading={isPending || hasRequested}
-                  className={cn(
-                    "shrink-0",
-                    hasRequested && "opacity-60 cursor-not-allowed",
-                  )}
+                  isLoading={isPending}
+                  disabled={isSuccess}
+                  className={cn("shrink-0", isSuccess && "opacity-60")}
                 />
               ) : (
                 <PrimaryButton

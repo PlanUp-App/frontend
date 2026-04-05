@@ -4,7 +4,7 @@ import { ChatBubble } from "@/components/ChatBubble";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useGetMyRole } from "../-queries";
-import NavDropdown from "@/components/Navigation/nav-dropdown";
+import { UserMenu } from "@/components/Navigation/user-menu";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$planId/_layout",
@@ -23,7 +23,7 @@ function RouteComponent() {
       <AppSidebar planId={planId} />
       <SidebarInset>
         <header className="flex items-center justify-end px-16 py-4">
-          <NavDropdown />
+          <UserMenu />
         </header>
         <main className="px-16">
           <div className="p-8 max-w-6xl mx-auto">

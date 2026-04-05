@@ -42,16 +42,18 @@ export const useGetPublicPlan = (planId: string) =>
     },
   });
 
-export const useRequestToJoin = (planId: string) =>
+export const useRequestToJoin = (planId: string, onSuccess?: (() => void) | undefined, onError?: (() => void) | undefined) =>
   useMutation({
     mutationFn: async () => {
-      const res = await axiosInstance.post(`/plans/${planId}/join`);
+      const res = await axiosInstance.post(`/public-plans/${planId}/join-request`);
       return res.data;
     },
     onSuccess: () => {
       toast.success("Join request sent successfully");
+      onSuccess && onSuccess()
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? "Failed to send request");
+      onError && onError()
     },
   });

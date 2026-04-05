@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { OutlineButton } from "../Button/outline";
 import { PrimaryButton } from "../Button/primary-filled";
 import { useAuth } from "@/auth/useAuth";
-import NavDropdown from "./nav-dropdown";
+import { UserMenu } from "./user-menu";
 
 export function Navigation() {
   const authData = useAuth();
@@ -21,7 +21,7 @@ export function Navigation() {
             Public Plans
           </Link>
           {authData.isAuthenticated ? (
-            <NavDropdown />
+            <UserMenu />
           ) : (
             <div className="flex gap-4">
               <OutlineButton
