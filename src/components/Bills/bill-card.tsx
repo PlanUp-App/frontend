@@ -1,6 +1,7 @@
 import { MdOutlineChevronRight } from "react-icons/md";
 import type { Bill } from "./-queries";
 import { toSentenceCase } from "@/lib/utils";
+import { CheckCircle2 } from "lucide-react";
 
 interface BillCardProps {
   bill: Bill;
@@ -11,7 +12,7 @@ export default function BillCard({ bill, onClick }: BillCardProps) {
   return (
     <div
       onClick={onClick}
-      className="py-4 pl-6 flex gap-6 justify-between items-center cursor-pointer shadow-[1px_2px_5px_rgba(0,0,0,0.18)] rounded-[8px]"
+      className="py-4 pl-6 flex gap-6 justify-between items-center cursor-pointer shadow-[1px_2px_5px_rgba(0,0,0,0.18)] rounded-xl"
     >
       <div>
         <p className="pup-body-lg-500 text-neutral-black mb-0.5">
@@ -30,6 +31,15 @@ export default function BillCard({ bill, onClick }: BillCardProps) {
             <>
               <span>•</span>
               <span>{bill.category}</span>
+            </>
+          )}
+          {bill.isSettled && (
+            <>
+              <span>•</span>
+              <span className="inline-flex items-center gap-1 text-green-600">
+                <CheckCircle2 size={14} />
+                Settled
+              </span>
             </>
           )}
         </div>

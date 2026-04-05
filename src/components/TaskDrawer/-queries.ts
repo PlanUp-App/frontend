@@ -101,6 +101,7 @@ export const useMarkTaskComplete = (
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks", planId, taskId] });
+      queryClient.invalidateQueries({ queryKey: ["tasks", phaseId] });
       queryClient.invalidateQueries({ queryKey: ["dashboard", planId] });
     },
   });

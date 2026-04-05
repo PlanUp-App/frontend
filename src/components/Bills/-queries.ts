@@ -92,6 +92,7 @@ export interface Bill {
   taskId: string | null;
   title: string;
   amount: number;
+  isSettled: boolean;
   category: string | null;
   attachmentUrl: string | null;
   splitType: BillSplitType;
@@ -184,6 +185,7 @@ export interface BillWithRelations {
   taskId: string | null;
   title: string;
   amount: number;
+  isSettled: boolean;
   category: string | null;
   attachmentUrl: string | null;
   splitType: BillSplitType;
@@ -214,5 +216,21 @@ export function useGetBill(billId: string) {
     queryKey: ["bill", billId],
     queryFn: () => getBill(billId),
     enabled: !!billId,
+  });
+}
+
+async function markBillSettled(billId: string) {
+  const response = await axiosInstance.patch(`/bills/${billId}/mark-settled`);
+  return response.data;
+}
+
+export function useMarkBillSettled(planId: string) {
+  return useMutation({
+    mutationFn: (billId: string) => markBillSettled(billId),
+    onSuccess: (_, billId) => {
+      queryClient.invalidateQueries({ queryKey: ["bills", planId] });
+      queryClient.invalidateQueries({ queryKey: ["bill", billId] });
+      queryClient.invalidateQueries({ queryKey: ["report", planId] });
+    },
   });
 }

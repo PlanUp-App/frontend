@@ -2,10 +2,13 @@ import { OutlineButton } from "../Button/outline";
 import { PrimaryButton } from "../Button/primary-filled";
 import { SheetContent, SheetFooter, SheetClose, Sheet } from "../ui/sheet";
 import { Spinner } from "../ui/spinner";
-import { BillSplitType, useGetBill } from "./-queries";
+import { BillSplitType, useGetBill, useMarkBillSettled } from "./-queries";
 import MemberCard from "../MemberCard";
 import { useState } from "react";
 import AddBill from "./add-bill";
+import { useAuth } from "@/auth/useAuth";
+import { toast } from "sonner";
+import { CheckCircle2 } from "lucide-react";
 
 export default function ViewBill({
   open,
@@ -19,8 +22,16 @@ export default function ViewBill({
   billId: string;
 }) {
   const { data: bill, isLoading, isError } = useGetBill(billId);
+  const { user } = useAuth();
+  const markSettledMutation = useMarkBillSettled(planId);
 
   const [isEdit, setIsEdit] = useState(false);
+  const role = localStorage.getItem(`plan_role_${planId}`);
+  const isPlanOwner = role === "OWNER";
+  const canSettle =
+    !!bill &&
+    (!!user?.id &&
+      (bill.createdById === user.id || bill.paidById === user.id || isPlanOwner));
 
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
@@ -50,6 +61,15 @@ export default function ViewBill({
                     currency: "NPR",
                   })}
                 </span>
+                {bill?.isSettled && (
+                  <>
+                    <span>•</span>
+                    <span className="inline-flex items-center gap-1 pup-body-sm-500 text-green-600">
+                      <CheckCircle2 size={16} />
+                      Settled
+                    </span>
+                  </>
+                )}
               </div>
 
               {bill?.category && (
@@ -148,6 +168,32 @@ export default function ViewBill({
               </div>
 
               <SheetFooter>
+                {canSettle && (
+                  <OutlineButton
+                    type="button"
+                    title={bill?.isSettled ? "Mark as Unsettled" : "Mark as Settled"}
+                    className="border-primary-orange text-primary-orange"
+                    onClick={() => {
+                      if (!bill?.id) return;
+                      markSettledMutation.mutate(bill.id, {
+                        onSuccess: () => {
+                          toast.success(
+                            bill.isSettled
+                              ? "Bill marked as unsettled"
+                              : "Bill marked as settled",
+                          );
+                        },
+                        onError: (error: any) => {
+                          toast.error(
+                            error?.response?.data?.message ??
+                              "Failed to update bill status",
+                          );
+                        },
+                      });
+                    }}
+                    isLoading={markSettledMutation.isPending}
+                  />
+                )}
                 <PrimaryButton
                   type="button"
                   title="Edit"
