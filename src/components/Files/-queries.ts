@@ -124,7 +124,9 @@ export function useUploadFile(planId: string) {
 }
 
 async function deleteFile(planId: string, fileId: string) {
-  const response = await axiosInstance.delete(`/plans/${planId}/files/${fileId}`);
+  const response = await axiosInstance.delete(
+    `/plans/${planId}/files/${fileId}`,
+  );
   return response.data;
 }
 
@@ -135,6 +137,39 @@ export function useDeleteFile(planId: string) {
       queryClient.invalidateQueries({
         queryKey: ["files", planId],
       });
+    },
+  });
+}
+
+interface UpdateFileAssociationsPayload {
+  taskIds?: string[];
+  billIds?: string[];
+  messageIds?: string[];
+}
+
+async function updateFileAssociations(
+  planId: string,
+  fileId: string,
+  payload: UpdateFileAssociationsPayload,
+) {
+  const response = await axiosInstance.patch(
+    `/plans/${planId}/files/${fileId}/associations`,
+    payload,
+  );
+  return response.data;
+}
+
+export function useUpdateFileAssociations(planId: string) {
+  return useMutation({
+    mutationFn: ({
+      fileId,
+      payload,
+    }: {
+      fileId: string;
+      payload: UpdateFileAssociationsPayload;
+    }) => updateFileAssociations(planId, fileId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["files", planId] });
     },
   });
 }

@@ -9,6 +9,7 @@ import MemberCard from "../MemberCard";
 import { useState } from "react";
 import TaskDrawer from "./add-task";
 import { CheckCircle2, Circle } from "lucide-react";
+import AttachmentItem from "../Files/attachment-item";
 
 export default function ViewTaskDrawer({
   open,
@@ -36,11 +37,18 @@ export default function ViewTaskDrawer({
 
   const [isEdit, setIsEdit] = useState(false);
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setIsEdit(false);
+    }
+    onOpenChange(nextOpen);
+  };
+
   const isComplete = task?.data.isComplete;
 
   if (!isEdit)
     return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
+      <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent className="max-w-[50%] min-w-[40%] px-8 py-12 overflow-scroll gap-10">
           {isLoading ? (
             <Spinner />
@@ -95,6 +103,21 @@ export default function ViewTaskDrawer({
                   <p>No one</p>
                 )}
               </div>
+              {task?.data.files && task.data.files.length > 0 && (
+                <div>
+                  <label className="pup-body-md-500 block text-neutral-black mb-3">
+                    Attachments
+                  </label>
+                  <div className="space-y-2">
+                    {task.data.files.map((file) => (
+                      <AttachmentItem
+                        key={file.id}
+                        file={file}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
               <SheetFooter>
                 <PrimaryButton
                   type="submit"
@@ -117,7 +140,7 @@ export default function ViewTaskDrawer({
   return (
     <TaskDrawer
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       planId={planId}
       phaseId={phaseId}
       onClose={() => setIsEdit(false)}
@@ -134,6 +157,7 @@ export default function ViewTaskDrawer({
               profilePicture: task.data.assignee.profilePicture,
             }
           : null,
+        files: task?.data.files ?? [],
       }}
     />
   );

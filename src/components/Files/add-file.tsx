@@ -5,12 +5,14 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { PrimaryButton } from "@/components/Button/primary-filled";
-import { useUploadFile } from "./-queries";
+import { useUploadFile, type PlanFile } from "./-queries";
 
 interface AddFileProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   planId: string;
+  taskIds?: string[];
+  onUploaded?: (file: PlanFile) => void;
 }
 
 const CLOUDINARY_ACCEPTED_TYPES: Record<string, string[]> = {
@@ -48,7 +50,13 @@ function withOriginalExtension(name: string, originalFileName: string) {
   return `${trimmedName}.${originalExtension}`;
 }
 
-export default function AddFile({ open, onOpenChange, planId }: AddFileProps) {
+export default function AddFile({
+  open,
+  onOpenChange,
+  planId,
+  taskIds,
+  onUploaded,
+}: AddFileProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState("");
   const uploadMutation = useUploadFile(planId);
@@ -129,10 +137,13 @@ export default function AddFile({ open, onOpenChange, planId }: AddFileProps) {
     const resolvedName = withOriginalExtension(baseName, selectedFile.name);
 
     uploadMutation.mutate(
-      { file: selectedFile, name: resolvedName },
+      { file: selectedFile, name: resolvedName, taskIds },
       {
-        onSuccess: () => {
+        onSuccess: (uploadedFile) => {
           toast.success("File uploaded successfully");
+          if (uploadedFile) {
+            onUploaded?.(uploadedFile as PlanFile);
+          }
           handleOpenChange(false);
         },
         onError: (error: any) => {

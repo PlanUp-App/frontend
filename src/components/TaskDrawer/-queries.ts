@@ -3,20 +3,37 @@ import axiosInstance from "@/utils/axios/axiosInstance";
 import { queryClient } from "@/utils/queryclient/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
+export interface TaskFile {
+  id: string;
+  name: string;
+  createdAt: Date;
+  planId: string;
+  url: string;
+  publicId: string;
+  size: number | null;
+  mimeType: string | null;
+  uploaderId: string;
+  tasks?: { id: string; name: string }[];
+  bills?: { id: string; title: string }[];
+  messages?: { id: string }[];
+}
+
 export interface CreateTaskRequest {
   name: string;
   description?: string;
   assigneeId?: string;
   dueDate: string;
+  fileIds?: string[];
 }
 
 export const useCreateTask = (planId: string, phaseId: string) => {
   return useMutation({
     mutationFn: async (request: CreateTaskRequest) => {
-      await axiosInstance.post(
+      const res = await axiosInstance.post<GetTaskResponse>(
         `plans/${planId}/phases/${phaseId}/tasks`,
         request,
       );
+      return res.data;
     },
   });
 };
@@ -24,6 +41,7 @@ export const useCreateTask = (planId: string, phaseId: string) => {
 export interface GetTaskResponse {
   assignee: User | null;
   creator: User;
+  files: TaskFile[];
   id: string;
   name: string;
   description: string | null;
@@ -56,10 +74,11 @@ export const useUpdateTask = (
 ) => {
   return useMutation({
     mutationFn: async (request: UpdateTaskRequest) => {
-      await axiosInstance.patch(
+      const res = await axiosInstance.patch<GetTaskResponse>(
         `plans/${planId}/phases/${phaseId}/tasks/${taskId}`,
         request,
       );
+      return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks", planId, taskId] });
