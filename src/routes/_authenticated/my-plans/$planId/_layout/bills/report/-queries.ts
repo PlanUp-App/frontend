@@ -59,9 +59,9 @@ export interface DashboardData {
   minTransactions: MinTransaction[];
 }
 
-export const useGetDashboard = (planId: string) =>
+export const useGetExpenditureReport = (planId: string) =>
   useQuery<DashboardData>({
-    queryKey: ["dashboard", planId],
+    queryKey: ["report", planId],
     queryFn: async () => {
       const res = await axiosInstance.get(`/bills/${planId}/report`);
       return res.data;

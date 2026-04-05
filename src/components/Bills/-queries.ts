@@ -39,6 +39,9 @@ export function useCreateBill(planId: string) {
       queryClient.invalidateQueries({
         queryKey: ["bills", planId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["report"],
+      });
     },
   });
 }
@@ -75,6 +78,9 @@ export function useUpdateBill(planId: string) {
       });
       queryClient.invalidateQueries({
         queryKey: ["bill", variables.billId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["report"],
       });
     },
   });

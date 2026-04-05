@@ -17,7 +17,7 @@ import {
   MdPayments,
   MdArrowForward,
 } from "react-icons/md";
-import { useGetDashboard } from "./-queries";
+import { useGetExpenditureReport } from "./-queries";
 import { useAuth } from "@/auth/useAuth";
 
 export const Route = createFileRoute(
@@ -130,7 +130,7 @@ function monthShort(month: string) {
 
 function ReportPage() {
   const { planId } = Route.useParams();
-  const { data, isLoading } = useGetDashboard(planId);
+  const { data, isLoading } = useGetExpenditureReport(planId);
   const { user: me } = useAuth();
 
   if (isLoading)
@@ -142,6 +142,7 @@ function ReportPage() {
 
   if (!data) return null;
 
+  console.log("DATA:", data);
   const {
     summary,
     owedByMe,
