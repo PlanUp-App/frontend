@@ -29,7 +29,8 @@ export default function MemberCard({
   isOwner = false,
   hasOptions = true,
   type = "lg",
-}: MemberCardProps) {
+  onRemove,
+}: MemberCardProps & { onRemove?: (id: string) => void }) {
   // const roleLabel = isOwner ? "Owner" : role === "ADMIN" ? "Admin" : "Member";
 
   if (type === "lg")
@@ -54,13 +55,16 @@ export default function MemberCard({
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {hasOptions && !isOwner && (
+          {hasOptions && !isOwner && onRemove && (
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <MdOutlineMoreVert size={24} />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400">
+                <DropdownMenuItem
+                  className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
+                  onClick={() => onRemove(id)}
+                >
                   Remove
                 </DropdownMenuItem>
               </DropdownMenuContent>

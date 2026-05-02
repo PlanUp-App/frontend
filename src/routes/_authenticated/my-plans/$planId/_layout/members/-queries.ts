@@ -75,3 +75,31 @@ export const useRejectJoinRequest = (planId: string) =>
       queryClient.invalidateQueries({ queryKey: ["joinRequests", planId] });
     },
   });
+
+export const useLeavePlan = (planId: string) =>
+  useMutation({
+    mutationFn: async () => {
+      const res = await axiosInstance.post(`/plans/${planId}/leave`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allPlans"] });
+      queryClient.invalidateQueries({ queryKey: ["plan", planId] });
+      queryClient.invalidateQueries({ queryKey: ["myRole", planId] });
+      queryClient.invalidateQueries({ queryKey: ["members", planId] });
+      queryClient.invalidateQueries({ queryKey: ["joinRequests", planId] });
+    },
+  });
+
+export const useRemoveMember = (planId: string) =>
+  useMutation({
+    mutationFn: async (memberId: string) => {
+      const res = await axiosInstance.delete(
+        `/plans/${planId}/members/${memberId}`,
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["members", planId] });
+    },
+  });
