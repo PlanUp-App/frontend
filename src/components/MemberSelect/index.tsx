@@ -46,6 +46,8 @@ interface MemberSelectProps {
   className?: string;
   disabledMemberIds?: Set<string>;
   error?: string;
+  variant?: "default" | "mini";
+  placeholder?: string;
 }
 
 export default function MemberSelect({
@@ -56,6 +58,8 @@ export default function MemberSelect({
   className,
   disabledMemberIds,
   error,
+  variant = "default",
+  placeholder,
 }: MemberSelectProps) {
   const [open, setOpen] = useState(false);
   const members = transformMembers(data);
@@ -80,29 +84,39 @@ export default function MemberSelect({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className={`w-full pup-body-md-400 justify-between h-12 cursor-pointer ${selectedMember?.value ? "text-neutral-black" : "text-neutral-grey"} px-3.5 py-2.5 radius-[8px]`}
+            className={cn(
+              "pup-body-md-400 cursor-pointer h-12 transition-all flex items-center",
+              variant === "mini"
+                ? "w-12 rounded-full p-0 justify-center"
+                : "w-full rounded-[8px] px-3.5 py-2.5 justify-between",
+              selectedMember?.value ? "text-neutral-black" : "text-neutral-grey",
+            )}
           >
-            <span className="flex gap-1 items-center">
+            <span className="flex items-center justify-center">
               {selectedMember?.value ? (
-                <div className="flex items-center gap-2">
+                <>
                   <ProfileAvatar
                     src={selectedMember.profilePicture}
                     alt={selectedMember.label}
                   />
-                  {selectedMember.label}
-                </div>
+                  {variant !== "mini" && (
+                    <span className="ml-2">{selectedMember.label}</span>
+                  )}
+                </>
               ) : (
                 <>
-                  <MdOutlinePersonOutline className="size-5" />
-                  <span className="pup-body-md-400">
-                    {selectedMember?.value
-                      ? selectedMember.label
-                      : "Select team member"}
-                  </span>
+                  <MdOutlinePersonOutline className="size-6" />
+                  {variant !== "mini" && (
+                    <span className="pup-body-md-400 ml-2">
+                      {placeholder || "Select team member"}
+                    </span>
+                  )}
                 </>
               )}
             </span>
-            <MdOutlineKeyboardArrowDown className="text-neutral-grey" />
+            {variant !== "mini" && (
+              <MdOutlineKeyboardArrowDown className="text-neutral-grey" />
+            )}
           </Button>
         </PopoverTrigger>
         {error && <p className="text-red-500 text-sm">{error}</p>}

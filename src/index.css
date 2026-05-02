@@ -176,6 +176,9 @@ h3.tiptap-heading + h2.tiptap-heading {
   body {
     @apply bg-background text-foreground;
   }
+  button:not(:disabled) {
+    @apply cursor-pointer;
+  }
 }
 
 .container {
