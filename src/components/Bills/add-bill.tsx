@@ -12,16 +12,23 @@ import { SimpleSelect } from "../Select";
 import { useGetMembers } from "@/routes/_authenticated/my-plans/$planId/_layout/members/-queries";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
-import { BillSplitType, useCreateBill, useUpdateBill } from "./-queries";
-import { useEffect } from "react";
+import { BillSplitType, useCreateBill, useUpdateBill, type Bill } from "./-queries";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useDebounce } from "../CustomInput/useDebounce";
+import { useGetFiles, type PlanFile } from "../Files/-queries";
+import AddFile from "../Files/add-file";
+import { Paperclip } from "lucide-react";
+import AttachmentItem from "../Files/attachment-item";
+import { SearchInput } from "../CustomInput/search-input";
+import { Spinner } from "../ui/spinner";
 
 export interface AddBillProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   planId: string;
   onClose?: () => void;
-  initialValues?: Partial<CreateBillForm>;
+  initialValues?: Partial<CreateBillForm> & { fileIds?: string[]; files?: PlanFile[] };
   billId?: string;
 }
 
@@ -63,6 +70,7 @@ const createBillSchema = z
     splitType: BillSplitTypeEnum,
     paidBy: memberOptionSchema.optional(),
     split: z.array(billSplitSchema).min(1),
+    fileIds: z.array(z.string()).optional(),
   })
   .superRefine((data, ctx) => {
     const { splitType, split, paidBy } = data;
@@ -185,6 +193,7 @@ export default function AddBill({
           member: null as any,
         },
       ],
+      fileIds: [],
     },
     validate: (values) => {
       const result = createBillSchema.safeParse(values);
@@ -201,6 +210,17 @@ export default function AddBill({
     },
   });
 
+  const [isUploadFileOpen, setIsUploadFileOpen] = useState(false);
+  const [attachmentSearch, setAttachmentSearch] = useState("");
+  const debouncedAttachmentSearch = useDebounce(attachmentSearch, 300);
+  const [selectedAttachmentIds, setSelectedAttachmentIds] = useState<string[]>(
+    [],
+  );
+  const [attachmentMap, setAttachmentMap] = useState<Record<string, PlanFile>>(
+    {},
+  );
+  const [attachmentsInitialized, setAttachmentsInitialized] = useState(false);
+
   const { data: members } = useGetMembers(planId);
   const isEditing = !!billId;
 
@@ -211,6 +231,48 @@ export default function AddBill({
   );
   const createBillMutation = useCreateBill(planId);
   const updateBillMutation = useUpdateBill(planId);
+
+  const { data: allFilesResponse, isLoading: isAllFilesLoading } = useGetFiles({
+    planId,
+    page: 1,
+    limit: 100,
+  });
+
+  const { data: searchedFilesResponse, isLoading: isSearchFilesLoading } =
+    useGetFiles({
+      planId,
+      search: debouncedAttachmentSearch,
+      page: 1,
+      limit: 20,
+    });
+
+  const addAttachment = (file: PlanFile) => {
+    setAttachmentMap((prev) => ({ ...prev, [file.id]: file }));
+    setSelectedAttachmentIds((prev) =>
+      prev.includes(file.id) ? prev : [...prev, file.id],
+    );
+    form.setFieldValue("fileIds", [
+      ...(form.values.fileIds || []),
+      file.id,
+    ]);
+  };
+
+  const removeAttachment = (fileId: string) => {
+    setSelectedAttachmentIds((prev) => prev.filter((id) => id !== fileId));
+    form.setFieldValue(
+      "fileIds",
+      (form.values.fileIds || []).filter((id) => id !== fileId),
+    );
+  };
+
+  const selectedAttachments = selectedAttachmentIds
+    .map((id) => attachmentMap[id])
+    .filter(Boolean);
+
+  const visibleSearchFiles =
+    searchedFilesResponse?.data.filter(
+      (file) => !selectedAttachmentIds.includes(file.id),
+    ) ?? [];
 
   const onSubmit = form.onSubmit(
     (values) => {
@@ -229,6 +291,7 @@ export default function AddBill({
           amount: s.amount ? Number(s.amount) : undefined,
           percentage: s.percentage ? Number(s.percentage) : undefined,
         })),
+        fileIds: selectedAttachmentIds,
       };
 
       if (isEditing && billId) {
@@ -268,10 +331,43 @@ export default function AddBill({
   useEffect(() => {
     if (open && initialValues) {
       form.setValues(initialValues);
+
+      if (initialValues.files) {
+        setAttachmentMap((prev) => {
+          const next = { ...prev };
+          initialValues.files?.forEach((file) => {
+            next[file.id] = file;
+          });
+          return next;
+        });
+        setSelectedAttachmentIds(initialValues.files.map((file) => file.id));
+        setAttachmentsInitialized(true);
+      }
     } else if (open && !initialValues) {
       form.reset();
+      setSelectedAttachmentIds([]);
+      setAttachmentMap({});
+      setAttachmentsInitialized(false);
     }
   }, [open, initialValues]);
+
+  useEffect(() => {
+    const allFiles = allFilesResponse?.data ?? [];
+    const searchedFiles = searchedFilesResponse?.data ?? [];
+
+    if (allFiles.length === 0 && searchedFiles.length === 0) return;
+
+    setAttachmentMap((prev) => {
+      const next = { ...prev };
+      allFiles.forEach((file) => {
+        next[file.id] = file;
+      });
+      searchedFiles.forEach((file) => {
+        next[file.id] = file;
+      });
+      return next;
+    });
+  }, [allFilesResponse?.data, searchedFilesResponse?.data]);
 
   useEffect(() => {
     if (form.values.splitType === BillSplitType.EXACT) {
@@ -305,6 +401,14 @@ export default function AddBill({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
+      <AddFile
+        open={isUploadFileOpen}
+        onOpenChange={setIsUploadFileOpen}
+        planId={planId}
+        onUploaded={(uploadedFile) => {
+          addAttachment(uploadedFile);
+        }}
+      />
       <SheetContent className="max-w-[50%] min-w-[40%] px-8 py-12 overflow-scroll">
         <div className="flex gap-3 items-center">
           <h3 className="pup-body-xl-700 text-neutral-black">
@@ -406,6 +510,78 @@ export default function AddBill({
               >
                 + Add member
               </button>
+            </div>
+
+            <div className="border border-off-white rounded-xl p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="pup-body-md-500 text-neutral-black">
+                  Attachments
+                </label>
+                <OutlineButton
+                  title="Upload & Attach"
+                  className="border-primary-orange text-primary-orange h-9 px-4"
+                  type="button"
+                  onClick={() => setIsUploadFileOpen(true)}
+                />
+              </div>
+
+              <div className="relative">
+                <SearchInput
+                  placeholder="Search existing files"
+                  value={attachmentSearch}
+                  onChange={(e) => setAttachmentSearch(e.target.value)}
+                />
+
+                {attachmentSearch && (
+                  <div className="absolute top-full left-0 right-0 z-50 mt-1 rounded-lg border border-off-white bg-white shadow-lg overflow-hidden">
+                    {isAllFilesLoading || isSearchFilesLoading ? (
+                      <div className="p-4 flex justify-center">
+                        <Spinner />
+                      </div>
+                    ) : visibleSearchFiles.length > 0 ? (
+                      <div className="max-h-64 overflow-y-auto">
+                        {visibleSearchFiles.map((file) => (
+                          <button
+                            key={file.id}
+                            type="button"
+                            onClick={() => {
+                              addAttachment(file);
+                              setAttachmentSearch("");
+                            }}
+                            className="w-full text-left px-4 py-2.5 hover:bg-neutral-50 transition-colors border-b border-off-white last:border-b-0 flex items-center gap-2"
+                          >
+                            <Paperclip
+                              size={14}
+                              className="text-neutral-dark-grey shrink-0"
+                            />
+                            <span className="pup-body-sm-400 text-neutral-black truncate">
+                              {file.name}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-4">
+                        <p className="pup-body-sm-400 text-neutral-grey">
+                          No matching files found.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {selectedAttachments.length > 0 && (
+                <div className="space-y-2">
+                  {selectedAttachments.map((file) => (
+                    <AttachmentItem
+                      key={file.id}
+                      file={file}
+                      onRemove={removeAttachment}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
             <SheetFooter>
               <PrimaryButton

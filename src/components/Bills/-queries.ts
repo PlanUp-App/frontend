@@ -1,6 +1,7 @@
 import axiosInstance from "@/utils/axios/axiosInstance";
 import { queryClient } from "@/utils/queryclient/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import type { PlanFile } from "../Files/-queries";
 
 export const BillSplitType = {
   EQUAL: "EQUAL",
@@ -25,6 +26,7 @@ export interface CreateBillDto {
     amount?: number;
     percentage?: number;
   }[];
+  fileIds?: string[];
 }
 
 async function createBill(dto: CreateBillDto) {
@@ -61,6 +63,7 @@ export interface UpdateBillDto {
     amount?: number;
     percentage?: number;
   }[];
+  fileIds?: string[];
 }
 
 async function updateBill(billId: string, dto: UpdateBillDto) {
@@ -101,6 +104,7 @@ export interface Bill {
   updatedAt: Date;
   paidAt: Date | null;
   createdById: string;
+  files: PlanFile[];
 }
 
 export interface BillsResponse {
@@ -202,6 +206,7 @@ export interface BillWithRelations {
     email: string;
     profilePicture: string | null;
   } | null;
+  files: PlanFile[];
 }
 
 export async function getBill(

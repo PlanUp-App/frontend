@@ -9,6 +9,7 @@ import AddBill from "./add-bill";
 import { useAuth } from "@/auth/useAuth";
 import { toast } from "sonner";
 import { CheckCircle2 } from "lucide-react";
+import AttachmentItem from "../Files/attachment-item";
 
 export default function ViewBill({
   open,
@@ -147,21 +148,18 @@ export default function ViewBill({
                 </div>
               )}
 
-              {/* {bill?.attachmentUrl && (
+              {bill?.files && bill.files.length > 0 && (
                 <div>
-                  <label className="pup-body-md-500 block text-neutral-black mb-2">
-                    Attachment:
+                  <label className="pup-body-md-500 block text-neutral-black mb-4">
+                    Attachments:
                   </label>
-                  <img
-                    href={bill.attachmentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="pup-body-md-400 text-primary-orange underline"
-                  >
-                    View attachment
-                  </a>
+                  <div className="space-y-2">
+                    {bill.files.map((file) => (
+                      <AttachmentItem key={file.id} file={file} />
+                    ))}
+                  </div>
                 </div>
-              )} */}
+              )}
 
               <div className="flex gap-4 text-neutral-grey pup-body-sm-400">
                 <span>Created: {new Date().toLocaleDateString()}</span>
@@ -244,6 +242,8 @@ export default function ViewBill({
             amount: s.amount,
             percentage: s.percentage ?? undefined,
           })) ?? [],
+        fileIds: bill?.files.map((f) => f.id) ?? [],
+        files: bill?.files ?? [],
       }}
     />
   );
