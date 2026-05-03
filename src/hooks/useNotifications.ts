@@ -69,6 +69,7 @@ export function useNotifications() {
     // Connect to notifications namespace
     socketRef.current = io("http://localhost:7001/notifications", {
       extraHeaders: { authorization: token },
+      forceNew: true, // Ensure a fresh connection for each user session
     });
 
     socketRef.current.on("connect", () => {
@@ -85,20 +86,12 @@ export function useNotifications() {
       // Show toast
       toast(notification.title, {
         description: notification.message,
-        action: notification.link
-          ? {
-            label: "View",
-            onClick: () => {
-              // We'll handle navigation in the component or here if needed
-              // For now, just a placeholder as we might need router
-            },
-          }
-          : undefined,
       });
     });
 
     return () => {
       if (socketRef.current) {
+        socketRef.current.off("newNotification");
         socketRef.current.disconnect();
         socketRef.current = null;
       }

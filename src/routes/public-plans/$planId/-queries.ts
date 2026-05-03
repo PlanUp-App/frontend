@@ -14,6 +14,7 @@ interface PublicPlanMember {
 }
 
 interface PublicPlan {
+  userStatus: string;
   id: string;
   name: string;
   coverImage: string | null;

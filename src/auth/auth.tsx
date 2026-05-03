@@ -104,6 +104,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const logout = () => {
+    // Clear all plan role entries from localStorage
+    const keysToRemove = Object.keys(localStorage).filter((key) =>
+      key.startsWith("plan_role_"),
+    );
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user");
     setUser(null);

@@ -1,7 +1,10 @@
-import { OutlineButton } from "@/components/Button/outline";
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { Navigation } from "@/components/Navigation";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import PlanCard from "@/components/PlanCard";
+import { useGetPublicPlans } from "./public-plans/-queries";
+
+import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
@@ -86,155 +89,65 @@ const FEATURES = [
   },
 ];
 
-const SOCIALS = [
-  {
-    label: "Facebook",
-    icon: (
-      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Instagram",
-    icon: (
-      <svg
-        className="w-4 h-4"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="2" y="2" width="20" height="20" rx="5" />
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-      </svg>
-    ),
-  },
-  { label: "X", icon: <span className="text-[13px] font-bold">𝕏</span> },
-  {
-    label: "LinkedIn",
-    icon: (
-      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
-        <circle cx="4" cy="4" r="2" />
-      </svg>
-    ),
-  },
-  {
-    label: "YouTube",
-    icon: (
-      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
-        <polygon
-          points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"
-          fill="white"
-        />
-      </svg>
-    ),
-  },
-];
 
-const ArrowRight = () => (
-  <svg
-    className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
-    viewBox="0 0 16 16"
-    fill="none"
-  >
-    <path
-      d="M3 8h10M9 4l4 4-4 4"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ImagePlaceholder = () => (
-  <div className="w-full h-full flex items-center justify-center bg-neutral-200">
-    <svg
-      className="w-12 h-12 text-neutral-400"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <polyline points="21 15 16 10 5 21" />
-    </svg>
-  </div>
-);
-
-const Logo = () => (
-  <a href="#" className="flex items-center gap-2 no-underline">
-    <div className="w-8 h-8 bg-[#F26419] rounded-lg flex items-center justify-center text-white text-sm font-black">
-      P
-    </div>
-    <span
-      className="font-bold text-xl text-[#F26419]"
-      style={{ fontFamily: "'Clash Display', sans-serif" }}
-    >
-      PlanUp
-    </span>
-  </a>
-);
 function RouteComponent() {
+  const { data: publicPlansData, isLoading: isPublicPlansLoading } = useGetPublicPlans({ limit: 3 });
+  const publicPlans = publicPlansData?.data;
+
   return (
     <>
       <Navigation />
-      <div className="text-neutral-900 bg-white overflow-x-hidden">
+      <div className="text-neutral-900 bg-neutral-50 overflow-x-hidden font-sans">
         {/* HERO */}
-        <section className="relative min-h-[calc(100vh-80px)] flex items-center pb-24">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80')",
-            }}
-          />
-          <div className="absolute inset-0 bg-neutral-black opacity-50" />
-          <div className="container relative z-10 px-16 max-w-2xl ">
-            <h1 className="pup-heading-one text-white mb-6">
-              Plan Up.
-              <br />
-              Live More.
-            </h1>
-            <p className="pup-body-md-400 text-white mb-8">
-              Create your first plan, invite your friends, and make organizing
-              group activities effortlessly.
-            </p>
-            <PrimaryButton
-              title="GET STARTED NOW"
-              link="/sign-up"
-              className="w-fit"
-            />
+        <section className="relative min-h-[calc(100vh-80px)] flex items-center pb-24 overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <img src="hero.png" alt="Hero background" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/90 via-neutral-900/70 to-transparent" />
+          </div>
+
+          <div className="container relative z-10 px-6 lg:px-16 max-w-7xl mx-auto">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6">
+                <span className="text-white/90 text-sm font-medium tracking-wide">The New Standard for Planning</span>
+              </div>
+              <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
+                Plan Up.<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400">Live More.</span>
+              </h1>
+              <p className="text-lg lg:text-xl text-neutral-200 mb-10 leading-relaxed font-light max-w-xl">
+                Create your first plan, invite your friends, and make organizing group activities effortlessly simple and beautifully clear.
+              </p>
+              <div className="flex items-center gap-4">
+                <PrimaryButton
+                  title="Get Started Now"
+                  link="/sign-up"
+                  className="w-fit px-8 py-4 rounded-full shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 transform hover:-translate-y-1"
+                />
+              </div>
+            </div>
           </div>
         </section>
 
         {/* FEATURES */}
-        <section className="container py-28">
-          <div className="mb-16">
-            <p className="pup-body-tag text-primary-orange uppercase mb-4">
-              Product Overview
-            </p>
-            <h2 className="pup-heading-two leading-tight text-neutral-black max-w-xl">
-              Make Group Activities Easier than Ever
+        <section className="container mx-auto px-6 lg:px-16 py-32 relative">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-orange-500/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <p className="text-orange-500 font-semibold uppercase tracking-wider text-sm mb-3">Product Overview</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-neutral-900 leading-tight">
+              Make Group Activities <br /><span className="font-light">Easier than Ever</span>
             </h2>
           </div>
-          <div className="grid grid-cols-4 gap-10">
-            {FEATURES.map((f, i) => (
-              <div key={f.title} className="feature-card">
-                <div className="w-10 h-10 bg-[#F26419] rounded-xl flex items-center justify-center text-white mb-4">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {FEATURES.map((f, _) => (
+              <div key={f.title} className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:shadow-orange-500/10 border border-neutral-100 transition-all duration-300 hover:-translate-y-2 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-orange-100/50 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-rose-500 rounded-2xl flex items-center justify-center text-white mb-8 shadow-md shadow-orange-500/20 group-hover:scale-110 transition-transform duration-300">
                   {f.icon}
                 </div>
-                <h3 className="font-semibold text-lg text-neutral-900 mb-2">
-                  {f.title}
-                </h3>
-                <p className="text-sm text-neutral-500 leading-relaxed">
+                <h3 className="font-bold text-xl text-neutral-900 mb-4">{f.title}</h3>
+                <p className="text-neutral-500 leading-relaxed group-hover:text-neutral-600 transition-colors">
                   {f.description}
                 </p>
               </div>
@@ -242,116 +155,105 @@ function RouteComponent() {
           </div>
         </section>
 
-        {/* COLLABORATE */}
-        <section className="container px-16 py-24 bg-neutral-50 grid grid-cols-2 gap-20 items-center">
-          <div
-            className="grid grid-cols-2 gap-4"
-            style={{ gridTemplateRows: "1fr 1fr" }}
-          >
-            <div className="row-span-2 rounded-2xl overflow-hidden min-h-[380px]">
-              <ImagePlaceholder />
+        {/* PUBLIC PLANS */}
+        <section className="py-32 bg-neutral-50 relative overflow-hidden">
+          <div className="container mx-auto px-6 lg:px-16">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+              <div className="max-w-2xl">
+                <p className="text-orange-500 font-semibold uppercase tracking-wider text-sm mb-3">Community</p>
+                <h2 className="text-4xl lg:text-5xl font-bold text-neutral-900 leading-tight">
+                  Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">Public Plans</span>
+                </h2>
+                <p className="mt-4 text-lg text-neutral-500 font-light">
+                  Get inspired by how others are organizing their activities. Join existing plans or learn from their structures.
+                </p>
+              </div>
+              <Link
+                to="/public-plans"
+                className="inline-flex items-center gap-2 text-orange-500 font-medium hover:text-orange-600 transition-colors group mb-2"
+              >
+                View all plans
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
             </div>
-            <div className="rounded-2xl overflow-hidden min-h-[180px]">
-              <ImagePlaceholder />
-            </div>
-            <div className="rounded-2xl overflow-hidden min-h-[180px]">
-              <ImagePlaceholder />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {isPublicPlansLoading ? (
+                [1, 2, 3].map((i) => (
+                  <div key={i} className="bg-white rounded-3xl p-4 shadow-sm border border-neutral-100 h-[400px] animate-pulse" />
+                ))
+              ) : publicPlans && publicPlans.length > 0 ? (
+                publicPlans.map((plan) => (
+                  <PlanCard
+                    key={plan.id}
+                    linkTo={`/public-plans/${plan.id}`}
+                    id={plan.id}
+                    name={plan.name}
+                    coverImage={plan.coverImage ?? "placeholder.png"}
+                    memberCount={plan._count.members}
+                    isPublic={plan.visibility === "PUBLIC"}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full py-20 text-center bg-white rounded-3xl border border-dashed border-neutral-200">
+                  <p className="text-neutral-400">No public plans available at the moment.</p>
+                </div>
+              )}
             </div>
           </div>
-          <div className="py-5">
-            <p className="pup-body-tag text-primary-orange uppercase mb-4">
-              Seamless Collaboration
-            </p>
-            <h2 className="pup-heading-two leading-tight text-neutral-black max-w-xl">
-              Collaborate with ease
-            </h2>
-            <p className="text-[15px] text-neutral-500 leading-relaxed mb-9">
-              Stay connected with real-time updates, instant chat, and smart
-              notifications. Coordinate effortlessly, share ideas, and keep
-              everyone in sync—ensuring smooth collaboration from planning to
-              completion.
-            </p>
-            <OutlineButton
-              title="Go To App"
-              className="text-primary-orange border-primary-orange"
-            />
+        </section>
+
+        {/* COLLABORATE */}
+        <section className="py-32 bg-white relative overflow-hidden">
+          <div className="container mx-auto px-6 lg:px-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+              <div className="rounded-3xl overflow-hidden shadow-xl shadow-neutral-200/80 group h-124">
+                <img src="collaborate.png" alt="Collab 2" className="w-full h-full object-fit group-hover:scale-105 transition-transform duration-700" />
+              </div>
+
+              <div className="max-w-xl">
+                <p className="text-orange-500 font-semibold uppercase tracking-wider text-sm mb-3">
+                  Seamless Collaboration
+                </p>
+                <h2 className="text-4xl lg:text-5xl font-bold text-neutral-900 leading-tight mb-8">
+                  Collaborate with <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">absolute ease</span>
+                </h2>
+                <p className="text-lg text-neutral-500 leading-relaxed mb-10 font-light">
+                  Stay connected with real-time updates, instant chat, and smart notifications. Coordinate effortlessly, share ideas, and keep everyone in sync—ensuring smooth collaboration from planning to completion.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="container relative py-32 text-center overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=1400&q=80')",
-            }}
-          />
-          <div className="absolute inset-0 bg-neutral-black/60" />
-          <div className="relative z-10">
-            <h2 className="pup-heading-two text-white mb-4">
-              Make Plans Come to Life
-            </h2>
-            <p className="pup-body-md-400 text-white mb-10">
-              Turn every idea into action — plan, track, and collaborate
-              instantly.
-            </p>
-            <PrimaryButton
-              title="Sign Up Now"
-              link="/sign-up"
-              className="w-fit mx-auto"
-            />
+        <section className="container mx-auto px-6 lg:px-16 py-32 mb-20">
+          <div className="relative rounded-[3rem] overflow-hidden shadow-2xl">
+            <div className="absolute inset-0">
+              <img src="friends.jpg" alt="CTA background" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-neutral-900/70 backdrop-blur-sm" />
+            </div>
+
+            <div className="relative z-10 py-24 px-10 text-center max-w-3xl mx-auto">
+              <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6">
+                Make Plans Come to Life
+              </h2>
+              <p className="text-xl text-neutral-300 mb-10 font-light">
+                Turn every idea into action — plan, track, and collaborate instantly. Join thousands of users who are organizing their group activities with PlanUp.
+              </p>
+              <PrimaryButton
+                title="Create Your First Plan Free"
+                link="/sign-up"
+                className="w-fit mx-auto px-10 py-5 text-lg rounded-full shadow-lg shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1"
+              />
+            </div>
           </div>
         </section>
 
         {/* FOOTER */}
-        {/* <footer className="px-16 py-12 flex items-center justify-between border-t border-neutral-100 flex-wrap gap-6">
-      <div className="flex items-center gap-10">
-        <Logo />
-        <div className="flex gap-7">
-          {NAV_LINKS.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
-      </div>
-      <div className="flex items-center gap-3">
-        {SOCIALS.map((s) => (
-          <a
-            key={s.label}
-            href="#"
-            aria-label={s.label}
-            className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-500 hover:border-[#F26419] hover:text-[#F26419] transition-all"
-          >
-            {s.icon}
-          </a>
-        ))}
-      </div>
-    </footer> */}
-        {/* <div className="px-16 py-5 flex items-center justify-between border-t border-neutral-100 flex-wrap gap-3">
-      <p className="text-xs text-neutral-400">
-        © 2025 PlanUp. All rights reserved.
-      </p>
-      <div className="flex gap-5">
-        <a
-          href="#"
-          className="text-xs text-neutral-400 hover:text-[#F26419] transition-colors"
-        >
-          Privacy Policy
-        </a>
-        <a
-          href="#"
-          className="text-xs text-neutral-400 hover:text-[#F26419] transition-colors"
-        >
-          Terms of Service
-        </a>
-      </div>
-    </div> */}
+        <Footer />
       </div>
     </>
   );

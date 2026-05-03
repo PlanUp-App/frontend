@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { User, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useUpdateAccount } from "@/routes/_authenticated/profile/$userId/-queries";
+import { useUpdateAccount } from "@/routes/profile/$userId/-queries";
 import { useAuth } from "@/auth/useAuth";
 import { AxiosError } from "axios";
 import axiosInstance from "@/utils/axios/axiosInstance";
