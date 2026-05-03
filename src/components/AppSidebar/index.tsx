@@ -29,6 +29,7 @@ import {
   useGetPhases,
   type Phase,
 } from "@/routes/_authenticated/my-plans/$planId/_layout/phases/-queries";
+import { useGetMyRole } from "@/routes/_authenticated/my-plans/-queries";
 
 function NavItem({
   to,
@@ -100,8 +101,9 @@ export function AppSidebar({ planId }: { planId: string }) {
     `/my-plans/${planId}/phases`,
   );
 
+  const { data: roleData } = useGetMyRole(planId);
   const roleKey = `plan_role_${planId}`;
-  const planRole = localStorage.getItem(roleKey);
+  const planRole = roleData?.role || localStorage.getItem(roleKey);
 
   return (
     <Sidebar collapsible="offcanvas">
