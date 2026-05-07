@@ -48,6 +48,6 @@ export const useReorderPhase = (planId: string) =>
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["phases"] });
+      queryClient.invalidateQueries({ queryKey: ["phases", planId] });
     },
   });
