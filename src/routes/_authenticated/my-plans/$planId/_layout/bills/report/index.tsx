@@ -19,6 +19,8 @@ import {
 } from "react-icons/md";
 import { useGetExpenditureReport } from "./-queries";
 import { useAuth } from "@/auth/useAuth";
+import { Tooltip, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { TooltipContent } from "@/components/ui/tooltip";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$planId/_layout/bills/report/",
@@ -383,10 +385,16 @@ function ReportPage() {
                         className="w-full flex items-end rounded-t-lg overflow-hidden"
                         style={{ height: 88 }}
                       >
-                        <div
-                          className="w-full bg-orange-100 group-hover:bg-primary-orange transition-colors duration-200 rounded-t-lg"
-                          style={{ height: `${Math.max(4, pct)}%` }}
-                        />
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div
+                              className="w-full bg-orange-100 group-hover:bg-primary-orange transition-colors duration-200 rounded-t-lg"
+                              style={{ height: `${Math.max(4, pct)}%` }}
+                            /></TooltipTrigger>
+                          <TooltipContent>
+                            <p>{fmt(m.total)}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                       <p className="pup-body-sm-400 text-neutral-grey">
                         {monthShort(m.month)}

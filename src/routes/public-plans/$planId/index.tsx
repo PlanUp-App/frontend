@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Spinner } from "@/components/ui/spinner";
 import { Crown, Shield, Users, Calendar, Globe } from "lucide-react";
 import { format } from "date-fns";
@@ -142,7 +142,7 @@ function RouteComponent() {
                   <div className="max-w-md">
                     <h3 className="text-3xl font-bold mb-4">Want to participate?</h3>
                     <p className="text-neutral-400 font-light leading-relaxed">
-                      {!isAuthenticated
+                      {!plan.config.acceptJoinRequest && plan.userStatus !== "MEMBER" ? "This plan is no longer accepting participants. Find similar plans here!" : !isAuthenticated
                         ? "Join our community today to send a request and start collaborating on this activity."
                         : plan.userStatus === "MEMBER"
                           ? "You are already a member of this plan. Collaborate with your team in the dashboard."
@@ -155,7 +155,11 @@ function RouteComponent() {
                   </div>
 
                   <div className="shrink-0">
-                    {!isAuthenticated ? (
+                    {!plan.config.acceptJoinRequest && plan.userStatus !== "MEMBER" ? <PrimaryButton
+                      title="Find Plans"
+                      link="/public-plans"
+                      className="px-10 py-5 rounded-full text-lg shadow-xl bg-orange-500 hover:bg-orange-600 shadow-orange-500/30"
+                    /> : !isAuthenticated ? (
                       <PrimaryButton
                         title="Sign Up to Join"
                         link="/sign-up"
@@ -219,7 +223,7 @@ function RouteComponent() {
 
                 <div className="space-y-5">
                   {sorted.map((member) => (
-                    <div key={member.user.id} className="group flex items-center gap-4 p-2 rounded-2xl hover:bg-neutral-50 transition-colors duration-200">
+                    <Link to={`/profile/${member.user.id}`} ><div key={member.user.id} className="group flex items-center gap-4 p-2 rounded-2xl hover:bg-neutral-50 transition-colors duration-200">
                       <div className="relative">
                         <ProfileAvatar
                           src={member.user.profilePicture}
@@ -243,6 +247,7 @@ function RouteComponent() {
                         </p>
                       </div>
                     </div>
+                    </Link>
                   ))}
 
                   {plan._count.members - sorted.length > 0 && (

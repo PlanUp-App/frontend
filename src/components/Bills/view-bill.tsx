@@ -162,7 +162,7 @@ export default function ViewBill({
               )}
 
               <div className="flex gap-4 text-neutral-grey pup-body-sm-400">
-                <span>Created: {new Date().toLocaleDateString()}</span>
+                <span>Created: {new Date(bill?.createdAt || "").toLocaleDateString()}</span>
               </div>
 
               <SheetFooter>
@@ -184,7 +184,7 @@ export default function ViewBill({
                         onError: (error: any) => {
                           toast.error(
                             error?.response?.data?.message ??
-                              "Failed to update bill status",
+                            "Failed to update bill status",
                           );
                         },
                       });
@@ -225,11 +225,11 @@ export default function ViewBill({
         splitType: bill?.splitType ?? BillSplitType.EQUAL,
         paidBy: bill?.paidBy
           ? {
-              value: bill.paidBy.id,
-              label: bill.paidBy.name,
-              email: bill.paidBy.email,
-              profilePicture: bill.paidBy.profilePicture,
-            }
+            value: bill.paidBy.id,
+            label: bill.paidBy.name,
+            email: bill.paidBy.email,
+            profilePicture: bill.paidBy.profilePicture,
+          }
           : undefined,
         split:
           bill?.split.map((s) => ({

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 interface ProfileAvatarProps {
   src?: string | null;
   alt?: string;
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl";
   className?: string;
   showBorder?: boolean;
 }
@@ -16,6 +16,7 @@ export function ProfileAvatar({
   showBorder = false,
 }: ProfileAvatarProps) {
   const sizeClasses = {
+    xxs: "w-4 h-4 text-[8px]",
     xs: "w-6 h-6 text-xs",
     sm: "w-8 h-8 text-xs",
     md: "w-10 h-10 text-sm",

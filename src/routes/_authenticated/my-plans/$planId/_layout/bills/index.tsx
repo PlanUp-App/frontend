@@ -37,12 +37,6 @@ function RouteComponent() {
   }, [debouncedSearch]);
 
   const { data, isLoading } = useGetBills({ planId, search });
-  if (isLoading)
-    return (
-      <div className="flex justify-center mt-24">
-        <Spinner />
-      </div>
-    );
   return (
     <>
       <AddBill
@@ -80,7 +74,9 @@ function RouteComponent() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <div className="flex flex-col gap-4">
+      {isLoading ? <div className="flex justify-center mt-24">
+        <Spinner />
+      </div> : <div className="flex flex-col gap-4">
         {data?.data.map((bill) => (
           <BillCard
             key={bill.id}
@@ -91,7 +87,7 @@ function RouteComponent() {
             }}
           />
         ))}
-      </div>
+      </div>}
     </>
   );
 }

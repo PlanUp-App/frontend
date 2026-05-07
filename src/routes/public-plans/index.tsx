@@ -67,7 +67,7 @@ function RouteComponent() {
         {/* HERO HEADER */}
         <section className="relative py-24 overflow-hidden bg-neutral-900">
           <div className="absolute inset-0 z-0">
-            <img src="placeholder.png" alt="Header background" className="w-full h-full object-cover opacity-30" />
+            <img src="friends.jpg" alt="Header background" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/50 to-neutral-900" />
           </div>
 
