@@ -174,7 +174,7 @@ function ReportPage() {
       </div>
 
       {/* Stat row */}
-      <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Plan Total"
           value={fmt(summary.planTotalExpenditure)}
@@ -220,9 +220,9 @@ function ReportPage() {
       </div>
 
       {/* Body grid */}
-      <div className="grid grid-cols-3 gap-6">
-        {/* Left — col-span-2 */}
-        <div className="col-span-2 flex flex-col gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left — lg:col-span-2 */}
+        <div className="lg:col-span-2 flex flex-col gap-6">
           {/* Minimum Transactions to Settle Bill */}
           {data.minTransactions.length > 0 && (
             <SectionCard title="Settle All Expenses">
@@ -233,33 +233,33 @@ function ReportPage() {
                 {data.minTransactions.map((tx, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 py-3 px-2 rounded-xl hover:bg-neutral-50 transition-colors"
+                    className="flex items-center gap-2 sm:gap-3 py-3 px-1 sm:px-2 rounded-xl hover:bg-neutral-50 transition-colors"
                   >
                     <ProfileAvatar
                       src={tx.from.profilePicture ?? null}
                       alt={tx.from.name}
-                      size="md"
+                      size="sm"
                     />
-                    <p className="pup-body-md-400 text-neutral-black shrink-0">
+                    <p className="pup-body-sm-500 sm:pup-body-md-400 text-neutral-black truncate max-w-[60px] sm:max-w-none">
                       {tx.from.id === me?.id ? "Me" : tx.from.name}
                     </p>
-                    <div className="flex-1 flex items-center gap-1 px-2">
+                    <div className="flex-1 flex items-center gap-1 px-1 sm:px-2">
                       <div className="flex-1 h-px bg-neutral-light-grey" />
                       <MdArrowForward
-                        size={14}
+                        size={12}
                         className="text-neutral-dark-grey shrink-0"
                       />
                       <div className="flex-1 h-px bg-neutral-light-grey" />
                     </div>
-                    <p className="pup-body-md-400 text-neutral-black shrink-0">
+                    <p className="pup-body-sm-500 sm:pup-body-md-400 text-neutral-black truncate max-w-[60px] sm:max-w-none">
                       {tx.to.id === me?.id ? "Me" : tx.to.name}
                     </p>
                     <ProfileAvatar
                       src={tx.to.profilePicture ?? null}
                       alt={tx.to.name}
-                      size="md"
+                      size="sm"
                     />
-                    <span className="ml-2 px-3 py-1 rounded-full bg-orange-50 pup-body-sm-400 text-primary-orange shrink-0">
+                    <span className="ml-1 sm:ml-2 px-2 sm:px-3 py-1 rounded-full bg-orange-50 text-[10px] sm:pup-body-sm-400 text-primary-orange shrink-0">
                       {fmt(tx.amount)}
                     </span>
                   </div>

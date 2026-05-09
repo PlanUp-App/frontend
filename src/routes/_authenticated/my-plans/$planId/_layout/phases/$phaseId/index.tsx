@@ -9,12 +9,19 @@ import { CheckCircle2, Circle } from "lucide-react";
 import { SearchInput } from "@/components/CustomInput/search-input";
 import { useGetMembers } from "../../members/-queries";
 import MemberSelect, { type MemberOption } from "@/components/MemberSelect";
-import { MdClose, MdOutlineTableChart, MdOutlineTimeline } from "react-icons/md";
+import { MdClose, MdOutlineTableChart, MdOutlineTimeline, MdFilterList } from "react-icons/md";
 import { useDebounce } from "@/components/CustomInput/useDebounce";
 import { cn } from "@/lib/utils";
 import { ProfileAvatar } from "@/components/PreviewImage";
 import { Skeleton } from "@/components/ui/skeleton";
 import { router } from "@/main";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { OutlineButton } from "@/components/Button/outline";
 import {
   Accordion,
   AccordionContent,
@@ -125,6 +132,7 @@ function ProgressSection({
 function RouteComponent() {
   const [addTaskIsOpen, setAddTaskIsOpen] = useState(false);
   const [viewTaskIsOpen, setViewTaskIsOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [viewTask, setViewTask] = useState("");
   const { planId: planId, phaseId: phaseId } = Route.useParams();
   const { view, page } = Route.useSearch();
@@ -304,14 +312,165 @@ function RouteComponent() {
         phaseId={phaseId}
         taskId={viewTask}
       />
+
+      <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto px-6 py-10">
+          <SheetHeader className="mb-6">
+            <SheetTitle className="pup-heading-three">Filters & Options</SheetTitle>
+          </SheetHeader>
+
+          <div className="flex flex-col gap-8">
+            {/* View Toggle */}
+            <div>
+              <h4 className="pup-body-md-500 text-neutral-black mb-4">View Mode</h4>
+              <div className="flex p-1 bg-neutral-light-grey rounded-xl w-fit">
+                <button
+                  onClick={() => handleViewChange("timeline")}
+                  className={cn(
+                    "flex items-center gap-2 px-6 py-2 rounded-lg transition-all cursor-pointer",
+                    view === "timeline"
+                      ? "bg-white shadow-sm text-neutral-black"
+                      : "text-neutral-grey hover:text-neutral-dark-grey",
+                  )}
+                >
+                  <MdOutlineTimeline size={20} />
+                  <span className="pup-body-sm-500">Timeline</span>
+                </button>
+                <button
+                  onClick={() => handleViewChange("table")}
+                  className={cn(
+                    "flex items-center gap-2 px-6 py-2 rounded-lg transition-all cursor-pointer",
+                    view === "table"
+                      ? "bg-white shadow-sm text-neutral-black"
+                      : "text-neutral-grey hover:text-neutral-dark-grey",
+                  )}
+                >
+                  <MdOutlineTableChart size={20} />
+                  <span className="pup-body-sm-500">Table</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Filters */}
+            <div className="flex flex-col gap-6">
+              <h4 className="pup-body-md-500 text-neutral-black">Filters</h4>
+              <SearchInput
+                placeholder="Search tasks..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full"
+              />
+
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <p className="pup-body-sm-500 text-neutral-grey tracking-wider">
+                    Assigned To
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <MemberSelect
+                      data={members || []}
+                      selectedMember={selectedAssignee}
+                      setSelectedMember={setSelectedAssignee}
+                      variant="mini"
+                      placeholder="All"
+                    />
+                    {selectedAssignee && (
+                      <button
+                        onClick={() => setSelectedAssignee(null)}
+                        className="p-1 hover:bg-neutral-light-grey rounded-full"
+                      >
+                        <MdClose className="text-neutral-grey size-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <p className="pup-body-sm-500 text-neutral-grey tracking-wider">
+                    Created By
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <MemberSelect
+                      data={members || []}
+                      selectedMember={selectedCreator}
+                      setSelectedMember={setSelectedCreator}
+                      variant="mini"
+                      placeholder="All"
+                    />
+                    {selectedCreator && (
+                      <button
+                        onClick={() => setSelectedCreator(null)}
+                        className="p-1 hover:bg-neutral-light-grey rounded-full"
+                      >
+                        <MdClose className="text-neutral-grey size-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Access - only in timeline */}
+            {view === "timeline" && Object.keys(groupedTasks).length > 0 && (
+              <div>
+                <h4 className="pup-body-md-500 text-neutral-black mb-4">Jump to Date</h4>
+                <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto pr-2">
+                  {Object.entries(groupedTasks).map(([date, tasksForDate]) => {
+                    const isActive = activeDate === date;
+                    return (
+                      <button
+                        key={date + "mobile-toc"}
+                        onClick={() => {
+                          scrollToDate(date);
+                          setIsFilterOpen(false);
+                        }}
+                        className={cn(
+                          "w-full text-left py-2.5 px-3 rounded-xl transition-all flex justify-between items-center",
+                          isActive
+                            ? "bg-orange-50 text-primary-orange pup-body-sm-500"
+                            : "text-neutral-grey hover:bg-neutral-50 pup-body-sm-400"
+                        )}
+                      >
+                        <span>{date}</span>
+                        <span className="text-[10px] opacity-60">
+                          {tasksForDate.length} tasks
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Stats */}
+            {stats && (
+              <div className="flex flex-col gap-4">
+                <h4 className="pup-body-md-500 text-neutral-black mb-2">Phase Progress</h4>
+                <ProgressSection
+                  label="Overall Progress"
+                  value={stats.completedTasks}
+                  total={stats.totalTasks}
+                  colorClass="bg-dark-blue"
+                />
+                <ProgressSection
+                  label="My Progress"
+                  value={stats.assignedCompletedTasks}
+                  total={stats.assignedTasks}
+                  colorClass="bg-primary-orange"
+                />
+              </div>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
       {/* Sticky Header & Filters */}
       <div ref={headerRef} className="sticky top-0 bg-white z-20 pt-4 pb-8 mb-4">
         {/* Heading section */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           {phase ? (
-            <h1 className="pup-heading-three">
+            <h1 className="pup-heading-three text-2xl md:text-3xl">
               {phase.name}{" "}
-              <span className="text-neutral-grey">
+              <span className="text-neutral-grey text-lg md:text-xl">
                 ({phase._count.tasks} tasks)
               </span>
             </h1>
@@ -320,73 +479,83 @@ function RouteComponent() {
               <Skeleton className="h-10 w-64" />
             </div>
           )}
-          <PrimaryButton
-            title="Add Task"
-            type="button"
-            onClick={() => setAddTaskIsOpen(true)}
-          />
+          <div className="flex gap-2 w-full sm:w-auto">
+            <OutlineButton
+              title="Options"
+              onClick={() => setIsFilterOpen(true)}
+              className="flex-1 sm:flex-none lg:hidden border-neutral-light-grey text-neutral-black"
+            />
+            <PrimaryButton
+              title="Add Task"
+              type="button"
+              className="flex-1 sm:w-auto"
+              onClick={() => setAddTaskIsOpen(true)}
+            />
+          </div>
         </div>
 
-        {/* Filter Section */}
-        {phase ? <div className="flex flex-wrap justify-between items-center">
+        {/* Filter Section - Desktop only */}
+        {phase ? <div className="hidden lg:flex flex-wrap gap-4 items-center">
           <SearchInput
             placeholder="Search tasks..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full md:max-w-128 flex-1 mr-6"
+            className="w-full lg:max-w-128"
           />
 
+          <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex gap-2 items-center">
+              <p className="pup-body-sm-500 text-neutral-grey tracking-wider whitespace-nowrap">
+                Assigned To
+              </p>
+              <MemberSelect
+                data={members || []}
+                selectedMember={selectedAssignee}
+                setSelectedMember={setSelectedAssignee}
+                variant="mini"
+                placeholder="All"
+              />
+              <button
+                onClick={() => setSelectedAssignee(null)}
+                className={cn(
+                  "p-1 hover:bg-neutral-light-grey rounded-full transition-opacity",
+                  selectedAssignee
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none",
+                )}
+                title="Clear filter"
+              >
+                <MdClose className="text-neutral-grey size-4" />
+              </button>
+            </div>
 
-          <div className="flex gap-2 items-center">
-            <p className="pup-body-sm-500 text-neutral-grey tracking-wider">
-              Assigned To
-            </p>
-            <MemberSelect
-              data={members || []}
-              selectedMember={selectedAssignee}
-              setSelectedMember={setSelectedAssignee}
-              variant="mini"
-              placeholder="All"
-            />
-            <button
-              onClick={() => setSelectedAssignee(null)}
-              className={cn(
-                "p-1 hover:bg-neutral-light-grey rounded-full transition-opacity",
-                selectedAssignee
-                  ? "opacity-100"
-                  : "opacity-0 pointer-events-none",
-              )}
-              title="Clear filter"
-            >
-              <MdClose className="text-neutral-grey size-4" />
-            </button>
+            <div className="flex gap-2 items-center">
+              <p className="pup-body-sm-500 text-neutral-grey tracking-wider whitespace-nowrap">
+                Created By
+              </p>
+              <MemberSelect
+                data={members || []}
+                selectedMember={selectedCreator}
+                setSelectedMember={setSelectedCreator}
+                variant="mini"
+                placeholder="All"
+              />
+              <button
+                onClick={() => setSelectedCreator(null)}
+                className={cn(
+                  "p-1 hover:bg-neutral-light-grey rounded-full transition-opacity",
+                  selectedCreator
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none",
+                )}
+                title="Clear filter"
+              >
+                <MdClose className="text-neutral-grey size-4" />
+              </button>
+            </div>
           </div>
 
-          <div className="flex gap-2 items-center">
-            <p className="pup-body-sm-500 text-neutral-grey tracking-wider">
-              Created By
-            </p>
-            <MemberSelect
-              data={members || []}
-              selectedMember={selectedCreator}
-              setSelectedMember={setSelectedCreator}
-              variant="mini"
-              placeholder="All"
-            />
-            <button
-              onClick={() => setSelectedCreator(null)}
-              className={cn(
-                "p-1 hover:bg-neutral-light-grey rounded-full transition-opacity",
-                selectedCreator
-                  ? "opacity-100"
-                  : "opacity-0 pointer-events-none",
-              )}
-              title="Clear filter"
-            >
-              <MdClose className="text-neutral-grey size-4" />
-            </button>
-          </div>
-          <div className="flex p-1 bg-neutral-light-grey rounded-lg mr-4">
+          <div className="flex p-1 bg-neutral-light-grey rounded-lg ml-auto">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -421,7 +590,7 @@ function RouteComponent() {
               <TooltipContent>Table View</TooltipContent>
             </Tooltip>
           </div>
-        </div> : <div className="flex flex-col gap-2">
+        </div> : <div className="hidden lg:flex flex-col gap-2">
           <Skeleton className="h-10 w-64" />
         </div>}
       </div>
@@ -429,22 +598,22 @@ function RouteComponent() {
       <div className="flex flex-col gap-8 pb-12">
         {isLoading ? (
           view === "timeline" ? (
-            <div className="flex justify-between items-start">
-              <div className="flex flex-col gap-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
+              <div className="flex flex-col gap-8 flex-1 w-full">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="border-l-4 border-neutral-light-grey w-[516px] pb-12">
+                  <div key={i} className="border-l-4 border-neutral-light-grey pb-12 w-full">
                     <div className="flex gap-4 items-center mb-6">
                       <div className="w-8 h-1 bg-neutral-light-grey"></div>
                       <Skeleton className="h-6 w-32" />
                     </div>
-                    <div className="flex flex-col gap-4 pl-12">
+                    <div className="flex flex-col gap-4 pl-4 sm:pl-12">
                       <Skeleton className="h-32 w-full rounded-xl" />
                       <Skeleton className="h-32 w-full rounded-xl" />
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col gap-4 w-40">
+              <div className="flex flex-col gap-4 w-full lg:w-40">
                 <Skeleton className="h-5 w-24 mb-2" />
                 {[1, 2, 3, 4].map((i) => (
                   <Skeleton key={i} className="h-4 w-20" />
@@ -480,9 +649,9 @@ function RouteComponent() {
         ) : tasks.length === 0 ? (
           <p>No tasks found. Add new tasks to get started.</p>
         ) : view === "timeline" ? (
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
             {/* Timeline View */}
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-1 w-full">
               {Object.entries(groupedTasks).map(([date, tasksForDate]) => {
                 const isActive = activeDate === date;
                 return (
@@ -492,7 +661,7 @@ function RouteComponent() {
                     ref={(el) => {
                       dateRefs.current[date] = el;
                     }}
-                    className="relative pl-12 pb-12 w-[560px]"
+                    className="relative pl-10 sm:pl-12 pb-12 w-full"
                   >
                     {/* Vertical Line */}
                     <div className="absolute left-4 top-0 bottom-0 w-[1px] bg-neutral-light-grey" />
@@ -537,8 +706,8 @@ function RouteComponent() {
               </div>
             </div>
 
-            {/* Quick access section */}
-            <div className="sticky top-48 self-start w-72">
+            {/* Quick access section - Desktop only */}
+            <div className="hidden lg:block lg:sticky lg:top-48 self-start w-full lg:w-72">
               <Accordion type="single" collapsible defaultValue="quick-access">
                 <AccordionItem value="quick-access" className="border-none">
                   <AccordionTrigger className="hover:no-underline py-0 mb-4">
@@ -743,3 +912,5 @@ function RouteComponent() {
     </>
   );
 }
+
+

@@ -124,14 +124,14 @@ function RouteComponent() {
         memberName={memberToDelete?.name ?? ""}
         isLoading={removeMemberMutation.isPending}
       />
-      <div className="flex justify-between content-center mb-6 py-4 sticky top-0 bg-white">
-        <h1 className="pup-heading-three">Members</h1>
-        <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-6 py-4 sticky top-0 bg-white z-10">
+        <h1 className="pup-heading-three text-2xl md:text-3xl">Members</h1>
+        <div className="flex gap-3 w-full sm:w-auto">
           {!isOwner && (
             <OutlineButton
               title="Leave Plan"
               type="button"
-              className="border-red-500 text-red-500 hover:bg-red-50"
+              className="flex-1 sm:flex-none border-red-500 text-red-500 hover:bg-red-50"
               onClick={handleLeavePlan}
               isLoading={leavePlanMutation.isPending}
             />
@@ -139,6 +139,7 @@ function RouteComponent() {
           {isOwner && (
             <PrimaryButton
               title="Add Members"
+              className="flex-1 sm:flex-none"
               type="button"
               onClick={() => setAddMemberModalIsOpen(true)}
             />

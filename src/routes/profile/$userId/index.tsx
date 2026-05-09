@@ -142,7 +142,7 @@ export default function Index() {
           <div className="bg-white rounded-[2rem] p-8 lg:p-10 shadow-sm border border-neutral-100 mb-8">
             <div className="flex flex-col md:flex-row md:items-end gap-6">
               {/* Avatar with upload overlay */}
-              <div className="-mt-24 md:-mt-28 relative group/avatar shrink-0">
+              <div className="w-fit mx-auto -mt-24 md:-mt-28 relative group/avatar shrink-0">
                 <div className="rounded-full ring-4 ring-white shadow-xl">
                   <ProfileAvatar
                     src={data.profilePicture}
@@ -185,7 +185,7 @@ export default function Index() {
 
               {/* Name + bio + actions */}
               <div className="flex-1 min-w-0 pb-1">
-                <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div className="flex flex-col items-center text-center md:flex-row md:items-start md:justify-between md:text-left gap-4">
                   <div>
                     <h1 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-2 leading-tight">
                       {data.name}
@@ -197,7 +197,7 @@ export default function Index() {
                     )}
                   </div>
 
-                  <div className="shrink-0">
+                  <div className="shrink-0 flex justify-center">
                     {isSelf ? (
                       <>
                         <button

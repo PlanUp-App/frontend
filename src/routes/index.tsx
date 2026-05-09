@@ -208,9 +208,9 @@ function RouteComponent() {
         {/* COLLABORATE */}
         <section className="py-32 bg-white relative overflow-hidden">
           <div className="container mx-auto px-6 lg:px-16">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-              <div className="rounded-3xl overflow-hidden shadow-xl shadow-neutral-200/80 group h-124">
-                <img src="collaborate.png" alt="Collab 2" className="w-full h-full object-fit group-hover:scale-105 transition-transform duration-700" />
+            <div className="flex flex-col-reverse lg:grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+              <div className="rounded-3xl overflow-hidden shadow-xl shadow-neutral-200/80 group">
+                <img src="collaborate.png" alt="Collab 2" className="w-full max-h-full object-fit group-hover:scale-105 transition-transform duration-700" />
               </div>
 
               <div className="max-w-xl">

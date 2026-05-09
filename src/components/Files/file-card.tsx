@@ -158,7 +158,7 @@ export default function FileCard({
             handleOpen();
           }
         }}
-        className="group flex w-full items-center justify-between rounded-xl border border-off-white bg-white p-4 gap-4 text-left cursor-pointer hover:bg-off-white/40 transition-colors"
+        className="group flex w-full flex-col sm:flex-row sm:items-center justify-between rounded-xl border border-off-white bg-white p-4 gap-4 text-left cursor-pointer hover:bg-off-white/40 transition-colors"
       >
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-off-white text-neutral-dark-grey overflow-hidden">
@@ -182,7 +182,7 @@ export default function FileCard({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 flex-wrap sm:flex-nowrap">
           {canDelete && (
             <button
               type="button"
@@ -191,7 +191,7 @@ export default function FileCard({
                 onDelete?.(file.id);
               }}
               disabled={isDeleting}
-              className="cursor-pointer inline-flex items-center gap-1 rounded-full border border-red-100 bg-white px-3 py-1.5 pup-body-sm-400 text-red-500 opacity-0 pointer-events-none transition-opacity group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="cursor-pointer inline-flex items-center gap-1 rounded-full border border-red-100 bg-white px-3 py-1.5 pup-body-sm-400 text-red-500 transition-opacity md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Trash2 size={14} />
               Delete
@@ -203,19 +203,21 @@ export default function FileCard({
               e.stopPropagation();
               void handleDownload();
             }}
-            className="cursor-pointer inline-flex items-center gap-1 rounded-full border border-off-white bg-white px-3 py-1.5 pup-body-sm-400 text-neutral-dark-grey opacity-0 pointer-events-none transition-opacity group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto hover:text-neutral-black"
+            className="cursor-pointer inline-flex items-center gap-1 rounded-full border border-off-white bg-white px-3 py-1.5 pup-body-sm-400 text-neutral-dark-grey transition-opacity md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto hover:text-neutral-black"
           >
             <Download size={14} />
             Download
           </button>
-          <ProfileAvatar
-            src={file.uploader?.profilePicture}
-            alt={file.uploader?.name ?? "Uploader"}
-            size="sm"
-          />
-          <span className="pup-body-sm-400 text-neutral-dark-grey max-w-36 truncate">
-            {file.uploader?.name ?? "Unknown"}
-          </span>
+          <div className="flex items-center gap-2">
+            <ProfileAvatar
+              src={file.uploader?.profilePicture}
+              alt={file.uploader?.name ?? "Uploader"}
+              size="sm"
+            />
+            <span className="pup-body-sm-400 text-neutral-dark-grey max-w-[100px] sm:max-w-36 truncate">
+              {file.uploader?.name ?? "Unknown"}
+            </span>
+          </div>
         </div>
       </div>
     </>

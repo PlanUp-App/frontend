@@ -44,7 +44,7 @@ export default function ViewBill({
   if (!isEdit)
     return (
       <Sheet open={open} onOpenChange={handleOpenChange}>
-        <SheetContent className="max-w-[50%] min-w-[40%] px-8 py-12 overflow-scroll gap-10">
+        <SheetContent className="w-full sm:max-w-[50%] sm:min-w-[40%] px-6 sm:px-8 py-10 sm:py-12 overflow-scroll gap-10">
           {isLoading ? (
             <Spinner />
           ) : isError ? (

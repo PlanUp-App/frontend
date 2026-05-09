@@ -60,9 +60,9 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-8 pb-24">
-      <h1 className="pup-heading-three">Welcome to {data.plan.name}</h1>
+      <h1 className="pup-heading-three text-2xl md:text-3xl">Welcome to {data.plan.name}</h1>
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Members"
           value={stats.memberCount}
@@ -89,9 +89,9 @@ function RouteComponent() {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column */}
-        <div className="col-span-2 flex flex-col gap-6">
+        <div className="lg:col-span-2 flex flex-col gap-6">
           {/* Progress bar */}
           <div className="bg-white border border-off-white rounded-2xl p-6">
             <div className="flex items-center justify-between mb-3">

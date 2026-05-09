@@ -66,7 +66,7 @@ function RouteComponent() {
   const owner = sorted.find((m) => m.role === "OWNER");
 
   const canJoin =
-    plan.config.acceptJoinRequest ||
+    plan.config.acceptJoinRequest &&
     plan._count.members < plan.config.maxMembers;
 
   return (
@@ -90,7 +90,7 @@ function RouteComponent() {
                 Public Activity
               </span>
               <span className="px-4 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-medium border border-white/20">
-                {plan.config.maxMembers - plan._count.members} Slots Left
+                {canJoin ? `${plan.config.maxMembers - plan._count.members} Slots Left` : "No Slots Left"}
               </span>
             </div>
 
@@ -100,13 +100,15 @@ function RouteComponent() {
 
             <div className="flex flex-wrap items-center gap-6 text-neutral-300">
               {owner && (
-                <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-                  <ProfileAvatar src={owner.user.profilePicture} alt={owner.user.name} className="w-8 h-8 ring-2 ring-orange-500/50" />
-                  <div className="text-sm">
-                    <p className="text-white font-medium leading-none mb-1">{owner.user.name}</p>
-                    <p className="text-[10px] uppercase tracking-widest text-neutral-400">Host</p>
+                <Link to={`/profile/${owner.user.id}`} >
+                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
+                    <ProfileAvatar src={owner.user.profilePicture} alt={owner.user.name} className="w-8 h-8 ring-2 ring-orange-500/50" />
+                    <div className="text-sm">
+                      <p className="text-white font-medium leading-none mb-1">{owner.user.name}</p>
+                      <p className="text-[10px] uppercase tracking-widest text-neutral-400">Host</p>
+                    </div>
                   </div>
-                </div>
+                </Link>
               )}
 
               <div className="flex items-center gap-2">

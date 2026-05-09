@@ -13,7 +13,7 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
   return (
     <div
       onClick={onClick}
-      className="py-4 pl-6 flex gap-6 justify-between items-center cursor-pointer shadow-[1px_2px_5px_rgba(0,0,0,0.18)] rounded-[8px]"
+      className="py-3 sm:py-4 pl-4 sm:pl-6 pr-2 sm:pr-4 flex gap-3 sm:gap-6 justify-between items-center cursor-pointer shadow-[1px_2px_5px_rgba(0,0,0,0.18)] rounded-[8px] w-full"
     >
       <div className="flex gap-4 items-center">
         {task.isComplete ? (

@@ -45,12 +45,13 @@ function Index() {
           onOpenChange={setCreateModalIsOpen}
         />
         <div className="container">
-          <div className="flex justify-between mb-12">
-            <h1 className="pup-heading-two text-neutral-black">My plans</h1>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 mb-12">
+            <h1 className="pup-heading-two text-3xl md:text-4xl text-neutral-black">My plans</h1>
             <PrimaryButton
               type="button"
               title="Create New Plan"
               onClick={() => setCreateModalIsOpen(true)}
+              className="w-full sm:w-auto"
             />
           </div>
           <SearchInput
@@ -59,7 +60,7 @@ function Index() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {isLoading ? (
               <Spinner />
             ) : isError ? (

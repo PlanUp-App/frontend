@@ -116,24 +116,25 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="flex justify-between mb-12">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
         <CreatePhaseDialog
           open={createModalIsOpen}
           onOpenChange={setCreateModalIsOpen}
           planId={planId}
         />
-        <h1 className="pup-heading-three">Phases</h1>
-        <div className="flex gap-3">
+        <h1 className="pup-heading-three text-2xl md:text-3xl">Phases</h1>
+        <div className="flex gap-3 w-full sm:w-auto">
           {!isReordering ? (
             <>
               <OutlineButton
                 title="Reorder"
-                className="border-primary-orange text-primary-orange"
+                className="flex-1 sm:flex-none border-primary-orange text-primary-orange"
                 type="button"
                 onClick={handleStartReordering}
               />
               <PrimaryButton
                 title="Add New Phase"
+                className="flex-1 sm:flex-none"
                 type="button"
                 onClick={() => setCreateModalIsOpen(true)}
               />
@@ -142,12 +143,13 @@ function RouteComponent() {
             <>
               <OutlineButton
                 title="Cancel"
-                className="border-primary-orange text-primary-orange"
+                className="flex-1 sm:flex-none border-primary-orange text-primary-orange"
                 type="button"
                 onClick={handleCancelReordering}
               />
               <PrimaryButton
                 title="Save"
+                className="flex-1 sm:flex-none"
                 type="button"
                 onClick={handleSaveOrder}
               />

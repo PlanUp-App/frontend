@@ -1,7 +1,7 @@
 import { useAuth } from "@/auth/useAuth";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ChatBubble } from "@/components/ChatBubble";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useGetMyRole } from "../-queries";
 import { UserMenu } from "@/components/Navigation/user-menu";
@@ -22,11 +22,12 @@ function RouteComponent() {
     <SidebarProvider>
       <AppSidebar planId={planId} />
       <SidebarInset>
-        <header className="flex items-center justify-end px-16 py-4">
+        <header className="flex items-center justify-between px-6 md:px-16 py-4 md:flex-row-reverse">
+          <SidebarTrigger className="md:hidden" />
           <UserMenu />
         </header>
-        <main className="px-16">
-          <div className="p-8 max-w-6xl mx-auto">
+        <main className="px-4 md:px-16">
+          <div className="p-4 md:p-8 max-w-6xl mx-auto">
             <Outlet />
           </div>
         </main>

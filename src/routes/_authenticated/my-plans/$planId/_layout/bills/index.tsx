@@ -50,11 +50,11 @@ function RouteComponent() {
         planId={planId}
         billId={viewBill}
       />
-      <div className="flex justify-between mb-12 items-center">
-        <h1 className="pup-heading-three">Bills</h1>
-        <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
+        <h1 className="pup-heading-three text-2xl md:text-3xl">Bills</h1>
+        <div className="flex gap-3 w-full sm:w-auto">
           <OutlineButton
-            className="border-primary-orange text-primary-orange"
+            className="flex-1 sm:flex-none border-primary-orange text-primary-orange"
             title="View Report"
             type="button"
             onClick={() => {
@@ -63,6 +63,7 @@ function RouteComponent() {
           />
           <PrimaryButton
             title="Add Bill"
+            className="flex-1 sm:flex-none"
             type="button"
             onClick={() => setAddBillIsOpen(true)}
           />

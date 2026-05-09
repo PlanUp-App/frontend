@@ -303,7 +303,7 @@ export default function TaskDrawer({
           addAttachment(uploadedFile);
         }}
       />
-      <SheetContent className="max-w-[50%] min-w-[40%] px-8 py-12 overflow-scroll">
+        <SheetContent className="w-full sm:max-w-[50%] sm:min-w-[40%] px-6 sm:px-8 py-10 sm:py-12 overflow-scroll gap-10">
         <div className="flex gap-3 items-center">
           <h3 className="pup-body-xl-700 text-neutral-black">
             {name ? name : "New Task"}

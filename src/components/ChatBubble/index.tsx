@@ -194,9 +194,9 @@ export function ChatBubble({ planId, currentUserId, token }: ChatBubbleProps) {
         }
       </DialogContent>
     </Dialog>
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
         {isOpen && (
-          <div className="mb-4 w-[400px] h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+          <div className="mb-4 w-[calc(100vw-2rem)] sm:w-[400px] h-[calc(100vh-8rem)] sm:h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
             {/* Header */}
             <div className="bg-dark-blue text-white px-6 py-4 flex items-center justify-between">
               <div>

@@ -86,10 +86,11 @@ function RouteComponent() {
         onOpenChange={setAddFileIsOpen}
         planId={planId}
       />
-      <div className="flex justify-between mb-12 items-center">
-        <h1 className="pup-heading-three">Files</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-12">
+        <h1 className="pup-heading-three text-2xl md:text-3xl">Files</h1>
         <PrimaryButton
           title="Upload File"
+          className="w-full sm:w-auto"
           type="button"
           onClick={() => setAddFileIsOpen(true)}
         />
