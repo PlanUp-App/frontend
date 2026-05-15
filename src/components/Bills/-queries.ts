@@ -239,3 +239,13 @@ export function useMarkBillSettled(planId: string) {
     },
   });
 }
+
+export function useDeleteBill(planId: string) {
+  return useMutation({
+    mutationFn: (billId: string) => axiosInstance.delete(`/bills/${billId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bills", planId] });
+      queryClient.invalidateQueries({ queryKey: ["report", planId] });
+    },
+  });
+}

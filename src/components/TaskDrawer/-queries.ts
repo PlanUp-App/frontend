@@ -35,6 +35,11 @@ export const useCreateTask = (planId: string, phaseId: string) => {
       );
       return res.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks-infinite"] });
+    },
   });
 };
 
@@ -81,8 +86,9 @@ export const useUpdateTask = (
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks", planId, taskId] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard", planId] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks-infinite"] });
     },
   });
 };
@@ -100,8 +106,26 @@ export const useMarkTaskComplete = (
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks", planId, taskId] });
-      queryClient.invalidateQueries({ queryKey: ["tasks", phaseId] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard", planId] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+  });
+
+export const useDeleteTask = (
+  planId: string,
+  phaseId: string,
+  taskId: string,
+) =>
+  useMutation({
+    mutationFn: async () => {
+      await axiosInstance.delete(
+        `plans/${planId}/phases/${phaseId}/tasks/${taskId}`,
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks-infinite"] });
     },
   });

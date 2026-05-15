@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UpdatePhaseDialog } from "@/components/Modals/update-phase";
 import { Reorder } from "framer-motion";
+import { ConfirmDeleteDialog } from "@/components/Modals/delete-confirmation";
+import { toast } from "sonner";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$planId/_layout/phases/",
@@ -32,6 +34,7 @@ function PhaseCard({
   onClick,
   planId,
   isReordering,
+  role
 }: {
   id: string;
   order: number;
@@ -39,8 +42,11 @@ function PhaseCard({
   onClick: (id: string) => unknown;
   planId: string;
   isReordering: boolean;
+  role: string | null;
 }) {
   const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const isOwner = role === "OWNER";
   return (
     <>
       <UpdatePhaseDialog
@@ -74,15 +80,29 @@ function PhaseCard({
             >
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
-              onClick={() => onClick(id)}
-            >
-              Delete
-            </DropdownMenuItem>
+            {isOwner && (
+              <DropdownMenuItem
+                className="text-red-400 pup-body-md-400 hover:cursor-pointer hover:text-red-400"
+                onClick={() => setDeleteConfirmOpen(true)}
+              >
+                Delete
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <ConfirmDeleteDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Phase"
+        description={`Are you sure you want to delete "${name}"? This will also permanently delete ALL tasks within this phase. This action cannot be undone.`}
+        onConfirm={() => {
+          onClick(id);
+          setDeleteConfirmOpen(false);
+          toast.success("Phase deleted successfully");
+        }}
+      />
     </>
   );
 }
@@ -91,6 +111,7 @@ function RouteComponent() {
   const { planId: planId } = Route.useParams();
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
   const { data: phases, isLoading } = useGetPhases(planId);
+  const role = localStorage.getItem(`plan_role_${planId}`);
   const [items, setItems] = useState<Phase[]>([]);
   const deletePhaseMutation = useDeletePhase(planId);
   const [isReordering, setIsReordering] = useState(false);
@@ -172,6 +193,7 @@ function RouteComponent() {
                     onClick={deletePhaseMutation.mutate}
                     planId={planId}
                     isReordering={isReordering}
+                    role={role}
                   />
                 </Reorder.Item>
               ))}
@@ -186,6 +208,7 @@ function RouteComponent() {
                 onClick={deletePhaseMutation.mutate}
                 planId={planId}
                 isReordering={isReordering}
+                role={role}
               />
             ))
           )

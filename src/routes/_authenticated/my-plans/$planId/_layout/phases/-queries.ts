@@ -32,7 +32,9 @@ export const useDeletePhase = (planId: string) =>
       return await axiosInstance.delete(`/plans/${planId}/phases/${phaseId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["phases"] });
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey.includes('phases')
+      });
     },
   });
 

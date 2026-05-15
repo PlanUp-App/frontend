@@ -8,8 +8,10 @@ import { useState } from "react";
 import AddBill from "./add-bill";
 import { useAuth } from "@/auth/useAuth";
 import { toast } from "sonner";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Trash2 } from "lucide-react";
 import AttachmentItem from "../Files/attachment-item";
+import { ConfirmDeleteDialog } from "../Modals/delete-confirmation";
+import { useDeleteBill } from "./-queries";
 
 export default function ViewBill({
   open,
@@ -24,11 +26,18 @@ export default function ViewBill({
 }) {
   const { data: bill, isLoading, isError } = useGetBill(billId);
   const { user } = useAuth();
-  const markSettledMutation = useMarkBillSettled(planId);
+  const { mutate: toggleSettled, isPending: isToggling } = useMarkBillSettled(planId);
+  const { mutate: deleteBill, isPending: isDeleting } = useDeleteBill(planId);
 
   const [isEdit, setIsEdit] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+
   const role = localStorage.getItem(`plan_role_${planId}`);
   const isPlanOwner = role === "OWNER";
+  const isCreator = bill?.createdById === user?.id;
+
+  const canEdit = isPlanOwner || isCreator;
+
   const canSettle =
     !!bill &&
     (!!user?.id &&
@@ -37,6 +46,7 @@ export default function ViewBill({
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
       setIsEdit(false);
+      setDeleteConfirmOpen(false);
     }
     onOpenChange(newOpen);
   };
@@ -52,6 +62,11 @@ export default function ViewBill({
           ) : (
             <>
               <div className="flex gap-3 items-center">
+                <button
+                  onClick={() => bill && toggleSettled(bill?.id)}
+                  disabled={isToggling || !canSettle}
+                  className="shrink-0 cursor-pointer transition-opacity hover:opacity-70 disabled:opacity-40"
+                ></button>
                 <h3 className="pup-body-xl-700 text-neutral-black">
                   {bill?.title}
                 </h3>
@@ -165,38 +180,23 @@ export default function ViewBill({
                 <span>Created: {new Date(bill?.createdAt || "").toLocaleDateString()}</span>
               </div>
 
-              <SheetFooter>
-                {canSettle && (
-                  <OutlineButton
-                    type="button"
-                    title={bill?.isSettled ? "Mark as Unsettled" : "Mark as Settled"}
-                    className="border-primary-orange text-primary-orange"
-                    onClick={() => {
-                      if (!bill?.id) return;
-                      markSettledMutation.mutate(bill.id, {
-                        onSuccess: () => {
-                          toast.success(
-                            bill.isSettled
-                              ? "Bill marked as unsettled"
-                              : "Bill marked as settled",
-                          );
-                        },
-                        onError: (error: any) => {
-                          toast.error(
-                            error?.response?.data?.message ??
-                            "Failed to update bill status",
-                          );
-                        },
-                      });
-                    }}
-                    isLoading={markSettledMutation.isPending}
-                  />
+              <SheetFooter className="gap-3">
+                {canEdit && (
+                  <div className="flex gap-2">
+                    <PrimaryButton
+                      type="button"
+                      title="Edit"
+                      onClick={() => setIsEdit(true)}
+                      className="flex-1"
+                    />
+                    <button
+                      className="w-11 h-11 flex items-center justify-center border border-red-200 text-red-600 hover:bg-red-50 rounded-full transition-colors shrink-0 cursor-pointer"
+                      onClick={() => setDeleteConfirmOpen(true)}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 )}
-                <PrimaryButton
-                  type="button"
-                  title="Edit"
-                  onClick={() => setIsEdit(true)}
-                />
                 <SheetClose asChild>
                   <OutlineButton
                     title="Close"
@@ -204,6 +204,26 @@ export default function ViewBill({
                   />
                 </SheetClose>
               </SheetFooter>
+
+              <ConfirmDeleteDialog
+                open={deleteConfirmOpen}
+                onOpenChange={setDeleteConfirmOpen}
+                title="Delete Bill"
+                description={`Are you sure you want to delete "${bill?.title}"? This action cannot be undone.`}
+                isLoading={isDeleting}
+                onConfirm={() => {
+                  if (!bill?.id) return;
+                  deleteBill(bill.id, {
+                    onSuccess: () => {
+                      toast.success("Bill deleted successfully");
+                      handleOpenChange(false);
+                    },
+                    onError: () => {
+                      toast.error("Failed to delete bill");
+                    },
+                  });
+                }}
+              />
             </>
           )}
         </SheetContent>

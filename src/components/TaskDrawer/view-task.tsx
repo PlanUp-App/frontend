@@ -8,8 +8,12 @@ import { RichTextParser } from "../RichTextParser";
 import MemberCard from "../MemberCard";
 import { useState } from "react";
 import TaskDrawer from "./add-task";
-import { CheckCircle2, Circle } from "lucide-react";
+import { CheckCircle2, Circle, Trash2 } from "lucide-react";
 import AttachmentItem from "../Files/attachment-item";
+import { useAuth } from "@/auth/useAuth";
+import { ConfirmDeleteDialog } from "../Modals/delete-confirmation";
+import { useDeleteTask } from "./-queries";
+import { toast } from "sonner";
 
 export default function ViewTaskDrawer({
   open,
@@ -34,12 +38,28 @@ export default function ViewTaskDrawer({
     phaseId,
     taskId,
   );
+  const { user } = useAuth();
+  const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask(
+    planId,
+    phaseId,
+    taskId,
+  );
 
   const [isEdit, setIsEdit] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+
+  const role = localStorage.getItem(`plan_role_${planId}`);
+  const isOwner = role === "OWNER";
+  const isCreator = task?.data.creatorId === user?.id;
+  const isAssignee = task?.data.assigneeId === user?.id;
+
+  const canEdit = isOwner || isCreator;
+  const canMarkComplete = isOwner || isCreator || isAssignee;
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
       setIsEdit(false);
+      setDeleteConfirmOpen(false);
     }
     onOpenChange(nextOpen);
   };
@@ -59,7 +79,7 @@ export default function ViewTaskDrawer({
               <div className="flex gap-3 items-center">
                 <button
                   onClick={() => toggleComplete()}
-                  disabled={isToggling}
+                  disabled={isToggling || !canMarkComplete}
                   className="shrink-0 cursor-pointer transition-opacity hover:opacity-70 disabled:opacity-40"
                 >
                   {isComplete ? (
@@ -118,12 +138,23 @@ export default function ViewTaskDrawer({
                   </div>
                 </div>
               )}
-              <SheetFooter>
-                <PrimaryButton
-                  type="submit"
-                  title="Edit"
-                  onClick={() => setIsEdit(true)}
-                />
+              <SheetFooter className="gap-3">
+                {canEdit && (
+                  <div className="flex gap-2">
+                    <PrimaryButton
+                      type="submit"
+                      title="Edit"
+                      className="flex-1"
+                      onClick={() => setIsEdit(true)}
+                    />
+                    <button
+                      className="w-11 h-11 flex items-center justify-center border border-red-200 text-red-600 hover:bg-red-50 rounded-full transition-colors shrink-0 cursor-pointer"
+                      onClick={() => setDeleteConfirmOpen(true)}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                )}
                 <SheetClose asChild>
                   <OutlineButton
                     title="Close"
@@ -131,6 +162,25 @@ export default function ViewTaskDrawer({
                   />
                 </SheetClose>
               </SheetFooter>
+
+              <ConfirmDeleteDialog
+                open={deleteConfirmOpen}
+                onOpenChange={setDeleteConfirmOpen}
+                title="Delete Task"
+                description={`Are you sure you want to delete "${task?.data.name}"? This action cannot be undone.`}
+                isLoading={isDeleting}
+                onConfirm={() => {
+                  deleteTask(undefined, {
+                    onSuccess: () => {
+                      toast.success("Task deleted successfully");
+                      handleOpenChange(false);
+                    },
+                    onError: () => {
+                      toast.error("Failed to delete task");
+                    },
+                  });
+                }}
+              />
             </>
           )}
         </SheetContent>
@@ -151,11 +201,11 @@ export default function ViewTaskDrawer({
         dueDate: task?.data.dueDate || new Date().toISOString(),
         assignee: task?.data.assignee
           ? {
-              value: task.data.assignee.id,
-              label: task.data.assignee.name,
-              email: task.data.assignee.email,
-              profilePicture: task.data.assignee.profilePicture,
-            }
+            value: task.data.assignee.id,
+            label: task.data.assignee.name,
+            email: task.data.assignee.email,
+            profilePicture: task.data.assignee.profilePicture,
+          }
           : null,
         files: task?.data.files ?? [],
       }}

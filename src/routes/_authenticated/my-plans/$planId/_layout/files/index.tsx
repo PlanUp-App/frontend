@@ -10,6 +10,7 @@ import { router } from "@/main";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ConfirmDeleteDialog } from "@/components/Modals/delete-confirmation";
 
 export const Route = createFileRoute(
   "/_authenticated/my-plans/$planId/_layout/files/",
@@ -31,6 +32,8 @@ function RouteComponent() {
   const role = localStorage.getItem(`plan_role_${planId}`);
   const isPlanOwner = role === "OWNER";
   const deleteFileMutation = useDeleteFile(planId);
+  const [deleteConfirmIsOpen, setDeleteConfirmIsOpen] = useState(false);
+  const [deleteFileId, setDeleteFileId] = useState<string | null>(null);
 
   useEffect(() => {
     router.navigate({
@@ -54,19 +57,18 @@ function RouteComponent() {
   const currentPage = pagination?.page ?? page ?? 1;
 
   const handleDeleteFile = (fileId: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this file?",
-    );
-    if (!confirmed) return;
 
     deleteFileMutation.mutate(fileId, {
       onSuccess: () => {
         toast.success("File deleted successfully");
+        setDeleteFileId(null);
+        setDeleteConfirmIsOpen(false);
       },
       onError: (error: any) => {
         toast.error(error?.response?.data?.message ?? "Failed to delete file");
       },
     });
+
   };
 
   const handlePageChange = (nextPage: number) => {
@@ -81,6 +83,7 @@ function RouteComponent() {
 
   return (
     <>
+      <ConfirmDeleteDialog open={deleteConfirmIsOpen} onOpenChange={setDeleteConfirmIsOpen} onConfirm={() => { handleDeleteFile(deleteFileId!) }} title={"Delete File"} description={"Are you sure you want to delete this file?"} isLoading={deleteFileMutation.isPending} />
       <AddFile
         open={addFileIsOpen}
         onOpenChange={setAddFileIsOpen}
@@ -120,7 +123,7 @@ function RouteComponent() {
                 file={file}
                 canDelete={isPlanOwner || file.uploaderId === user?.id}
                 isDeleting={deleteFileMutation.isPending}
-                onDelete={handleDeleteFile}
+                onDelete={() => { setDeleteFileId(file.id); setDeleteConfirmIsOpen(true) }}
               />
             ))}
           </div>

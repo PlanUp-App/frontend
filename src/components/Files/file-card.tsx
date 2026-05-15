@@ -9,7 +9,7 @@ interface FileCardProps {
   file: PlanFile;
   canDelete?: boolean;
   isDeleting?: boolean;
-  onDelete?: (fileId: string) => void;
+  onDelete?: () => void;
 }
 
 function isPreviewableFile(file: PlanFile) {
@@ -188,10 +188,10 @@ export default function FileCard({
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onDelete?.(file.id);
+                onDelete?.();
               }}
               disabled={isDeleting}
-              className="cursor-pointer inline-flex items-center gap-1 rounded-full border border-red-100 bg-white px-3 py-1.5 pup-body-sm-400 text-red-500 transition-opacity md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="cursor-pointer inline-flex items-center gap-1 rounded-full border border-red-100 bg-white px-3 py-1.5 pup-body-sm-400 text-red-500 transition-opacity md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto hover:text-red-600 disabled:cursor-not-allowed disabled:hover:opacity-60"
             >
               <Trash2 size={14} />
               Delete
