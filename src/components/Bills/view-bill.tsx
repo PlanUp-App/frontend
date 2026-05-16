@@ -8,10 +8,11 @@ import { useState } from "react";
 import AddBill from "./add-bill";
 import { useAuth } from "@/auth/useAuth";
 import { toast } from "sonner";
-import { CheckCircle2, Trash2 } from "lucide-react";
+import { CheckCircle2, Circle, Trash2 } from "lucide-react";
 import AttachmentItem from "../Files/attachment-item";
 import { ConfirmDeleteDialog } from "../Modals/delete-confirmation";
 import { useDeleteBill } from "./-queries";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function ViewBill({
   open,
@@ -26,7 +27,8 @@ export default function ViewBill({
 }) {
   const { data: bill, isLoading, isError } = useGetBill(billId);
   const { user } = useAuth();
-  const { mutate: toggleSettled, isPending: isToggling } = useMarkBillSettled(planId);
+  const { mutate: toggleSettled, isPending: isToggling } =
+    useMarkBillSettled(planId);
   const { mutate: deleteBill, isPending: isDeleting } = useDeleteBill(planId);
 
   const [isEdit, setIsEdit] = useState(false);
@@ -40,8 +42,8 @@ export default function ViewBill({
 
   const canSettle =
     !!bill &&
-    (!!user?.id &&
-      (bill.createdById === user.id || bill.paidById === user.id || isPlanOwner));
+    !!user?.id &&
+    (bill.createdById === user.id || bill.paidById === user.id || isPlanOwner);
 
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
@@ -62,11 +64,31 @@ export default function ViewBill({
           ) : (
             <>
               <div className="flex gap-3 items-center">
-                <button
-                  onClick={() => bill && toggleSettled(bill?.id)}
-                  disabled={isToggling || !canSettle}
-                  className="shrink-0 cursor-pointer transition-opacity hover:opacity-70 disabled:opacity-40"
-                ></button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      tabIndex={-1}
+                      onClick={() => bill && toggleSettled(bill?.id)}
+                      disabled={isToggling || !canSettle}
+                      className="shrink-0 cursor-pointer transition-opacity hover:opacity-70 disabled:opacity-40"
+                    >
+                      {isToggling ? (
+                        <Spinner />
+                      ) : bill?.isSettled ? (
+                        <CheckCircle2 size={20} className="text-green-500" />
+                      ) : (
+                        <Circle size={20} className="text-neutral-300" />
+                      )}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {bill?.isSettled
+                        ? "Mark as unsettled"
+                        : "Mark as settled"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
                 <h3 className="pup-body-xl-700 text-neutral-black">
                   {bill?.title}
                 </h3>
@@ -77,15 +99,6 @@ export default function ViewBill({
                     currency: "NPR",
                   })}
                 </span>
-                {bill?.isSettled && (
-                  <>
-                    <span>•</span>
-                    <span className="inline-flex items-center gap-1 pup-body-sm-500 text-green-600">
-                      <CheckCircle2 size={16} />
-                      Settled
-                    </span>
-                  </>
-                )}
               </div>
 
               {bill?.category && (
@@ -177,7 +190,10 @@ export default function ViewBill({
               )}
 
               <div className="flex gap-4 text-neutral-grey pup-body-sm-400">
-                <span>Created: {new Date(bill?.createdAt || "").toLocaleDateString()}</span>
+                <span>
+                  Created:{" "}
+                  {new Date(bill?.createdAt || "").toLocaleDateString()}
+                </span>
               </div>
 
               <SheetFooter className="gap-3">
@@ -245,11 +261,11 @@ export default function ViewBill({
         splitType: bill?.splitType ?? BillSplitType.EQUAL,
         paidBy: bill?.paidBy
           ? {
-            value: bill.paidBy.id,
-            label: bill.paidBy.name,
-            email: bill.paidBy.email,
-            profilePicture: bill.paidBy.profilePicture,
-          }
+              value: bill.paidBy.id,
+              label: bill.paidBy.name,
+              email: bill.paidBy.email,
+              profilePicture: bill.paidBy.profilePicture,
+            }
           : undefined,
         split:
           bill?.split.map((s) => ({

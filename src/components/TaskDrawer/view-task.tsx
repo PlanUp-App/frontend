@@ -14,6 +14,7 @@ import { useAuth } from "@/auth/useAuth";
 import { ConfirmDeleteDialog } from "../Modals/delete-confirmation";
 import { useDeleteTask } from "./-queries";
 import { toast } from "sonner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function ViewTaskDrawer({
   open,
@@ -77,17 +78,27 @@ export default function ViewTaskDrawer({
           ) : (
             <>
               <div className="flex gap-3 items-center">
-                <button
-                  onClick={() => toggleComplete()}
-                  disabled={isToggling || !canMarkComplete}
-                  className="shrink-0 cursor-pointer transition-opacity hover:opacity-70 disabled:opacity-40"
-                >
-                  {isComplete ? (
-                    <CheckCircle2 size={20} className="text-green-500" />
-                  ) : (
-                    <Circle size={20} className="text-neutral-300" />
-                  )}
-                </button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      tabIndex={-1}
+                      onClick={() => toggleComplete()}
+                      disabled={isToggling || !canMarkComplete}
+                      className="shrink-0 cursor-pointer transition-opacity hover:opacity-70 disabled:opacity-40"
+                    >
+                      {isComplete ? (
+                        <CheckCircle2 size={20} className="text-green-500" />
+                      ) : (
+                        <Circle size={20} className="text-neutral-300" />
+                      )}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {isComplete ? "Mark as incomplete" : "Mark as complete"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
                 <h3
                   className={cn(
                     "pup-body-xl-700 text-neutral-black",
@@ -130,10 +141,7 @@ export default function ViewTaskDrawer({
                   </label>
                   <div className="space-y-2">
                     {task.data.files.map((file) => (
-                      <AttachmentItem
-                        key={file.id}
-                        file={file}
-                      />
+                      <AttachmentItem key={file.id} file={file} />
                     ))}
                   </div>
                 </div>
@@ -201,11 +209,11 @@ export default function ViewTaskDrawer({
         dueDate: task?.data.dueDate || new Date().toISOString(),
         assignee: task?.data.assignee
           ? {
-            value: task.data.assignee.id,
-            label: task.data.assignee.name,
-            email: task.data.assignee.email,
-            profilePicture: task.data.assignee.profilePicture,
-          }
+              value: task.data.assignee.id,
+              label: task.data.assignee.name,
+              email: task.data.assignee.email,
+              profilePicture: task.data.assignee.profilePicture,
+            }
           : null,
         files: task?.data.files ?? [],
       }}

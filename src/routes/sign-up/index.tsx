@@ -10,6 +10,7 @@ import { AxiosError } from "axios";
 import { useSignUp } from "./-queries";
 import { censorEmail } from "@/lib/utils";
 import { Navigation } from "@/components/Navigation";
+import { GoogleButton } from "@/components/Button/google-button";
 
 export const Route = createFileRoute("/sign-up/")({
   validateSearch: (search) => ({
@@ -58,6 +59,11 @@ function Index() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const signUpMutation = useSignUp();
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`;
+    console.log("Redirecting to google...");
+  };
 
   const { getInputProps, onSubmit, reset } = useForm<SignUpForm>({
     initialValues: { name: "", email: "", password: "", confirmPassword: "" },
@@ -138,6 +144,7 @@ function Index() {
                 type="submit"
               />
             </form>
+            <GoogleButton className="w-full" onClick={handleGoogleLogin} />
             <div className="flex gap-1 justify-center">
               <p className="pup-body-md-400 text-neutral-black">
                 Already have an account?

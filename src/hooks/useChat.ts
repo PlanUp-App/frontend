@@ -46,11 +46,11 @@ export function useChat(
         staleTime: Infinity,
       })
       .then((count) => setUnreadCount(count))
-      .catch(() => { });
+      .catch(() => {});
   }, [planId, token]);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:7001", {
+    socketRef.current = io(import.meta.env.VITE_API_URL, {
       extraHeaders: { authorization: token },
     });
 
@@ -63,44 +63,45 @@ export function useChat(
       setMessages(history);
     });
 
-    socketRef.current.on("newMessage", (message: Message & { tempId?: string }) => {
+    socketRef.current.on(
+      "newMessage",
+      (message: Message & { tempId?: string }) => {
+        setMessages((prev) => {
+          // check if message sent already
+          if (prev.some((m) => m.id === message.id)) return prev;
 
-      setMessages((prev) => {
-        // check if message sent already
-        if (prev.some((m) => m.id === message.id)) return prev;
+          // if temp id, replace message with sent message
+          if (message.tempId) {
+            const index = prev.findIndex((m) => m.tempId === message.tempId);
+            if (index !== -1) {
+              const newMessages = [...prev];
+              newMessages[index] = { ...message, status: "sent" };
+              return newMessages;
+            }
+          }
 
+          // 3. If no optimistic message was found to replace, just add the new message
+          if (message.tempId && prev.some((m) => m.tempId === message.tempId)) {
+            return prev;
+          }
 
-        // if temp id, replace message with sent message
-        if (message.tempId) {
-          const index = prev.findIndex((m) => m.tempId === message.tempId);
-          if (index !== -1) {
-            const newMessages = [...prev];
-            newMessages[index] = { ...message, status: "sent" };
-            return newMessages;
+          return [...prev, { ...message, status: "sent" }];
+        });
+
+        if (message.senderId !== currentUserId) {
+          if (isOpen) {
+            // user is looking at the chat, mark as seen immediately
+            socketRef.current?.emit("markSeen", {
+              planId,
+              messageIds: [message.id],
+            });
+          } else {
+            // user hasn't opened the chat, increment the badge
+            setUnreadCount((prev) => prev + 1);
           }
         }
-
-        // 3. If no optimistic message was found to replace, just add the new message
-        if (message.tempId && prev.some((m) => m.tempId === message.tempId)) {
-          return prev;
-        }
-
-        return [...prev, { ...message, status: "sent" }];
-      });
-
-      if (message.senderId !== currentUserId) {
-        if (isOpen) {
-          // user is looking at the chat, mark as seen immediately
-          socketRef.current?.emit("markSeen", {
-            planId,
-            messageIds: [message.id],
-          });
-        } else {
-          // user hasn't opened the chat, increment the badge
-          setUnreadCount((prev) => prev + 1);
-        }
-      }
-    });
+      },
+    );
 
     socketRef.current.on(
       "messagesSeen",
@@ -162,7 +163,11 @@ export function useChat(
     setUnreadCount(0);
   }, [isOpen, messages.length]);
 
-  const sendMessage = (content: string, fileIds?: string[], files?: PlanFile[]) => {
+  const sendMessage = (
+    content: string,
+    fileIds?: string[],
+    files?: PlanFile[],
+  ) => {
     const tempId = `temp-${Date.now()}`;
 
     const optimisticMessage: Message = {
@@ -181,7 +186,12 @@ export function useChat(
       return [...prev, optimisticMessage];
     });
 
-    socketRef.current?.emit("sendMessage", { planId, content, fileIds, tempId });
+    socketRef.current?.emit("sendMessage", {
+      planId,
+      content,
+      fileIds,
+      tempId,
+    });
   };
 
   return { messages, sendMessage, connected, unreadCount, setUnreadCount };

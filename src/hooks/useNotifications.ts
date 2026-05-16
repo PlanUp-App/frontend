@@ -46,7 +46,7 @@ export function useNotifications() {
     },
     onSuccess: (_, id) => {
       queryClient.setQueryData(["notifications"], (prev: Notification[] = []) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+        prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
       );
     },
   });
@@ -58,7 +58,7 @@ export function useNotifications() {
     },
     onSuccess: () => {
       queryClient.setQueryData(["notifications"], (prev: Notification[] = []) =>
-        prev.map((n) => ({ ...n, read: true }))
+        prev.map((n) => ({ ...n, read: true })),
       );
     },
   });
@@ -67,7 +67,7 @@ export function useNotifications() {
     if (!isAuthenticated || !token || !user) return;
 
     // Connect to notifications namespace
-    socketRef.current = io("http://localhost:7001/notifications", {
+    socketRef.current = io(`${import.meta.env.VITE_API_URL}/notifications`, {
       extraHeaders: { authorization: token },
       forceNew: true, // Ensure a fresh connection for each user session
     });
@@ -78,10 +78,10 @@ export function useNotifications() {
 
     socketRef.current.on("newNotification", (notification: Notification) => {
       // Update query cache
-      queryClient.setQueryData(["notifications"], (prev: Notification[] = []) => [
-        notification,
-        ...prev,
-      ]);
+      queryClient.setQueryData(
+        ["notifications"],
+        (prev: Notification[] = []) => [notification, ...prev],
+      );
 
       // Show toast
       toast(notification.title, {

@@ -48,7 +48,7 @@ function RouteComponent() {
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (loadMoreRef.current) {
@@ -67,17 +67,27 @@ function RouteComponent() {
         {/* HERO HEADER */}
         <section className="relative py-24 overflow-hidden bg-neutral-900">
           <div className="absolute inset-0 z-0">
-            <img src="friends.jpg" alt="Header background" className="w-full h-full object-cover" />
+            <img
+              src="friends.jpg"
+              alt="Header background"
+              className="w-full h-full object-cover"
+            />
             <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/50 to-neutral-900" />
           </div>
 
           <div className="container relative z-10 mx-auto px-6 lg:px-16 text-center max-w-4xl">
-            <p className="text-orange-500 font-semibold uppercase tracking-wider text-sm mb-4">Community Directory</p>
+            <p className="text-orange-500 font-semibold uppercase tracking-wider text-sm mb-4">
+              Join the Community
+            </p>
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400">Public Plans</span>
+              Explore{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400">
+                Public Plans
+              </span>
             </h1>
             <p className="text-lg lg:text-xl text-neutral-300 mb-10 font-light leading-relaxed">
-              Find inspiration from our community or join public activities shared by users around the world.
+              Find inspiration from our community or join public activities
+              shared by users around the world.
             </p>
 
             <div className="max-w-2xl mx-auto relative group">
@@ -101,24 +111,36 @@ function RouteComponent() {
             </div>
           ) : isError ? (
             <div className="py-20 text-center bg-white rounded-3xl border border-neutral-100 shadow-sm">
-              <p className="text-rose-500 font-medium">Something went wrong while fetching plans.</p>
-              <button onClick={() => window.location.reload()} className="mt-4 text-orange-500 hover:underline">Try again</button>
+              <p className="text-rose-500 font-medium">
+                Something went wrong while fetching plans.
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 text-orange-500 hover:underline"
+              >
+                Try again
+              </button>
             </div>
           ) : allPlans.length > 0 ? (
             <div className="space-y-12">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {allPlans.map(({ id, name, coverImage, _count, visibility }) => (
-                  <div key={id} className="transform hover:-translate-y-2 transition-transform duration-300">
-                    <PlanCard
-                      linkTo={`/public-plans/${id}`}
-                      id={id}
-                      name={name}
-                      coverImage={coverImage ?? "placeholder.png"}
-                      memberCount={_count.members}
-                      isPublic={visibility === "PUBLIC"}
-                    />
-                  </div>
-                ))}
+                {allPlans.map(
+                  ({ id, name, coverImage, _count, visibility }) => (
+                    <div
+                      key={id}
+                      className="transform hover:-translate-y-2 transition-transform duration-300"
+                    >
+                      <PlanCard
+                        linkTo={`/public-plans/${id}`}
+                        id={id}
+                        name={name}
+                        coverImage={coverImage ?? "placeholder.png"}
+                        memberCount={_count.members}
+                        isPublic={visibility === "PUBLIC"}
+                      />
+                    </div>
+                  ),
+                )}
               </div>
 
               {/* INFINITE SCROLL LOADER */}
@@ -126,20 +148,35 @@ function RouteComponent() {
                 {isFetchingNextPage ? (
                   <div className="flex items-center gap-3 text-neutral-500">
                     <Spinner className="w-5 h-5 text-orange-500" />
-                    <span className="text-sm font-medium tracking-wide">Loading more plans...</span>
+                    <span className="text-sm font-medium tracking-wide">
+                      Loading more plans...
+                    </span>
                   </div>
-                ) : hasNextPage && (
-                  <div className="h-10" />
+                ) : (
+                  hasNextPage && <div className="h-10" />
                 )}
               </div>
             </div>
           ) : (
             <div className="py-32 text-center">
               <div className="w-20 h-20 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                <svg
+                  className="w-10 h-10 text-neutral-300"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
               </div>
-              <h3 className="text-xl font-bold text-neutral-900 mb-2">No public plans found</h3>
-              <p className="text-neutral-500">Try adjusting your search terms or check back later.</p>
+              <h3 className="text-xl font-bold text-neutral-900 mb-2">
+                No public plans found
+              </h3>
+              <p className="text-neutral-500">
+                Try adjusting your search terms or check back later.
+              </p>
             </div>
           )}
         </section>

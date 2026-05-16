@@ -42,7 +42,7 @@ function Index() {
   }, [auth.isAuthenticated, redirect]);
 
   const handleGoogleLogin = () => {
-    window.location.href = `${"http://localhost:7001"}/auth/google/login`;
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`;
     console.log("Redirecting to google...");
   };
 
