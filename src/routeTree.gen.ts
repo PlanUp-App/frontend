@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerifyIndexRouteImport } from './routes/verify/index'
+import { Route as UpdatePasswordIndexRouteImport } from './routes/update-password/index'
 import { Route as SignUpIndexRouteImport } from './routes/sign-up/index'
 import { Route as PublicPlansIndexRouteImport } from './routes/public-plans/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password/index'
 import { Route as PublicPlansPlanIdIndexRouteImport } from './routes/public-plans/$planId/index'
 import { Route as ProfileUserIdIndexRouteImport } from './routes/profile/$userId/index'
 import { Route as AuthenticatedMyPlansIndexRouteImport } from './routes/_authenticated/my-plans/index'
@@ -44,6 +46,11 @@ const VerifyIndexRoute = VerifyIndexRouteImport.update({
   path: '/verify/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UpdatePasswordIndexRoute = UpdatePasswordIndexRouteImport.update({
+  id: '/update-password/',
+  path: '/update-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignUpIndexRoute = SignUpIndexRouteImport.update({
   id: '/sign-up/',
   path: '/sign-up/',
@@ -57,6 +64,11 @@ const PublicPlansIndexRoute = PublicPlansIndexRouteImport.update({
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicPlansPlanIdIndexRoute = PublicPlansPlanIdIndexRouteImport.update({
@@ -144,9 +156,11 @@ const AuthenticatedMyPlansPlanIdLayoutBillsReportIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/public-plans/': typeof PublicPlansIndexRoute
   '/sign-up/': typeof SignUpIndexRoute
+  '/update-password/': typeof UpdatePasswordIndexRoute
   '/verify/': typeof VerifyIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/my-plans/': typeof AuthenticatedMyPlansIndexRoute
@@ -165,9 +179,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordIndexRoute
   '/login': typeof LoginIndexRoute
   '/public-plans': typeof PublicPlansIndexRoute
   '/sign-up': typeof SignUpIndexRoute
+  '/update-password': typeof UpdatePasswordIndexRoute
   '/verify': typeof VerifyIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/my-plans': typeof AuthenticatedMyPlansIndexRoute
@@ -187,9 +203,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
   '/public-plans/': typeof PublicPlansIndexRoute
   '/sign-up/': typeof SignUpIndexRoute
+  '/update-password/': typeof UpdatePasswordIndexRoute
   '/verify/': typeof VerifyIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/my-plans/': typeof AuthenticatedMyPlansIndexRoute
@@ -210,9 +228,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/forgot-password/'
     | '/login/'
     | '/public-plans/'
     | '/sign-up/'
+    | '/update-password/'
     | '/verify/'
     | '/dashboard/'
     | '/my-plans/'
@@ -231,9 +251,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/forgot-password'
     | '/login'
     | '/public-plans'
     | '/sign-up'
+    | '/update-password'
     | '/verify'
     | '/dashboard'
     | '/my-plans'
@@ -252,9 +274,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/forgot-password/'
     | '/login/'
     | '/public-plans/'
     | '/sign-up/'
+    | '/update-password/'
     | '/verify/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/my-plans/'
@@ -275,9 +299,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   PublicPlansIndexRoute: typeof PublicPlansIndexRoute
   SignUpIndexRoute: typeof SignUpIndexRoute
+  UpdatePasswordIndexRoute: typeof UpdatePasswordIndexRoute
   VerifyIndexRoute: typeof VerifyIndexRoute
   ProfileUserIdIndexRoute: typeof ProfileUserIdIndexRoute
   PublicPlansPlanIdIndexRoute: typeof PublicPlansPlanIdIndexRoute
@@ -306,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/update-password/': {
+      id: '/update-password/'
+      path: '/update-password'
+      fullPath: '/update-password/'
+      preLoaderRoute: typeof UpdatePasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sign-up/': {
       id: '/sign-up/'
       path: '/sign-up'
@@ -325,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login/'
       preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/': {
+      id: '/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password/'
+      preLoaderRoute: typeof ForgotPasswordIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/public-plans/$planId/': {
@@ -485,9 +525,11 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   PublicPlansIndexRoute: PublicPlansIndexRoute,
   SignUpIndexRoute: SignUpIndexRoute,
+  UpdatePasswordIndexRoute: UpdatePasswordIndexRoute,
   VerifyIndexRoute: VerifyIndexRoute,
   ProfileUserIdIndexRoute: ProfileUserIdIndexRoute,
   PublicPlansPlanIdIndexRoute: PublicPlansPlanIdIndexRoute,

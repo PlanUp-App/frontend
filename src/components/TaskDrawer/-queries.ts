@@ -56,6 +56,21 @@ export interface GetTaskResponse {
   isComplete: boolean;
   creatorId: string;
   createdAt: Date;
+  Bill: {
+    id: string;
+    title: string;
+    amount: number;
+    isSettled: boolean;
+    category: string | null;
+  }[];
+}
+
+export interface PlanTaskPickerItem {
+  id: string;
+  name: string;
+  isComplete: boolean;
+  phaseId: string | null;
+  phaseName: string | null;
 }
 
 export const useGetTask = (planId: string, phaseId: string, taskId: string) => {
@@ -129,3 +144,18 @@ export const useDeleteTask = (
       queryClient.invalidateQueries({ queryKey: ["tasks-infinite"] });
     },
   });
+
+// ─── Flat plan tasks (for bill-view task picker) ────────────────────────────
+
+async function getPlanTasks(planId: string): Promise<PlanTaskPickerItem[]> {
+  const res = await axiosInstance.get(`/plans/${planId}/tasks`);
+  return res.data;
+}
+
+export function useGetPlanTasksForPicker(planId: string) {
+  return useQuery({
+    queryKey: ["plan-tasks-picker", planId],
+    queryFn: () => getPlanTasks(planId),
+    enabled: !!planId,
+  });
+}

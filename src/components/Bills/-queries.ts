@@ -3,6 +3,7 @@ import { queryClient } from "@/utils/queryclient/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { PlanFile } from "../Files/-queries";
 
+
 export const BillSplitType = {
   EQUAL: "EQUAL",
   PERCENTAGE: "PERCENTAGE",
@@ -247,5 +248,62 @@ export function useDeleteBill(planId: string) {
       queryClient.invalidateQueries({ queryKey: ["bills", planId] });
       queryClient.invalidateQueries({ queryKey: ["report", planId] });
     },
+  });
+}
+
+// ─── Link / Unlink Task ──────────────────────────────────────────────────────
+
+async function linkBillToTask(billId: string, taskId: string | null) {
+  const response = await axiosInstance.patch(`/bills/${billId}/link-task`, {
+    taskId,
+  });
+  return response.data;
+}
+
+export function useLinkBillToTask(planId: string) {
+  return useMutation({
+    mutationFn: ({
+      billId,
+      taskId,
+    }: {
+      billId: string;
+      taskId: string | null;
+    }) => linkBillToTask(billId, taskId),
+    onSuccess: (_, { billId, taskId }) => {
+      queryClient.invalidateQueries({ queryKey: ["bill", billId] });
+      queryClient.invalidateQueries({ queryKey: ["bills", planId] });
+      // Refresh both old and new task views
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+}
+
+// ─── Light plan-bills list (for task view picker) ────────────────────────────
+
+export interface BillPickerItem {
+  id: string;
+  title: string;
+  amount: number;
+  isSettled: boolean;
+  category: string | null;
+  taskId: string | null;
+  task: { id: string; name: string } | null;
+}
+
+async function getBillsForPlan(
+  planId: string,
+  search?: string,
+): Promise<BillPickerItem[]> {
+  const params = new URLSearchParams({ planId, limit: "100", skip: "0" });
+  if (search) params.append("search", search);
+  const res = await axiosInstance.get(`/bills?${params.toString()}`);
+  return res.data.data as BillPickerItem[];
+}
+
+export function useGetBillsForPlan(planId: string, search?: string) {
+  return useQuery({
+    queryKey: ["bills-picker", planId, search],
+    queryFn: () => getBillsForPlan(planId, search),
+    enabled: !!planId,
   });
 }

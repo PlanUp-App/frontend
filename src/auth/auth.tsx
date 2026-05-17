@@ -10,7 +10,6 @@ import type { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axios/axiosInstance";
 import { router } from "@/main";
-import { toast } from "sonner";
 
 export interface User {
   id: string;
@@ -24,7 +23,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const urlParams = new URLSearchParams(window.location.search);
-  const urlToken = urlParams.get("token");
+  const isLoginPath = window.location.pathname.startsWith("/login");
+  const urlToken = isLoginPath ? urlParams.get("token") : null;
   const storedToken = localStorage.getItem("auth_token");
   const token = urlToken || storedToken;
 
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginMutation = useMutation<
     LoginResponse,
     AxiosError,
-    LoginCredentials
+    LoginCredentials & { redirectTo?: string }
   >({
     mutationFn: async (credentials: LoginCredentials) => {
       const response = await axiosInstance.post<LoginResponse>(
@@ -93,13 +93,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       );
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       localStorage.setItem("auth_token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       axiosInstance.defaults.headers.common["Authorization"] =
         `Bearer ${data.token}`;
       setUser(data.user);
-      queryClient.invalidateQueries(); // Refresh all queries
+      queryClient.invalidateQueries();
+      console.log(
+        "Login successful, redirecting...",
+        variables.redirectTo || "/my-plans",
+      );
+
+      router.history.push(variables.redirectTo || "/my-plans");
     },
   });
 

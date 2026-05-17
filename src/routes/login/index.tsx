@@ -4,10 +4,9 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { router } from "@/main";
 import { GoogleButton } from "@/components/Button/google-button";
 import { Navigation } from "@/components/Navigation";
 
@@ -15,11 +14,11 @@ export const Route = createFileRoute("/login/")({
   validateSearch: (search) => ({
     redirect: search.redirect as string,
   }),
-  // beforeLoad: ({ context, search }) => {
-  //   if (context.auth.isAuthenticated) {
-  //     throw redirect({ to: search.redirect || "/my-plans" });
-  //   }
-  // },
+  beforeLoad: ({ context, search }) => {
+    if (context.auth.isAuthenticated) {
+      throw redirect({ to: search.redirect || "/my-plans" });
+    }
+  },
   component: Index,
 });
 
@@ -35,12 +34,6 @@ function Index() {
   const redirect = Route.useSearch().redirect || "/my-plans";
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (auth.isAuthenticated) {
-      router.navigate({ to: redirect });
-    }
-  }, [auth.isAuthenticated, redirect]);
-
   const handleGoogleLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`;
     console.log("Redirecting to google...");
@@ -55,12 +48,10 @@ function Index() {
   const handleSubmit = async ({ email, password }: LoginForm) => {
     setIsLoading(true);
     auth.loginMutation.mutate(
-      { email, password },
+      { email, password, redirectTo: redirect },
       {
         onSuccess: () => {
           toast.success("Login Successful");
-          console.log(redirect);
-          router.navigate({ to: redirect });
           setIsLoading(false);
         },
         onError: (err: unknown) => {
@@ -100,12 +91,21 @@ function Index() {
                 placeholder="user@example.com"
                 inputProps={getInputProps("email")}
               />
-              <CustomInput
-                className="mb-8"
-                label="Password"
-                type="password"
-                inputProps={getInputProps("password")}
-              />
+              <div className="mb-8 flex flex-col gap-1.5">
+                <CustomInput
+                  label="Password"
+                  type="password"
+                  inputProps={getInputProps("password")}
+                />
+                <div className="flex justify-end">
+                  <Link
+                    to="/forgot-password"
+                    className="pup-body-sm-500 text-primary-orange hover:underline"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+              </div>
               <PrimaryButton
                 isLoading={isLoading}
                 title="Log In"
