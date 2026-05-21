@@ -15,7 +15,7 @@ export const Route = createFileRoute("/login/")({
     redirect: search.redirect as string,
   }),
   beforeLoad: ({ context, search }) => {
-    if (context.auth.isAuthenticated) {
+    if (localStorage.getItem("auth_token") && context.auth.isAuthenticated) {
       throw redirect({ to: search.redirect || "/my-plans" });
     }
   },

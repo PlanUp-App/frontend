@@ -1,5 +1,6 @@
 import { router } from "@/main";
 import axios from "axios";
+import { queryClient } from "../queryclient/queryClient";
 
 const defaultOptions = {
   baseURL: import.meta.env.VITE_API_URL,
@@ -27,8 +28,17 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      const keysToRemove = Object.keys(localStorage).filter((key) =>
+        key.startsWith("plan_role_"),
+      );
+
+      keysToRemove.forEach((key) => localStorage.removeItem(key));
+
       localStorage.removeItem("auth_token");
       localStorage.removeItem("user");
+
+      queryClient.clear();
+
       router.navigate({ to: "/login" });
     }
     return Promise.reject(error);

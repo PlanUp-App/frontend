@@ -42,6 +42,7 @@ export default function Index() {
     onSuccess: (data) => {
       updateUser({ profilePicture: data.user.profilePicture });
       toast.success("Profile picture updated");
+      queryClient.invalidateQueries({ queryKey: ["profile", userId] });
     },
     onError: (error: Error) => toast.error(error.message),
   });

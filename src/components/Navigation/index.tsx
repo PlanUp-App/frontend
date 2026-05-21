@@ -2,9 +2,20 @@ import { Link } from "@tanstack/react-router";
 import { OutlineButton } from "../Button/outline";
 import { PrimaryButton } from "../Button/primary-filled";
 import { useAuth } from "@/auth/useAuth";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { MdMenu, MdClose } from "react-icons/md";
-import { MdPerson, MdSettings, MdLogout, MdMap, MdPublic } from "react-icons/md";
+import {
+  MdPerson,
+  MdSettings,
+  MdLogout,
+  MdMap,
+  MdPublic,
+} from "react-icons/md";
 import { useState } from "react";
 import { UserMenu } from "./user-menu";
 
@@ -14,12 +25,13 @@ export function Navigation() {
   const close = () => setIsOpen(false);
 
   // Get initials for avatar
-  const initials = authData.user?.name
-    ?.split(" ")
-    .map((n: string) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2) ?? "?";
+  const initials =
+    authData.user?.name
+      ?.split(" ")
+      .map((n: string) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) ?? "?";
 
   return (
     <nav className="w-full bg-white/80 backdrop-blur-md h-16 flex items-center z-50 sticky top-0 border-b border-neutral-100 shadow-sm">
@@ -36,7 +48,7 @@ export function Navigation() {
           >
             Public Plans
           </Link>
-          {authData.isAuthenticated ? (
+          {localStorage.getItem("auth_token") && authData.isAuthenticated ? (
             <UserMenu />
           ) : (
             <div className="flex gap-3">
@@ -56,7 +68,7 @@ export function Navigation() {
 
         {/* Mobile Navigation */}
         <div className="md:hidden">
-          <Sheet open={isOpen} onOpenChange={setIsOpen} >
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <button
                 className="p-2 text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors"
@@ -108,15 +120,27 @@ export function Navigation() {
                 {/* Nav Links */}
                 <nav className="flex flex-col flex-1">
                   {authData.isAuthenticated && (
-                    <MobileNavLink to="/my-plans" icon={<MdMap size={18} />} onClick={close}>
+                    <MobileNavLink
+                      to="/my-plans"
+                      icon={<MdMap size={18} />}
+                      onClick={close}
+                    >
                       My Plans
                     </MobileNavLink>
                   )}
-                  <MobileNavLink to="/public-plans" icon={<MdPublic size={18} />} onClick={close}>
+                  <MobileNavLink
+                    to="/public-plans"
+                    icon={<MdPublic size={18} />}
+                    onClick={close}
+                  >
                     Public Plans
                   </MobileNavLink>
                   {authData.isAuthenticated && (
-                    <MobileNavLink to={`/profile/${authData.user?.id}`} icon={<MdPerson size={18} />} onClick={close}>
+                    <MobileNavLink
+                      to={`/profile/${authData.user?.id}`}
+                      icon={<MdPerson size={18} />}
+                      onClick={close}
+                    >
                       My Profile
                     </MobileNavLink>
                   )}
@@ -124,7 +148,10 @@ export function Navigation() {
 
                   {authData.isAuthenticated && (
                     <button
-                      onClick={() => { authData.logout?.(); close(); }}
+                      onClick={() => {
+                        authData.logout?.();
+                        close();
+                      }}
                       className="flex items-center gap-3 py-3 text-sm font-medium text-red-500 hover:text-red-600 transition-colors border-t border-neutral-100 mt-2"
                     >
                       <MdLogout size={18} />
