@@ -22,7 +22,7 @@ export function AddMemberDialog({
   planId,
 }: AddMemberDialog) {
   const addMemberSchema = z.object({
-    email: z.email().nonempty(),
+    email: z.email().min(1, { message: "Email cannot be empty" }),
   });
   type AddMemberForm = z.infer<typeof addMemberSchema>;
 
@@ -36,7 +36,7 @@ export function AddMemberDialog({
     mutationFn: async (data: AddMemberForm) => {
       const response = await axiosInstance.post(
         `/plans/${planId}/members`,
-        data
+        data,
       );
       return response.data;
     },

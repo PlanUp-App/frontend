@@ -75,20 +75,28 @@ function RouteComponent() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      {isLoading ? <div className="flex justify-center mt-24">
-        <Spinner />
-      </div> : <div className="flex flex-col gap-4">
-        {data?.data.map((bill) => (
-          <BillCard
-            key={bill.id}
-            bill={bill}
-            onClick={() => {
-              setViewBill(bill.id);
-              setViewBillIsOpen(true);
-            }}
-          />
-        ))}
-      </div>}
+      {isLoading ? (
+        <div className="flex justify-center mt-24">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {data && data.data.length > 0 ? (
+            data.data.map((bill) => (
+              <BillCard
+                key={bill.id}
+                bill={bill}
+                onClick={() => {
+                  setViewBill(bill.id);
+                  setViewBillIsOpen(true);
+                }}
+              />
+            ))
+          ) : (
+            <p className="text-muted-foreground">No bills found.</p>
+          )}
+        </div>
+      )}
     </>
   );
 }

@@ -42,7 +42,9 @@ function RouteComponent() {
     return (
       <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center">
         <Spinner className="w-12 h-12 text-orange-500" />
-        <p className="mt-4 text-neutral-500 animate-pulse">Fetching plan details...</p>
+        <p className="mt-4 text-neutral-500 animate-pulse">
+          Fetching plan details...
+        </p>
       </div>
     );
 
@@ -52,11 +54,17 @@ function RouteComponent() {
         <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mb-6">
           <Globe size={40} className="text-rose-300" />
         </div>
-        <h2 className="text-2xl font-bold text-neutral-900 mb-2">Plan not found</h2>
+        <h2 className="text-2xl font-bold text-neutral-900 mb-2">
+          Plan not found
+        </h2>
         <p className="text-neutral-500 mb-8 max-w-sm">
           This plan may have been removed or set to private by its owner.
         </p>
-        <PrimaryButton title="Back to Directory" link="/public-plans" className="rounded-full px-8" />
+        <PrimaryButton
+          title="Back to Directory"
+          link="/public-plans"
+          className="rounded-full px-8"
+        />
       </div>
     );
 
@@ -77,7 +85,7 @@ function RouteComponent() {
         <div className="relative h-[400px] lg:h-[500px] overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
-              src={plan.coverImage || "placeholder.png"}
+              src={plan.coverImage || "/placeholder.png"}
               alt={plan.name}
               className="w-full h-full object-cover"
             />
@@ -90,7 +98,9 @@ function RouteComponent() {
                 Public Activity
               </span>
               <span className="px-4 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-medium border border-white/20">
-                {canJoin ? `${plan.config.maxMembers - plan._count.members} Slots Left` : "No Slots Left"}
+                {canJoin
+                  ? `${plan.config.maxMembers - plan._count.members} Slots Left`
+                  : "No Slots Left"}
               </span>
             </div>
 
@@ -100,12 +110,20 @@ function RouteComponent() {
 
             <div className="flex flex-wrap items-center gap-6 text-neutral-300">
               {owner && (
-                <Link to={`/profile/${owner.user.id}`} >
+                <Link to={`/profile/${owner.user.id}`}>
                   <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-                    <ProfileAvatar src={owner.user.profilePicture} alt={owner.user.name} className="w-8 h-8 ring-2 ring-orange-500/50" />
+                    <ProfileAvatar
+                      src={owner.user.profilePicture}
+                      alt={owner.user.name}
+                      className="w-8 h-8 ring-2 ring-orange-500/50"
+                    />
                     <div className="text-sm">
-                      <p className="text-white font-medium leading-none mb-1">{owner.user.name}</p>
-                      <p className="text-[10px] uppercase tracking-widest text-neutral-400">Host</p>
+                      <p className="text-white font-medium leading-none mb-1">
+                        {owner.user.name}
+                      </p>
+                      <p className="text-[10px] uppercase tracking-widest text-neutral-400">
+                        Host
+                      </p>
                     </div>
                   </div>
                 </Link>
@@ -113,12 +131,16 @@ function RouteComponent() {
 
               <div className="flex items-center gap-2">
                 <Calendar size={18} className="text-orange-400" />
-                <span className="text-sm font-medium">{format(new Date(plan.createdAt), "MMMM d, yyyy")}</span>
+                <span className="text-sm font-medium">
+                  {format(new Date(plan.createdAt), "MMMM d, yyyy")}
+                </span>
               </div>
 
               <div className="flex items-center gap-2">
                 <Users size={18} className="text-orange-400" />
-                <span className="text-sm font-medium">{plan._count.members} / {plan.config.maxMembers} Members</span>
+                <span className="text-sm font-medium">
+                  {plan._count.members} / {plan.config.maxMembers} Members
+                </span>
               </div>
             </div>
           </div>
@@ -130,9 +152,13 @@ function RouteComponent() {
             {/* LEFT COLUMN: DESCRIPTION */}
             <div className="lg:col-span-2 space-y-8">
               <div className="bg-white rounded-[2rem] p-10 shadow-sm border border-neutral-100 transition-all duration-300 hover:shadow-xl hover:shadow-neutral-200/50">
-                <h2 className="text-2xl font-bold text-neutral-900 mb-8">About this Plan</h2>
+                <h2 className="text-2xl font-bold text-neutral-900 mb-8">
+                  About this Plan
+                </h2>
                 <div className="prose prose-orange max-w-none">
-                  <RichTextParser html={plan.description || "This plan has no description"} />
+                  <RichTextParser
+                    html={plan.description || "This plan has no description"}
+                  />
                 </div>
               </div>
 
@@ -142,26 +168,34 @@ function RouteComponent() {
 
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                   <div className="max-w-md">
-                    <h3 className="text-3xl font-bold mb-4">Want to participate?</h3>
+                    <h3 className="text-3xl font-bold mb-4">
+                      Want to participate?
+                    </h3>
                     <p className="text-neutral-400 font-light leading-relaxed">
-                      {!plan.config.acceptJoinRequest && plan.userStatus !== "MEMBER" ? "This plan is no longer accepting participants. Find similar plans here!" : !isAuthenticated
-                        ? "Join our community today to send a request and start collaborating on this activity."
-                        : plan.userStatus === "MEMBER"
-                          ? "You are already a member of this plan. Collaborate with your team in the dashboard."
-                          : plan.userStatus === "PENDING"
-                            ? "Your request to join this plan is currently pending approval from the host."
-                            : canJoin
-                              ? "Send a request to the host and wait for their approval to join the team."
-                              : "This activity is currently full, but stay tuned for future openings!"}
+                      {!plan.config.acceptJoinRequest &&
+                      plan.userStatus !== "MEMBER"
+                        ? "This plan is no longer accepting participants. Find similar plans here!"
+                        : !isAuthenticated
+                          ? "Join our community today to send a request and start collaborating on this activity."
+                          : plan.userStatus === "MEMBER"
+                            ? "You are already a member of this plan. Collaborate with your team in the dashboard."
+                            : plan.userStatus === "PENDING"
+                              ? "Your request to join this plan is currently pending approval from the host."
+                              : canJoin
+                                ? "Send a request to the host and wait for their approval to join the team."
+                                : "This activity is currently full, but stay tuned for future openings!"}
                     </p>
                   </div>
 
                   <div className="shrink-0">
-                    {!plan.config.acceptJoinRequest && plan.userStatus !== "MEMBER" ? <PrimaryButton
-                      title="Find Plans"
-                      link="/public-plans"
-                      className="px-10 py-5 rounded-full text-lg shadow-xl bg-orange-500 hover:bg-orange-600 shadow-orange-500/30"
-                    /> : !isAuthenticated ? (
+                    {!plan.config.acceptJoinRequest &&
+                    plan.userStatus !== "MEMBER" ? (
+                      <PrimaryButton
+                        title="Find Plans"
+                        link="/public-plans"
+                        className="px-10 py-5 rounded-full text-lg shadow-xl bg-orange-500 hover:bg-orange-600 shadow-orange-500/30"
+                      />
+                    ) : !isAuthenticated ? (
                       <PrimaryButton
                         title="Sign Up to Join"
                         link="/sign-up"
@@ -217,7 +251,9 @@ function RouteComponent() {
             <div className="space-y-8">
               <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-neutral-100 sticky top-24">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-xl font-bold text-neutral-900">Team Members</h2>
+                  <h2 className="text-xl font-bold text-neutral-900">
+                    Team Members
+                  </h2>
                   <span className="px-3 py-1 rounded-full bg-neutral-50 text-neutral-500 text-xs font-bold">
                     {plan._count.members} Total
                   </span>
@@ -225,30 +261,34 @@ function RouteComponent() {
 
                 <div className="space-y-5">
                   {sorted.map((member) => (
-                    <Link to={`/profile/${member.user.id}`} ><div key={member.user.id} className="group flex items-center gap-4 p-2 rounded-2xl hover:bg-neutral-50 transition-colors duration-200">
-                      <div className="relative">
-                        <ProfileAvatar
-                          src={member.user.profilePicture}
-                          alt={member.user.name}
-                          className="w-12 h-12 ring-2 ring-transparent group-hover:ring-orange-500/20 transition-all"
-                        />
-                        <div className="absolute -bottom-1 -right-1">
-                          {roleIcon(member.role) && (
-                            <div className="bg-white p-1 rounded-full shadow-sm border border-neutral-100">
-                              {roleIcon(member.role)}
-                            </div>
-                          )}
+                    <Link to={`/profile/${member.user.id}`}>
+                      <div
+                        key={member.user.id}
+                        className="group flex items-center gap-4 p-2 rounded-2xl hover:bg-neutral-50 transition-colors duration-200"
+                      >
+                        <div className="relative">
+                          <ProfileAvatar
+                            src={member.user.profilePicture}
+                            alt={member.user.name}
+                            className="w-12 h-12 ring-2 ring-transparent group-hover:ring-orange-500/20 transition-all"
+                          />
+                          <div className="absolute -bottom-1 -right-1">
+                            {roleIcon(member.role) && (
+                              <div className="bg-white p-1 rounded-full shadow-sm border border-neutral-100">
+                                {roleIcon(member.role)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-neutral-900 truncate group-hover:text-orange-500 transition-colors">
+                            {member.user.name}
+                          </p>
+                          <p className="text-xs text-neutral-400 uppercase tracking-widest font-medium">
+                            {member.role.toLowerCase()}
+                          </p>
                         </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-neutral-900 truncate group-hover:text-orange-500 transition-colors">
-                          {member.user.name}
-                        </p>
-                        <p className="text-xs text-neutral-400 uppercase tracking-widest font-medium">
-                          {member.role.toLowerCase()}
-                        </p>
-                      </div>
-                    </div>
                     </Link>
                   ))}
 
@@ -257,7 +297,10 @@ function RouteComponent() {
                       <div className="w-12 h-12 rounded-full border-2 border-dashed border-neutral-300 flex items-center justify-center">
                         <Users size={16} />
                       </div>
-                      <span>+ {plan._count.members - sorted.length} more contributors</span>
+                      <span>
+                        + {plan._count.members - sorted.length} more
+                        contributors
+                      </span>
                     </div>
                   )}
                 </div>

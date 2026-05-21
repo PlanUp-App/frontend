@@ -228,7 +228,7 @@ function RouteComponent() {
                     linkTo={`/public-plans/${plan.id}`}
                     id={plan.id}
                     name={plan.name}
-                    coverImage={plan.coverImage ?? "placeholder.png"}
+                    coverImage={plan.coverImage ?? "/placeholder.png"}
                     memberCount={plan._count.members}
                     isPublic={plan.visibility === "PUBLIC"}
                   />
